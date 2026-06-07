@@ -8,6 +8,12 @@ Goals:
 - **Create a modeling template for each actor type**, specifying its structural components (state) and dynamical components (processes and behaviors).
 - **Represent individual actors** by applying the template derived from their actor type in order to produce a structured model of the actor.
 
+Sub Projects:
+
+- Product Space
+- Firm Space
+- Literary Space
+
 ## References
 
 - [Actor](https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Noetic/Actor/)
