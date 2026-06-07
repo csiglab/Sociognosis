@@ -5,7 +5,7 @@
 Goals:
 
 - We aim to stabilize a generative system that produces a **Domain Epistemic Artifact Set (DESA)** representing social reality and rendering it intelligible as a structured domain of analysis and action.
-- We aim to study, ****refine, and improve the underlying generative system** that produces and organizes the Domain Epistemic Artifact Set (DESA), with emphasis on consistency, expressiveness, and explanatory power.
+- We aim to study, **refine, and improve the underlying generative system** that produces and organizes the Domain Epistemic Artifact Set (DESA), with emphasis on consistency, expressiveness, and explanatory power.
 - We aim to connect the DESA to practical **activity systems**, such that epistemic artifacts are systematically linked to real-world actions, interventions, and decision-making processes within social domains.
 
 Sub Projects:
