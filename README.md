@@ -1,12 +1,12 @@
-# Ontologia Socialis
+# Sociognosis
 
-> This project aims to construct a Social Ontology Repository comprising actors (e.g., firms, individuals, states), together with processes, phenomena, and properties. These elements serve as ontic–conceptual building blocks for the systematic parsing and analysis of social reality.
+> **Sociognosis** aims to identify and formalize the set of epistemic elements that enable an agent to effectively navigate social reality. It is grounded in the Domain Epistemic Artifact Set (DESA) and its underlying generative system, with the goal of supporting well-formed and effective agency within the social domain.
 
 Goals:
 
-- We aim to establish comparative metrics and analytical frameworks that allow systematic analysis of actors, their capacities, and their roles within global socio-economic systems.
-- **Create a modeling template for each actor type**, specifying its structural components (state) and dynamical components (processes and behaviors).
-- **Represent individual actors** by applying the template derived from their actor type in order to produce a structured model of the actor.
+- We aim to stabilize a generative system that produces a **Concrete Epistemic Artifact Set (CEAS)** representing social reality and rendering it intelligible as a structured domain of analysis and action.
+- We aim to study, refine, and improve the underlying generative system that produces and organizes the Concrete Epistemic Artifact Set, with emphasis on consistency, expressiveness, and explanatory power.
+- We aim to connect the DESA to practical activity systems, such that epistemic artifacts are systematically linked to real-world actions, interventions, and decision-making processes within social domains.
 
 Sub Projects:
 
