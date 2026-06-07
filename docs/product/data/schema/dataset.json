@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/product-space-node.schema.json",
+  "title": "Product Space Node Schema",
+  "description": "Schema for representing the product space, production processes, and enabling capabilities including techniques, infrastructure, constraints, and market structures.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "category",
+    "inheritanceLevel",
+    "description",
+    "functionalRoles",
+    "domainScope",
+    "historicalContext",
+    "specific",
+    "relationships",
+    "metadata",
+    "references"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Product",
+        "ProductCategory",
+        "ProductionProcess",
+        "ProductionSystem",
+        "Technique",
+        "Capability",
+        "Resource",
+        "Infrastructure",
+        "Constraint",
+        "Market",
+        "ValueChainStage",
+        "ProductionFunction",
+        "Specification",
+        "Standard",
+        "Institution",
+        "Strategy",
+        "Problem",
+        "Failure",
+        "Evolution",
+        "Research"
+      ]
+    },
+    "inheritanceLevel": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "description": {
+      "type": "string"
+    },
+    "longDescription": {
+      "type": "string"
+    },
+    "functionalRoles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "domainScope": {
+      "type": "array",
+      "description": "Economic, industrial, or production domains where the node operates",
+      "items": {
+        "type": "string"
+      }
+    },
+    "historicalContext": {
+      "type": "object",
+      "required": [
+        "summary",
+        "chronology"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "chronology": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "year",
+              "event",
+              "context"
+            ],
+            "properties": {
+              "year": {
+                "type": "number"
+              },
+              "event": {
+                "type": "string"
+              },
+              "context": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "specific": {
+      "type": "object",
+      "description": "Category-specific structured extension fields"
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "relationshipType",
+          "targetNodeId",
+          "description"
+        ],
+        "properties": {
+          "relationshipFamily": {
+            "type": "string",
+            "enum": [
+              "FUNCTIONAL",
+              "STRUCTURAL",
+              "CAPABILITY_DEPENDENCY",
+              "VALUE_CHAIN",
+              "MARKET_RELATION",
+              "GOVERNANCE",
+              "TEMPORAL_EVOLUTION",
+              "COMPOSITIONAL",
+              "CLASSIFICATION"
+            ]
+          },
+          "relationshipType": {
+            "type": "string",
+            "enum": [
+              "PRODUCES",
+              "CONSUMES",
+              "ENABLES",
+              "REQUIRES",
+              "DEPENDS_ON",
+              "PART_OF",
+              "TRANSFORMS_INTO",
+              "SPECIALIZES",
+              "GENERALIZES",
+              "COMPLIES_WITH",
+              "CONSTRAINED_BY",
+              "COMPETES_WITH",
+              "SUBSTITUTES_FOR",
+              "COMPLEMENTS",
+              "ORCHESTRATED_BY",
+              "EVOLVES_FROM",
+              "SUPERSEDES"
+            ]
+          },
+          "targetNodeId": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "tags",
+        "confidenceScore",
+        "sourceReference",
+        "createdAt",
+        "auditTrail"
+      ],
+      "properties": {
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidenceScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "sourceReference": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "auditTrail": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "reviewDate",
+              "reviewNote"
+            ],
+            "properties": {
+              "reviewDate": {
+                "type": "string",
+                "format": "date"
+              },
+              "reviewNote": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "description"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "category": {
+            "const": "Product"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "specific": {
+            "$ref": "#/$defs/ProductSpecific"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "category": {
+            "const": "ProductionProcess"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "specific": {
+            "$ref": "#/$defs/ProductionProcessSpecific"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "category": {
+            "const": "Technique"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "specific": {
+            "$ref": "#/$defs/TechniqueSpecific"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "category": {
+            "const": "Capability"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "specific": {
+            "$ref": "#/$defs/CapabilitySpecific"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "ProductSpecific": {
+      "type": "object",
+      "required": [
+        "materiality",
+        "useCase",
+        "lifeCycleStage"
+      ],
+      "properties": {
+        "materiality": {
+          "type": "string"
+        },
+        "useCase": {
+          "type": "string"
+        },
+        "lifeCycleStage": {
+          "type": "string",
+          "enum": [
+            "concept",
+            "prototype",
+            "production",
+            "distribution",
+            "consumption",
+            "obsolete"
+          ]
+        }
+      }
+    },
+    "ProductionProcessSpecific": {
+      "type": "object",
+      "required": [
+        "inputs",
+        "outputs",
+        "transformationLogic"
+      ],
+      "properties": {
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "transformationLogic": {
+          "type": "string"
+        }
+      }
+    },
+    "TechniqueSpecific": {
+      "type": "object",
+      "required": [
+        "knowledgeType",
+        "codificationLevel",
+        "transferMechanism"
+      ],
+      "properties": {
+        "knowledgeType": {
+          "type": "string"
+        },
+        "codificationLevel": {
+          "type": "string",
+          "enum": [
+            "tacit",
+            "explicit",
+            "hybrid"
+          ]
+        },
+        "transferMechanism": {
+          "type": "string"
+        }
+      }
+    },
+    "CapabilitySpecific": {
+      "type": "object",
+      "required": [
+        "capabilityType",
+        "proficiencyLevel",
+        "measurability"
+      ],
+      "properties": {
+        "capabilityType": {
+          "type": "string"
+        },
+        "proficiencyLevel": {
+          "type": "string"
+        },
+        "measurability": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

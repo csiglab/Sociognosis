@@ -1,0 +1,678 @@
+[
+  {
+    "id": "N1",
+    "name": "Smartphone",
+    "category": "Product",
+    "inheritanceLevel": 0,
+    "description": "Portable multifunctional computing and communication device.",
+    "longDescription": "A smartphone integrates telecommunication, computing, sensing, and application execution into a handheld device, enabling digital communication, media consumption, and productivity applications.",
+    "functionalRoles": ["communication device", "computing platform", "sensor hub"],
+    "domainScope": ["consumer electronics", "telecommunications", "digital services"],
+    "historicalContext": {
+      "summary": "Emerged from convergence of mobile phones and PDAs.",
+      "chronology": [
+        {
+          "year": 2007,
+          "event": "Modern smartphone paradigm established",
+          "context": "Touchscreen-based smartphone architectures became dominant."
+        }
+      ]
+    },
+    "specific": {
+      "materiality": "electronic device with semiconductor components",
+      "useCase": "personal communication and computing",
+      "lifeCycleStage": "consumption"
+    },
+    "relationships": [
+      {
+        "relationshipFamily": "VALUE_CHAIN",
+        "relationshipType": "CONSUMES",
+        "targetNodeId": "N2",
+        "description": "Relies on battery assembly process for energy storage systems."
+      }
+    ],
+    "metadata": {
+      "tags": ["electronics", "mobile", "consumer tech"],
+      "confidenceScore": 0.95,
+      "sourceReference": "industrial systems synthesis",
+      "createdAt": "2026-06-06T10:00:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-06",
+          "reviewNote": "Initial dataset entry created"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Mobile Computing Systems Overview",
+        "link": "https://example.org/mobile-systems",
+        "description": "Overview of smartphone system architectures."
+      }
+    ]
+  },
+  {
+    "id": "N2",
+    "name": "Lithium Battery Assembly",
+    "category": "ProductionProcess",
+    "inheritanceLevel": 1,
+    "description": "Manufacturing process for assembling lithium-ion battery cells.",
+    "longDescription": "A multi-stage electrochemical assembly process involving electrode preparation, cell stacking, electrolyte filling, and sealing under controlled conditions.",
+    "functionalRoles": ["energy storage production", "component fabrication"],
+    "domainScope": ["battery manufacturing", "electronics supply chain"],
+    "historicalContext": {
+      "summary": "Evolved with demand for portable electronics and EVs.",
+      "chronology": [
+        {
+          "year": 1991,
+          "event": "Commercial lithium-ion batteries introduced",
+          "context": "Sony commercialized lithium-ion technology."
+        }
+      ]
+    },
+    "specific": {
+      "inputs": ["lithium compounds", "cathode materials", "anode materials", "electrolyte"],
+      "outputs": ["battery cells"],
+      "transformationLogic": "electrochemical energy storage assembly under controlled environment"
+    },
+    "relationships": [
+      {
+        "relationshipFamily": "FUNCTIONAL",
+        "relationshipType": "TRANSFORMS_INTO",
+        "targetNodeId": "N1",
+        "description": "Provides energy storage components for smartphones."
+      }
+    ],
+    "metadata": {
+      "tags": ["battery", "manufacturing", "energy"],
+      "confidenceScore": 0.9,
+      "sourceReference": "industrial battery engineering literature",
+      "createdAt": "2026-06-06T10:05:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-06",
+          "reviewNote": "Validated process structure"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Lithium-Ion Manufacturing Processes",
+        "link": "https://example.org/battery-manufacturing",
+        "description": "Technical overview of battery assembly."
+      }
+    ]
+  },
+  {
+    "id": "N3",
+    "name": "Surface Mount Technology (SMT)",
+    "category": "Technique",
+    "inheritanceLevel": 2,
+    "description": "Technique for mounting electronic components directly onto PCB surfaces.",
+    "longDescription": "SMT is a highly automated electronics assembly technique enabling miniaturization and high-density circuit design through pick-and-place machines and reflow soldering.",
+    "functionalRoles": ["electronics assembly", "miniaturization enablement"],
+    "domainScope": ["electronics manufacturing", "PCB production"],
+    "historicalContext": {
+      "summary": "Replaced through-hole assembly in modern electronics.",
+      "chronology": [
+        {
+          "year": 1980,
+          "event": "SMT adoption begins in industry",
+          "context": "Driven by demand for smaller electronics."
+        }
+      ]
+    },
+    "specific": {
+      "knowledgeType": "manufacturing engineering knowledge",
+      "codificationLevel": "explicit",
+      "transferMechanism": "training manuals and machine programming"
+    },
+    "relationships": [
+      {
+        "relationshipFamily": "CAPABILITY_DEPENDENCY",
+        "relationshipType": "ENABLES",
+        "targetNodeId": "N2",
+        "description": "Enables automated battery electronics assembly."
+      }
+    ],
+    "metadata": {
+      "tags": ["electronics", "manufacturing technique"],
+      "confidenceScore": 0.92,
+      "sourceReference": "electronics manufacturing standards",
+      "createdAt": "2026-06-06T10:10:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-06",
+          "reviewNote": "Technique classification verified"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "SMT Process Fundamentals",
+        "link": "https://example.org/smt",
+        "description": "Explanation of surface mount assembly."
+      }
+    ]
+  },
+  {
+    "id": "N4",
+    "name": "Precision Manufacturing Capability",
+    "category": "Capability",
+    "inheritanceLevel": 2,
+    "description": "Organizational capability to manufacture high-tolerance components.",
+    "longDescription": "Represents the ability of a production system to achieve micron-level tolerances in fabrication processes using advanced machinery and quality control systems.",
+    "functionalRoles": ["quality assurance", "high-precision fabrication"],
+    "domainScope": ["advanced manufacturing", "aerospace", "electronics"],
+    "historicalContext": {
+      "summary": "Developed alongside CNC machining and semiconductor fabrication.",
+      "chronology": [
+        {
+          "year": 1970,
+          "event": "CNC machining adoption",
+          "context": "Enabled repeatable precision manufacturing."
+        }
+      ]
+    },
+    "specific": {
+      "capabilityType": "manufacturing precision",
+      "proficiencyLevel": "high",
+      "measurability": "defect rate per million units"
+    },
+    "relationships": [
+      {
+        "relationshipFamily": "CAPABILITY_DEPENDENCY",
+        "relationshipType": "ENABLES",
+        "targetNodeId": "N3",
+        "description": "Supports SMT component placement precision."
+      }
+    ],
+    "metadata": {
+      "tags": ["precision", "manufacturing", "capability"],
+      "confidenceScore": 0.93,
+      "sourceReference": "industrial engineering frameworks",
+      "createdAt": "2026-06-06T10:15:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-06",
+          "reviewNote": "Capability validated"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Precision Manufacturing Systems",
+        "link": "https://example.org/precision-manufacturing",
+        "description": "Study of high-accuracy production systems."
+      }
+    ]
+  },
+  {
+    "id": "N5",
+    "name": "Semiconductor Fab Plant",
+    "category": "Infrastructure",
+    "inheritanceLevel": 3,
+    "description": "Industrial facility for manufacturing semiconductor chips.",
+    "longDescription": "A semiconductor fabrication plant is a highly controlled industrial environment used to manufacture integrated circuits using photolithography and chemical processing.",
+    "functionalRoles": ["chip production", "advanced fabrication environment"],
+    "domainScope": ["semiconductors", "electronics manufacturing"],
+    "historicalContext": {
+      "summary": "Evolved with the rise of integrated circuits.",
+      "chronology": [
+        {
+          "year": 1960,
+          "event": "First semiconductor fabs established",
+          "context": "Enabled mass production of integrated circuits."
+        }
+      ]
+    },
+    "specific": {},
+    "relationships": [
+      {
+        "relationshipFamily": "STRUCTURAL",
+        "relationshipType": "ENABLES",
+        "targetNodeId": "N3",
+        "description": "Provides infrastructure for SMT-enabled electronics assembly."
+      }
+    ],
+    "metadata": {
+      "tags": ["semiconductor", "infrastructure", "fab"],
+      "confidenceScore": 0.96,
+      "sourceReference": "semiconductor industry reports",
+      "createdAt": "2026-06-06T10:20:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-06",
+          "reviewNote": "Infrastructure entry validated"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Semiconductor Fabrication Overview",
+        "link": "https://example.org/fab",
+        "description": "Overview of chip manufacturing plants."
+      }
+    ]
+  },
+  {
+    "id": "N6",
+    "name": "Global Smartphone Market",
+    "category": "Market",
+    "inheritanceLevel": 1,
+    "description": "Global economic market for smartphones.",
+    "longDescription": "Represents global supply-demand dynamics, pricing structures, competition, and consumer adoption patterns for smartphones.",
+    "functionalRoles": ["price formation", "demand aggregation", "competition structure"],
+    "domainScope": ["consumer electronics", "global trade"],
+    "historicalContext": {
+      "summary": "Rapid expansion after smartphone adoption in 2000s.",
+      "chronology": [
+        {
+          "year": 2010,
+          "event": "Mass smartphone adoption",
+          "context": "Market expansion driven by app ecosystems."
+        }
+      ]
+    },
+    "specific": {},
+    "relationships": [
+      {
+        "relationshipFamily": "MARKET_RELATION",
+        "relationshipType": "COMPETES_WITH",
+        "targetNodeId": "N1",
+        "description": "Defines competitive environment for smartphone products."
+      }
+    ],
+    "metadata": {
+      "tags": ["market", "smartphones", "economics"],
+      "confidenceScore": 0.9,
+      "sourceReference": "market analytics synthesis",
+      "createdAt": "2026-06-06T10:25:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-06",
+          "reviewNote": "Market node reviewed"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Global Electronics Market Report",
+        "link": "https://example.org/market-report",
+        "description": "Analysis of smartphone market dynamics."
+      }
+    ]
+  },
+  {
+    "id": "N7",
+    "name": "Electronics Assembly Stage",
+    "category": "ValueChainStage",
+    "inheritanceLevel": 1,
+    "description": "Stage in the value chain where electronic components are assembled.",
+    "longDescription": "This stage includes PCB assembly, component integration, and system testing prior to product distribution.",
+    "functionalRoles": ["assembly coordination", "system integration"],
+    "domainScope": ["manufacturing value chain", "electronics"],
+    "historicalContext": {
+      "summary": "Standardized in modern electronics manufacturing pipelines.",
+      "chronology": [
+        {
+          "year": 1995,
+          "event": "Global outsourcing of assembly",
+          "context": "Shift to specialized EMS providers."
+        }
+      ]
+    },
+    "specific": {},
+    "relationships": [
+      {
+        "relationshipFamily": "VALUE_CHAIN",
+        "relationshipType": "PART_OF",
+        "targetNodeId": "N2",
+        "description": "Includes battery assembly as a subprocess."
+      }
+    ],
+    "metadata": {
+      "tags": ["value chain", "assembly", "electronics"],
+      "confidenceScore": 0.88,
+      "sourceReference": "supply chain literature",
+      "createdAt": "2026-06-06T10:30:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-06",
+          "reviewNote": "Stage definition confirmed"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Electronics Value Chain Analysis",
+        "link": "https://example.org/value-chain",
+        "description": "Breakdown of electronics production stages."
+      }
+    ]
+  },
+  {
+    "id": "N8",
+    "name": "Rare Earth Supply Constraint",
+    "category": "Constraint",
+    "inheritanceLevel": 2,
+    "description": "Constraint arising from limited availability of rare earth materials.",
+    "longDescription": "Represents supply-side limitations affecting production of electronics due to geopolitical concentration of rare earth element mining and refining.",
+    "functionalRoles": ["supply limitation", "production bottleneck"],
+    "domainScope": ["mining", "electronics supply chain", "geopolitics"],
+    "historicalContext": {
+      "summary": "Increasing relevance due to geopolitical supply concentration.",
+      "chronology": [
+        {
+          "year": 2010,
+          "event": "Rare earth export restrictions",
+          "context": "Highlighted global dependency risks."
+        }
+      ]
+    },
+    "specific": {},
+    "relationships": [
+      {
+        "relationshipFamily": "STRUCTURAL",
+        "relationshipType": "CONSTRAINED_BY",
+        "targetNodeId": "N2",
+        "description": "Limits availability of materials for battery production."
+      }
+    ],
+    "metadata": {
+      "tags": ["resources", "constraint", "supply chain"],
+      "confidenceScore": 0.91,
+      "sourceReference": "resource economics literature",
+      "createdAt": "2026-06-06T10:35:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-06",
+          "reviewNote": "Constraint validated"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Rare Earth Supply Chains",
+        "link": "https://example.org/rare-earth",
+        "description": "Analysis of global rare earth dependencies."
+      }
+    ]
+  },
+  {
+    "id": "N9",
+    "name": "ISO Quality Standards Body",
+    "category": "Institution",
+    "inheritanceLevel": 2,
+    "description": "Institution responsible for defining international quality standards.",
+    "longDescription": "Represents formal standardization bodies such as ISO that define quality, safety, and interoperability standards for global industries.",
+    "functionalRoles": ["standardization", "regulatory coordination"],
+    "domainScope": ["global manufacturing", "compliance systems"],
+    "historicalContext": {
+      "summary": "Established to harmonize international industrial standards.",
+      "chronology": [
+        {
+          "year": 1947,
+          "event": "ISO founded",
+          "context": "Created to unify global standards."
+        }
+      ]
+    },
+    "specific": {},
+    "relationships": [
+      {
+        "relationshipFamily": "GOVERNANCE",
+        "relationshipType": "COMPLIES_WITH",
+        "targetNodeId": "N3",
+        "description": "SMT processes comply with ISO manufacturing standards."
+      }
+    ],
+    "metadata": {
+      "tags": ["standards", "institution", "compliance"],
+      "confidenceScore": 0.94,
+      "sourceReference": "standards documentation",
+      "createdAt": "2026-06-06T10:40:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-06",
+          "reviewNote": "Institution entry verified"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "ISO Standards Overview",
+        "link": "https://example.org/iso",
+        "description": "Information on international standards systems."
+      }
+    ]
+  },
+  {
+    "id": "N10",
+    "name": "Just-in-Time Manufacturing Strategy",
+    "category": "Strategy",
+    "inheritanceLevel": 3,
+    "description": "Production strategy focused on minimizing inventory and optimizing flow.",
+    "longDescription": "Just-in-time manufacturing reduces waste by synchronizing production with demand, minimizing inventory holding costs and improving responsiveness.",
+    "functionalRoles": ["inventory minimization", "production optimization"],
+    "domainScope": ["manufacturing systems", "supply chain management"],
+    "historicalContext": {
+      "summary": "Developed in Japanese automotive industry.",
+      "chronology": [
+        {
+          "year": 1970,
+          "event": "Toyota Production System expansion",
+          "context": "Formalization of JIT principles."
+        }
+      ]
+    },
+    "specific": {},
+    "relationships": [
+      {
+        "relationshipFamily": "FUNCTIONAL",
+        "relationshipType": "ORCHESTRATED_BY",
+        "targetNodeId": "N7",
+        "description": "Implemented within electronics assembly stages."
+      }
+    ],
+    "metadata": {
+      "tags": ["strategy", "manufacturing", "supply chain"],
+      "confidenceScore": 0.92,
+      "sourceReference": "operations management literature",
+      "createdAt": "2026-06-06T10:45:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-06",
+          "reviewNote": "Strategy model validated"
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Just-in-Time Production Systems",
+        "link": "https://example.org/jit",
+        "description": "Overview of JIT manufacturing principles."
+      }
+    ]
+  },
+  {
+    "id": "p001",
+    "name": "Silicon Wafers",
+    "category": "Product",
+    "inheritanceLevel": 2,
+    "description": "Thin slices of semiconductor material used as the substrate for integrated circuits.",
+    "longDescription": "Base substrate in semiconductor manufacturing enabling integrated circuit fabrication via lithographic processes.",
+    "functionalRoles": ["substrate", "semiconductor base material"],
+    "domainScope": ["Semiconductors", "Microelectronics"],
+    "historicalContext": "Core enabling material in post-1970s semiconductor industrialization.",
+    "specific": true,
+    "relationships": [],
+    "metadata": {
+      "source": "IEEE Standards",
+      "hsCode": "2804.61"
+    },
+    "references": ["IEEE Standards", "Semiconductor Manufacturing Processes"]
+  },
+  {
+    "id": "p002",
+    "name": "Integrated Circuits",
+    "category": "Product",
+    "inheritanceLevel": 3,
+    "description": "Electronic circuits integrated onto semiconductor substrates.",
+    "longDescription": "Miniaturized circuits embedding transistors and interconnects on silicon wafers enabling computation and signal processing.",
+    "functionalRoles": ["computation unit", "signal processing"],
+    "domainScope": ["Microelectronics", "Computing"],
+    "historicalContext": "Central artifact of the microelectronics revolution beginning in the 1960s.",
+    "specific": true,
+    "relationships": [],
+    "metadata": {
+      "source": "IEEE Standards",
+      "hsCode": "8542.31"
+    },
+    "references": ["IEEE Standards", "IC Fabrication Literature"]
+  },
+  {
+    "id": "p003",
+    "name": "Printed Circuit Boards",
+    "category": "Product",
+    "inheritanceLevel": 2,
+    "description": "Boards that mechanically support and electrically connect electronic components.",
+    "longDescription": "Layered fiberglass and copper structures providing interconnect architecture for electronic systems.",
+    "functionalRoles": ["electrical interconnect", "mechanical support"],
+    "domainScope": ["Electronics Manufacturing"],
+    "historicalContext": "Standardized in mid-20th century electronics manufacturing.",
+    "specific": true,
+    "relationships": [],
+    "metadata": {
+      "source": "IPC Standards",
+      "hsCode": "8534.00"
+    },
+    "references": ["IPC Standards"]
+  },
+  {
+    "id": "p004",
+    "name": "Microprocessors",
+    "category": "Product",
+    "inheritanceLevel": 4,
+    "description": "Single-chip central processing units for computing systems.",
+    "longDescription": "Integrated computational engines combining ALU, control unit, and registers on a single semiconductor die.",
+    "functionalRoles": ["computation", "control logic execution"],
+    "domainScope": ["Computing", "Microelectronics"],
+    "historicalContext": "Emerged in the 1970s as scaling of integrated circuits enabled CPU-on-chip designs.",
+    "specific": true,
+    "relationships": [],
+    "metadata": {
+      "source": "TechSpecs",
+      "hsCode": "8542.31"
+    },
+    "references": ["Computer Architecture Standards"]
+  },
+  {
+    "id": "p005",
+    "name": "Memory Modules",
+    "category": "Product",
+    "inheritanceLevel": 3,
+    "description": "Circuit boards containing memory chips for data storage.",
+    "longDescription": "Volatile and non-volatile memory assemblies used in computing systems for temporary and persistent data storage.",
+    "functionalRoles": ["data storage", "memory buffering"],
+    "domainScope": ["Computing"],
+    "historicalContext": "Evolved alongside microprocessor-based computing systems.",
+    "specific": true,
+    "relationships": [],
+    "metadata": {
+      "source": "TechSpecs",
+      "hsCode": "8542.32"
+    },
+    "references": ["Computer Hardware Standards"]
+  },
+  {
+    "id": "p006",
+    "name": "Capacitors",
+    "category": "Product",
+    "inheritanceLevel": 2,
+    "description": "Passive components that store electrical energy in an electric field.",
+    "longDescription": "Electronic components that store and release electrical energy, used in filtering and signal stabilization.",
+    "functionalRoles": ["energy storage", "signal smoothing"],
+    "domainScope": ["Electronics"],
+    "historicalContext": "Fundamental component since early electrical engineering.",
+    "specific": true,
+    "relationships": [],
+    "metadata": {
+      "source": "EIA",
+      "hsCode": "8532.21"
+    },
+    "references": ["Electronic Components Handbook"]
+  },
+  {
+    "id": "p007",
+    "name": "Resistors",
+    "category": "Product",
+    "inheritanceLevel": 2,
+    "description": "Components that implement electrical resistance in circuits.",
+    "longDescription": "Passive electronic components used to control current flow and divide voltage in electrical systems.",
+    "functionalRoles": ["current limitation", "voltage division"],
+    "domainScope": ["Electronics"],
+    "historicalContext": "Foundational component in analog and digital electronics.",
+    "specific": true,
+    "relationships": [],
+    "metadata": {
+      "source": "EIA",
+      "hsCode": "8533.21"
+    },
+    "references": ["Electrical Engineering Standards"]
+  },
+  {
+    "id": "p008",
+    "name": "Smartphones",
+    "category": "Product",
+    "inheritanceLevel": 5,
+    "description": "Portable devices combining mobile communication and computing.",
+    "longDescription": "Integrated consumer electronics platform combining telecommunications, computation, sensors, and software ecosystems.",
+    "functionalRoles": ["communication", "mobile computing", "sensor interface"],
+    "domainScope": ["Consumer Electronics", "Telecommunications"],
+    "historicalContext": "Converged device category emerging post-2007 smartphone revolution.",
+    "specific": true,
+    "relationships": [],
+    "metadata": {
+      "source": "GSMA",
+      "hsCode": "8517.12"
+    },
+    "references": ["Mobile Systems Architecture"]
+  },
+  {
+    "id": "p009",
+    "name": "Laptops",
+    "category": "Product",
+    "inheritanceLevel": 5,
+    "description": "Portable personal computers with clamshell form factor.",
+    "longDescription": "General-purpose computing devices integrating CPU, memory, storage, and I/O systems into a portable architecture.",
+    "functionalRoles": ["general computing", "productivity platform"],
+    "domainScope": ["Computing"],
+    "historicalContext": "Mainstream personal computing platform since the 1990s.",
+    "specific": true,
+    "relationships": [],
+    "metadata": {
+      "source": "TechSpecs",
+      "hsCode": "8471.30"
+    },
+    "references": ["PC Architecture Standards"]
+  },
+  {
+    "id": "p010",
+    "name": "Tablets",
+    "category": "Product",
+    "inheritanceLevel": 5,
+    "description": "Touchscreen mobile computing devices.",
+    "longDescription": "Flat mobile computing platforms optimized for touch interaction and lightweight computing tasks.",
+    "functionalRoles": ["mobile computing", "content consumption"],
+    "domainScope": ["Consumer Electronics"],
+    "historicalContext": "Popularized after 2010 as a new mobile computing form factor.",
+    "specific": true,
+    "relationships": [],
+    "metadata": {
+      "source": "TechSpecs",
+      "hsCode": "8471.30"
+    },
+    "references": ["Mobile Device Standards"]
+  }
+]

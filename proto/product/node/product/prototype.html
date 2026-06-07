@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EUV Lithography Systems — Structural Analysis</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0a0e14;
+      --bg-secondary: #111820;
+      --bg-tertiary: #1a222d;
+      --fg-primary: #e8edf4;
+      --fg-secondary: #8b99ab;
+      --fg-muted: #5a6778;
+      --accent-cyan: #00d4ff;
+      --accent-amber: #ffaa00;
+      --accent-red: #ff4757;
+      --accent-green: #00ff88;
+      --border: #2a3544;
+      --glow-cyan: rgba(0, 212, 255, 0.15);
+      --glow-amber: rgba(255, 170, 0, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg-primary);
+      color: var(--fg-primary);
+      overflow-x: hidden;
+    }
+
+    .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Animated Grid Background */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .grid-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, var(--glow-cyan) 0%, transparent 60%);
+    }
+
+    /* Floating Particles */
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      opacity: 0.4;
+      animation: float 20s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); opacity: 0.2; }
+      25% { transform: translateY(-100px) translateX(20px); opacity: 0.6; }
+      50% { transform: translateY(-50px) translateX(-30px); opacity: 0.3; }
+      75% { transform: translateY(-150px) translateX(10px); opacity: 0.5; }
+    }
+
+    /* Section Animations */
+    .reveal-section {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-section {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      .particle {
+        animation: none;
+      }
+    }
+
+    /* Matrix Table */
+    .matrix-cell {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .matrix-cell::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .matrix-cell:hover::before {
+      opacity: 1;
+    }
+
+    .matrix-is-not::before {
+      background: linear-gradient(135deg, rgba(255, 71, 87, 0.1), transparent);
+    }
+
+    .matrix-is::before {
+      background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), transparent);
+    }
+
+    /* Network Visualization */
+    #network-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    /* Timeline */
+    .timeline-node {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline-node::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--accent-cyan), var(--border));
+    }
+
+    .timeline-node::after {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 0.5rem;
+      width: 10px;
+      height: 10px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 20px var(--accent-cyan);
+    }
+
+    /* Data Cards */
+    .data-card {
+      background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+      border: 1px solid var(--border);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .data-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -20px rgba(0, 212, 255, 0.2);
+    }
+
+    /* Progress Bars */
+    .progress-track {
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .progress-fill.animate {
+      transform: scaleX(1);
+    }
+
+    /* Typing Animation */
+    .typing-text {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid var(--accent-cyan);
+      animation: typing 3s steps(60) forwards, blink 0.8s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    /* Focus States */
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent-cyan);
+      outline-offset: 2px;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--fg-muted);
+    }
+
+    /* Badge Styles */
+    .badge-critical {
+      background: linear-gradient(135deg, rgba(255, 71, 87, 0.2), rgba(255, 71, 87, 0.05));
+      border: 1px solid var(--accent-red);
+      color: var(--accent-red);
+    }
+
+    .badge-strategic {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 212, 255, 0.05));
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .badge-warning {
+      background: linear-gradient(135deg, rgba(255, 170, 0, 0.2), rgba(255, 170, 0, 0.05));
+      border: 1px solid var(--accent-amber);
+      color: var(--accent-amber);
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Background Grid -->
+  <div class="grid-bg"></div>
+  
+  <!-- Floating Particles -->
+  <div id="particles" class="fixed inset-0 pointer-events-none z-0" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[rgba(10,14,20,0.8)] border-b border-[var(--border)]">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent-cyan)] to-[var(--accent-green)] flex items-center justify-center">
+          <svg class="w-5 h-5 text-[var(--bg-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+          </svg>
+        </div>
+        <span class="font-display font-semibold text-sm tracking-wider">INDUSTRIAL ONTOLOGY</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8 text-xs tracking-widest uppercase text-[var(--fg-secondary)]">
+        <a href="#definition" class="hover:text-[var(--accent-cyan)] transition-colors">Definition</a>
+        <a href="#structure" class="hover:text-[var(--accent-cyan)] transition-colors">Structure</a>
+        <a href="#topology" class="hover:text-[var(--accent-cyan)] transition-colors">Topology</a>
+        <a href="#synthesis" class="hover:text-[var(--accent-cyan)] transition-colors">Synthesis</a>
+      </div>
+      <button id="menu-toggle" class="md:hidden p-2 rounded-lg border border-[var(--border)] hover:border-[var(--accent-cyan)] transition-colors" aria-label="Toggle menu">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--accent-cyan)] opacity-5 rounded-full blur-[100px]"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-[var(--accent-amber)] opacity-5 rounded-full blur-[80px]"></div>
+    </div>
+    
+    <div class="relative z-10 max-w-6xl mx-auto px-6 text-center">
+      <div class="mb-8">
+        <span class="inline-block px-4 py-2 text-xs tracking-[0.3em] uppercase border border-[var(--border)] text-[var(--fg-muted)] rounded-full">
+          Reverse-Engineered Analysis
+        </span>
+      </div>
+      
+      <h1 class="font-display font-bold text-5xl md:text-7xl lg:text-8xl tracking-tight mb-6 leading-[1.1]">
+        <span class="block text-[var(--fg-primary)]">EUV Lithography</span>
+        <span class="block text-[var(--accent-cyan)]">Systems</span>
+      </h1>
+      
+      <p class="text-lg md:text-xl text-[var(--fg-secondary)] max-w-3xl mx-auto mb-12 leading-relaxed">
+        A structural analysis of the most precise manufacturing machines ever constructed — 
+        where light becomes a sculpting tool at the atomic scale.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <button onclick="document.getElementById('definition').scrollIntoView({behavior: 'smooth'})" 
+                class="group px-8 py-4 bg-[var(--accent-cyan)] text-[var(--bg-primary)] font-display font-semibold rounded-lg hover:bg-[var(--fg-primary)] transition-all duration-300 flex items-center gap-3">
+          Enter Analysis
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </button>
+        <button onclick="document.getElementById('synthesis').scrollIntoView({behavior: 'smooth'})" 
+                class="px-8 py-4 border border-[var(--border)] text-[var(--fg-secondary)] font-display font-medium rounded-lg hover:border-[var(--accent-cyan)] hover:text-[var(--accent-cyan)] transition-all duration-300">
+          Jump to Verdict
+        </button>
+      </div>
+
+      <!-- Key Metrics -->
+      <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="data-card p-6 rounded-xl text-center">
+          <div class="font-display font-bold text-3xl md:text-4xl text-[var(--accent-cyan)] mb-2" data-counter="100">0</div>
+          <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase">Million Parts</div>
+        </div>
+        <div class="data-card p-6 rounded-xl text-center">
+          <div class="font-display font-bold text-3xl md:text-4xl text-[var(--accent-amber)] mb-2" data-counter="380">0</div>
+          <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase">Million USD</div>
+        </div>
+        <div class="data-card p-6 rounded-xl text-center">
+          <div class="font-display font-bold text-3xl md:text-4xl text-[var(--accent-green)] mb-2" data-counter="1">0</div>
+          <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase">Producer</div>
+        </div>
+        <div class="data-card p-6 rounded-xl text-center">
+          <div class="font-display font-bold text-3xl md:text-4xl text-[var(--accent-red)] mb-2" data-counter="13.5">0</div>
+          <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase">nm Wavelength</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[var(--fg-muted)]">
+      <span class="text-xs tracking-widest uppercase">Scroll</span>
+      <div class="w-6 h-10 border-2 border-[var(--border)] rounded-full flex justify-center">
+        <div class="w-1 h-2 bg-[var(--accent-cyan)] rounded-full mt-2 animate-bounce"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Is / Is Not Matrix -->
+  <section class="relative py-24 z-10">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="reveal-section">
+        <div class="flex items-center gap-4 mb-12">
+          <div class="w-12 h-[2px] bg-[var(--accent-cyan)]"></div>
+          <span class="text-xs tracking-[0.3em] uppercase text-[var(--fg-muted)]">Ontological Framework</span>
+        </div>
+        
+        <h2 class="font-display font-bold text-3xl md:text-4xl mb-4">The Is / Is Not Matrix</h2>
+        <p class="text-[var(--fg-secondary)] mb-12 max-w-2xl">
+          This document rejects surface-level description. It is a reverse-engineering of a techno-industrial system.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Is Not Column -->
+          <div class="relative">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--accent-red)] to-transparent rounded-full"></div>
+            <div class="text-xs tracking-[0.2em] uppercase text-[var(--accent-red)] mb-6 font-semibold">It is NOT...</div>
+            <div class="space-y-3">
+              <div class="matrix-cell matrix-is-not p-5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)]">
+                <p class="text-[var(--fg-secondary)]">A market summary</p>
+              </div>
+              <div class="matrix-cell matrix-is-not p-5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)]">
+                <p class="text-[var(--fg-secondary)]">A list of features</p>
+              </div>
+              <div class="matrix-cell matrix-is-not p-5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)]">
+                <p class="text-[var(--fg-secondary)]">A descriptive overview</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Is Column -->
+          <div class="relative">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--accent-green)] to-transparent rounded-full"></div>
+            <div class="text-xs tracking-[0.2em] uppercase text-[var(--accent-green)] mb-6 font-semibold">It IS...</div>
+            <div class="space-y-3">
+              <div class="matrix-cell matrix-is p-5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)]">
+                <p class="text-[var(--fg-primary)]">A structural analysis of causality</p>
+              </div>
+              <div class="matrix-cell matrix-is p-5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)]">
+                <p class="text-[var(--fg-primary)]">An explanation of functional necessity</p>
+              </div>
+              <div class="matrix-cell matrix-is p-5 rounded-lg bg-[var(--bg-secondary)] border border-[var(--border)]">
+                <p class="text-[var(--fg-primary)]">A diagnosis of constraints and leverage points</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-12 p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-[var(--glow-cyan)] flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-[var(--accent-cyan)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="font-display font-semibold text-[var(--fg-primary)] mb-2">Core Directive</div>
+              <p class="text-[var(--fg-secondary)] text-sm leading-relaxed">
+                Reconstruct the product as a node in a network. Explain not just what it is, but <em class="text-[var(--fg-primary)]">why it exists where it does</em> and <em class="text-[var(--fg-primary)]">what holds its production system together</em>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase I: Definition -->
+  <section id="definition" class="relative py-24 z-10">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="reveal-section">
+        <div class="flex items-center gap-4 mb-12">
+          <span class="px-3 py-1 text-xs tracking-wider uppercase bg-[var(--bg-tertiary)] border border-[var(--border)] rounded text-[var(--accent-cyan)]">Phase I</span>
+          <div class="flex-1 h-[1px] bg-[var(--border)]"></div>
+        </div>
+
+        <h2 class="font-display font-bold text-3xl md:text-4xl mb-2">Definition & Ontology</h2>
+        <p class="text-[var(--fg-muted)] text-sm tracking-wider uppercase mb-12">Establish immediate conceptual clarity. No context, no history. Pure function.</p>
+
+        <!-- Axiomatic Base -->
+        <div class="mb-16">
+          <h3 class="font-display font-semibold text-xl mb-8 text-[var(--fg-primary)]">1. Product Definition (The Axiomatic Base)</h3>
+          
+          <div class="grid gap-6">
+            <!-- Sentence 1 -->
+            <div class="group relative p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl hover:border-[var(--accent-cyan)] transition-all duration-300">
+              <div class="absolute top-6 left-6 w-8 h-8 rounded-full bg-[var(--glow-cyan)] flex items-center justify-center text-[var(--accent-cyan)] font-display font-bold text-sm">1</div>
+              <div class="pl-12">
+                <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase mb-2">Technical Essence</div>
+                <p class="text-[var(--fg-primary)] leading-relaxed">
+                  A <span class="text-[var(--accent-cyan)]">vacuum-chambered optical projection system</span> utilizing extreme ultraviolet radiation at 13.5nm wavelength, generated by plasma-excited tin droplets, to pattern sub-7nm features on photoresist-coated silicon wafers through reflective multilayer mirror optics.
+                </p>
+              </div>
+            </div>
+
+            <!-- Sentence 2 -->
+            <div class="group relative p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl hover:border-[var(--accent-cyan)] transition-all duration-300">
+              <div class="absolute top-6 left-6 w-8 h-8 rounded-full bg-[var(--glow-amber)] flex items-center justify-center text-[var(--accent-amber)] font-display font-bold text-sm">2</div>
+              <div class="pl-12">
+                <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase mb-2">Functional Role</div>
+                <p class="text-[var(--fg-primary)] leading-relaxed">
+                  Functioning as the <span class="text-[var(--accent-amber)]">bottleneck node</span> for advanced semiconductor manufacturing — without which, no sub-7nm logic chip can be produced at scale.
+                </p>
+              </div>
+            </div>
+
+            <!-- Sentence 3 -->
+            <div class="group relative p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl hover:border-[var(--accent-cyan)] transition-all duration-300">
+              <div class="absolute top-6 left-6 w-8 h-8 rounded-full bg-[var(--glow-cyan)] flex items-center justify-center text-[var(--accent-cyan)] font-display font-bold text-sm">3</div>
+              <div class="pl-12">
+                <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase mb-2">System Position</div>
+                <p class="text-[var(--fg-primary)] leading-relaxed">
+                  Classification: <span class="badge-strategic px-2 py-1 rounded text-xs">Capital Good — Strategic Bottleneck</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical Core -->
+        <div>
+          <h3 class="font-display font-semibold text-xl mb-8 text-[var(--fg-primary)]">2. Technical Core (The Physics of Production)</h3>
+          
+          <div class="grid md:grid-cols-3 gap-6">
+            <!-- Materials Basis -->
+            <div class="data-card p-6 rounded-xl">
+              <div class="w-12 h-12 rounded-lg bg-[var(--bg-primary)] border border-[var(--border)] flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-[var(--accent-cyan)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                </svg>
+              </div>
+              <h4 class="font-display font-semibold text-[var(--fg-primary)] mb-3">Materials Basis</h4>
+              <ul class="space-y-2 text-sm text-[var(--fg-secondary)]">
+                <li class="flex items-start gap-2">
+                  <span class="text-[var(--accent-cyan)] mt-1">&#9656;</span>
+                  Ultra-pure tin (Sn) for plasma generation
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-[var(--accent-cyan)] mt-1">&#9656;</span>
+                  Molybdenum-silicon multilayer mirrors (40+ bilayers)
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-[var(--accent-cyan)] mt-1">&#9656;</span>
+                  Molecular-contaminant-free vacuum environment
+                </li>
+              </ul>
+            </div>
+
+            <!-- Transformation Logic -->
+            <div class="data-card p-6 rounded-xl">
+              <div class="w-12 h-12 rounded-lg bg-[var(--bg-primary)] border border-[var(--border)] flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-[var(--accent-amber)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+              </div>
+              <h4 class="font-display font-semibold text-[var(--fg-primary)] mb-3">Transformation Logic</h4>
+              <div class="space-y-3 text-sm">
+                <div class="flex items-center gap-3">
+                  <span class="w-6 h-6 rounded bg-[var(--bg-primary)] border border-[var(--border)] flex items-center justify-center text-xs text-[var(--fg-muted)]">1</span>
+                  <span class="text-[var(--fg-secondary)]">Tin droplet generation (50,000/sec)</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="w-6 h-6 rounded bg-[var(--bg-primary)] border border-[var(--border)] flex items-center justify-center text-xs text-[var(--fg-muted)]">2</span>
+                  <span class="text-[var(--fg-secondary)]">CO₂ laser vaporization</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="w-6 h-6 rounded bg-[var(--accent-red)] text-[var(--bg-primary)] flex items-center justify-center text-xs font-bold">3</span>
+                  <span class="text-[var(--accent-red)] font-medium">HARD STEP: Plasma → EUV emission</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="w-6 h-6 rounded bg-[var(--bg-primary)] border border-[var(--border)] flex items-center justify-center text-xs text-[var(--fg-muted)]">4</span>
+                  <span class="text-[var(--fg-secondary)]">Mirror collection & wafer projection</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Failure Modes -->
+            <div class="data-card p-6 rounded-xl">
+              <div class="w-12 h-12 rounded-lg bg-[var(--bg-primary)] border border-[var(--border)] flex items-center justify-center mb-4">
+                <svg class="w-6 h-6 text-[var(--accent-red)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+              </div>
+              <h4 class="font-display font-semibold text-[var(--fg-primary)] mb-3">Failure Modes</h4>
+              <ul class="space-y-2 text-sm text-[var(--fg-secondary)]">
+                <li class="flex items-start gap-2">
+                  <span class="text-[var(--accent-red)] mt-1">&#9656;</span>
+                  Mirror contamination from tin debris
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-[var(--accent-red)] mt-1">&#9656;</span>
+                  EUV source power instability
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-[var(--accent-red)] mt-1">&#9656;</span>
+                  Sub-nanometer positioning drift
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase II: Structure -->
+  <section id="structure" class="relative py-24 z-10 bg-[var(--bg-secondary)]">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="reveal-section">
+        <div class="flex items-center gap-4 mb-12">
+          <span class="px-3 py-1 text-xs tracking-wider uppercase bg-[var(--bg-tertiary)] border border-[var(--border)] rounded text-[var(--accent-amber)]">Phase II</span>
+          <div class="flex-1 h-[1px] bg-[var(--border)]"></div>
+        </div>
+
+        <h2 class="font-display font-bold text-3xl md:text-4xl mb-2">Structure & Production</h2>
+        <p class="text-[var(--fg-muted)] text-sm tracking-wider uppercase mb-12">The geography and concentration of production capability.</p>
+
+        <!-- Producer Map -->
+        <div class="mb-16">
+          <h3 class="font-display font-semibold text-xl mb-8 text-[var(--fg-primary)]">3. Industrial Architecture</h3>
+
+          <!-- Monopoly Visualization -->
+          <div class="relative p-8 bg-[var(--bg-primary)] border border-[var(--border)] rounded-2xl overflow-hidden mb-8">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-[var(--accent-cyan)] opacity-5 rounded-full blur-[60px]"></div>
+            
+            <div class="relative z-10">
+              <div class="flex items-center justify-between mb-8">
+                <div>
+                  <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase mb-2">Market Concentration</div>
+                  <div class="font-display font-bold text-4xl text-[var(--accent-cyan)]">100%</div>
+                </div>
+                <span class="badge-critical px-4 py-2 rounded-lg text-sm font-medium">Absolute Monopoly</span>
+              </div>
+
+              <div class="flex items-end gap-2 h-32 mb-6">
+                <div class="flex-1 bg-gradient-to-t from-[var(--accent-cyan)] to-[var(--accent-cyan)]/30 rounded-t-lg" style="height: 100%"></div>
+                <div class="flex-1 bg-[var(--bg-tertiary)] rounded-t-lg" style="height: 5%"></div>
+                <div class="flex-1 bg-[var(--bg-tertiary)] rounded-t-lg" style="height: 3%"></div>
+                <div class="flex-1 bg-[var(--bg-tertiary)] rounded-t-lg" style="height: 2%"></div>
+              </div>
+
+              <div class="grid grid-cols-4 gap-4 text-center text-xs">
+                <div>
+                  <div class="font-semibold text-[var(--fg-primary)]">ASML</div>
+                  <div class="text-[var(--fg-muted)]">Netherlands</div>
+                </div>
+                <div>
+                  <div class="text-[var(--fg-muted)]">Nikon</div>
+                  <div class="text-[var(--fg-muted)]">Japan</div>
+                </div>
+                <div>
+                  <div class="text-[var(--fg-muted)]">Canon</div>
+                  <div class="text-[var(--fg-muted)]">Japan</div>
+                </div>
+                <div>
+                  <div class="text-[var(--fg-muted)]">Others</div>
+                  <div class="text-[var(--fg-muted)]">—</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Structural Drivers -->
+          <div class="grid md:grid-cols-3 gap-6">
+            <div class="data-card p-6 rounded-xl">
+              <h4 class="font-display font-semibold text-[var(--fg-primary)] mb-4 flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-[var(--glow-cyan)] flex items-center justify-center text-[var(--accent-cyan)] text-sm">$</span>
+                Capital Barriers
+              </h4>
+              <p class="text-sm text-[var(--fg-secondary)] leading-relaxed mb-4">
+                $380M per unit. 10+ year R&D cycles. Requires ecosystem of 500+ specialized suppliers.
+              </p>
+              <div class="progress-track">
+                <div class="progress-fill bg-[var(--accent-cyan)]" style="--width: 98%"></div>
+              </div>
+              <div class="flex justify-between mt-2 text-xs text-[var(--fg-muted)]">
+                <span>Entry Barrier</span>
+                <span>Extreme</span>
+              </div>
+            </div>
+
+            <div class="data-card p-6 rounded-xl">
+              <h4 class="font-display font-semibold text-[var(--fg-primary)] mb-4 flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-[var(--glow-amber)] flex items-center justify-center text-[var(--accent-amber)] text-sm">K</span>
+                Knowledge Lock-in
+              </h4>
+              <p class="text-sm text-[var(--fg-secondary)] leading-relaxed mb-4">
+                30+ years of accumulated tacit knowledge. 10,000+ patents. Proprietary integration knowledge.
+              </p>
+              <div class="progress-track">
+                <div class="progress-fill bg-[var(--accent-amber)]" style="--width: 95%"></div>
+              </div>
+              <div class="flex justify-between mt-2 text-xs text-[var(--fg-muted)]">
+                <span>Knowledge Moat</span>
+                <span>Impenetrable</span>
+              </div>
+            </div>
+
+            <div class="data-card p-6 rounded-xl">
+              <h4 class="font-display font-semibold text-[var(--fg-primary)] mb-4 flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-[rgba(255,71,87,0.15)] flex items-center justify-center text-[var(--accent-red)] text-sm">G</span>
+                Geopolitical Friction
+              </h4>
+              <p class="text-sm text-[var(--fg-secondary)] leading-relaxed mb-4">
+                US export controls restrict sales to China. Strategic technology with national security implications.
+              </p>
+              <div class="progress-track">
+                <div class="progress-fill bg-[var(--accent-red)]" style="--width: 90%"></div>
+              </div>
+              <div class="flex justify-between mt-2 text-xs text-[var(--fg-muted)]">
+                <span>Restriction Level</span>
+                <span>Critical</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase II Continued: Topology -->
+  <section id="topology" class="relative py-24 z-10">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="reveal-section">
+        <h3 class="font-display font-semibold text-xl mb-8 text-[var(--fg-primary)]">4. System Topology (The Flow)</h3>
+
+        <div class="relative bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl p-8 overflow-hidden min-h-[500px]">
+          <canvas id="network-canvas"></canvas>
+          
+          <div class="relative z-10 pointer-events-none">
+            <!-- Upstream -->
+            <div class="absolute top-8 left-8 pointer-events-auto">
+              <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase mb-4">Upstream Dependencies</div>
+              <div class="space-y-2">
+                <div class="px-4 py-2 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg text-sm">
+                  <span class="text-[var(--accent-amber)]">Zeiss</span> — Mirror Optics
+                </div>
+                <div class="px-4 py-2 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg text-sm">
+                  <span class="text-[var(--accent-amber)]">Trumpf</span> — CO₂ Lasers
+                </div>
+                <div class="px-4 py-2 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg text-sm">
+                  <span class="text-[var(--accent-amber)]">Cymer</span> — Light Sources
+                </div>
+              </div>
+            </div>
+
+            <!-- Central Node -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
+              <div class="w-48 h-48 rounded-full bg-gradient-to-br from-[var(--accent-cyan)]/20 to-transparent border-2 border-[var(--accent-cyan)] flex items-center justify-center animate-pulse">
+                <div class="text-center">
+                  <div class="font-display font-bold text-2xl text-[var(--accent-cyan)]">EUV</div>
+                  <div class="text-xs text-[var(--fg-muted)]">BOTTLENECK NODE</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Downstream -->
+            <div class="absolute bottom-8 right-8 pointer-events-auto">
+              <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase mb-4 text-right">Downstream Enablement</div>
+              <div class="space-y-2">
+                <div class="px-4 py-2 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg text-sm text-right">
+                  TSMC — Logic Foundry
+                </div>
+                <div class="px-4 py-2 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg text-sm text-right">
+                  Samsung — Memory & Logic
+                </div>
+                <div class="px-4 py-2 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg text-sm text-right">
+                  Intel — Advanced Logic
+                </div>
+              </div>
+            </div>
+
+            <!-- Lateral -->
+            <div class="absolute bottom-8 left-8 pointer-events-auto">
+              <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase mb-4">Lateral Adjacencies</div>
+              <div class="px-4 py-2 bg-[var(--bg-primary)] border border-[var(--border)] rounded-lg text-sm">
+                DUV Lithography (Legacy)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leverage Points -->
+        <div class="mt-8 grid md:grid-cols-2 gap-6">
+          <div class="p-6 bg-[var(--bg-secondary)] border border-[var(--accent-red)]/30 rounded-xl">
+            <div class="flex items-center gap-3 mb-4">
+              <svg class="w-5 h-5 text-[var(--accent-red)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+              <span class="font-display font-semibold text-[var(--accent-red)]">System Break Point</span>
+            </div>
+            <p class="text-sm text-[var(--fg-secondary)]">
+              Without EUV lithography, advanced semiconductor manufacturing stops. No alternative technology exists for sub-7nm production at scale.
+            </p>
+          </div>
+
+          <div class="p-6 bg-[var(--bg-secondary)] border border-[var(--accent-green)]/30 rounded-xl">
+            <div class="flex items-center gap-3 mb-4">
+              <svg class="w-5 h-5 text-[var(--accent-green)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+              <span class="font-display font-semibold text-[var(--accent-green)]">Indispensable Node</span>
+            </div>
+            <p class="text-sm text-[var(--fg-secondary)]">
+              Controls the pace of all downstream computing advancement. AI accelerators, smartphones, data centers — all depend on EUV.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase III: Dynamics -->
+  <section class="relative py-24 z-10 bg-[var(--bg-secondary)]">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="reveal-section">
+        <div class="flex items-center gap-4 mb-12">
+          <span class="px-3 py-1 text-xs tracking-wider uppercase bg-[var(--bg-tertiary)] border border-[var(--border)] rounded text-[var(--accent-green)]">Phase III</span>
+          <div class="flex-1 h-[1px] bg-[var(--border)]"></div>
+        </div>
+
+        <h2 class="font-display font-bold text-3xl md:text-4xl mb-2">Dynamics & Evolution</h2>
+        <p class="text-[var(--fg-muted)] text-sm tracking-wider uppercase mb-12">Market causality and innovation trajectory.</p>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Demand Mechanics -->
+          <div>
+            <h3 class="font-display font-semibold text-xl mb-6 text-[var(--fg-primary)]">5. Market Causality</h3>
+            
+            <div class="space-y-6">
+              <div class="timeline-node pb-6">
+                <div class="font-semibold text-[var(--fg-primary)] mb-1">Derived Demand</div>
+                <p class="text-sm text-[var(--fg-secondary)]">
+                  Demand is pulled by capital expenditure cycles of semiconductor foundries, not end consumers. Highly cyclical.
+                </p>
+              </div>
+
+              <div class="timeline-node pb-6">
+                <div class="font-semibold text-[var(--fg-primary)] mb-1">Inelastic Substitution</div>
+                <p class="text-sm text-[var(--fg-secondary)]">
+                  No direct substitute exists. Buyers are price-insensitive because the alternative is exiting the advanced node market entirely.
+                </p>
+              </div>
+
+              <div class="timeline-node">
+                <div class="font-semibold text-[var(--fg-primary)] mb-1">Obsolescence Horizon</div>
+                <p class="text-sm text-[var(--fg-secondary)]">
+                  Next-generation High-NA EUV is already in development. Current tools will face capability obsolescence within 5-7 years.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Innovation Trajectory -->
+          <div>
+            <h3 class="font-display font-semibold text-xl mb-6 text-[var(--fg-primary)]">6. Innovation Trajectory</h3>
+            
+            <div class="p-6 bg-[var(--bg-primary)] border border-[var(--border)] rounded-xl mb-6">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-sm text-[var(--fg-muted)]">S-Curve Position</span>
+                <span class="badge-strategic px-3 py-1 rounded text-xs">Growth Phase</span>
+              </div>
+              <div class="h-4 bg-[var(--bg-tertiary)] rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-green)] rounded-full" style="width: 35%"></div>
+              </div>
+              <div class="flex justify-between mt-2 text-xs text-[var(--fg-muted)]">
+                <span>Introduction</span>
+                <span>Maturity</span>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-lg bg-[var(--glow-cyan)] flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-[var(--accent-cyan)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-semibold text-[var(--fg-primary)] text-sm mb-1">The Frontier</div>
+                  <p class="text-xs text-[var(--fg-secondary)]">High-NA EUV with 0.55 numerical aperture for 2nm nodes</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-lg bg-[var(--glow-amber)] flex items-center justify-center flex-shrink-0">
+                  <svg class="w-5 h-5 text-[var(--accent-amber)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-semibold text-[var(--fg-primary)] text-sm mb-1">Physical Limits</div>
+                  <p class="text-xs text-[var(--fg-secondary)]">Approaching quantum limits of photon-matter interaction</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase IV: Entry Barriers -->
+  <section class="relative py-24 z-10">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="reveal-section">
+        <div class="flex items-center gap-4 mb-12">
+          <span class="px-3 py-1 text-xs tracking-wider uppercase bg-[var(--bg-tertiary)] border border-[var(--border)] rounded text-[var(--accent-red)]">Phase IV</span>
+          <div class="flex-1 h-[1px] bg-[var(--border)]"></div>
+        </div>
+
+        <h2 class="font-display font-bold text-3xl md:text-4xl mb-2">Industrialization Requirements</h2>
+        <p class="text-[var(--fg-muted)] text-sm tracking-wider uppercase mb-12">The conditions required to create a new competitor.</p>
+
+        <div class="grid md:grid-cols-4 gap-4">
+          <div class="p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl text-center group hover:border-[var(--accent-red)] transition-colors">
+            <div class="text-5xl font-display font-bold text-[var(--accent-red)] mb-2">$20B+</div>
+            <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase">R&D Investment</div>
+            <div class="mt-4 text-xs text-[var(--fg-secondary)]">Minimum viable development cost</div>
+          </div>
+
+          <div class="p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl text-center group hover:border-[var(--accent-amber)] transition-colors">
+            <div class="text-5xl font-display font-bold text-[var(--accent-amber)] mb-2">15+</div>
+            <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase">Years to Yield</div>
+            <div class="mt-4 text-xs text-[var(--fg-secondary)]">Time to production parity</div>
+          </div>
+
+          <div class="p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl text-center group hover:border-[var(--accent-cyan)] transition-colors">
+            <div class="text-5xl font-display font-bold text-[var(--accent-cyan)] mb-2">500+</div>
+            <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase">Suppliers</div>
+            <div class="mt-4 text-xs text-[var(--fg-secondary)]">Specialized ecosystem required</div>
+          </div>
+
+          <div class="p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl text-center group hover:border-[var(--accent-green)] transition-colors">
+            <div class="text-5xl font-display font-bold text-[var(--accent-green)] mb-2">10K</div>
+            <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase">Engineers</div>
+            <div class="mt-4 text-xs text-[var(--fg-secondary)]">PhD-level specialists</div>
+          </div>
+        </div>
+
+        <div class="mt-8 p-6 bg-gradient-to-r from-[var(--accent-red)]/10 to-transparent border-l-4 border-[var(--accent-red)] rounded-r-xl">
+          <div class="font-display font-semibold text-[var(--fg-primary)] mb-2">Ticket to Entry</div>
+          <p class="text-[var(--fg-secondary)] text-sm">
+            Entry is <strong class="text-[var(--accent-red)]">only feasible for a nation-state</strong> with sustained multi-decade commitment. No startup or even conventional corporation can marshal the required resources, knowledge, and ecosystem.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phase V: Synthesis -->
+  <section id="synthesis" class="relative py-32 z-10">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--accent-cyan)]/5 to-transparent pointer-events-none"></div>
+    
+    <div class="max-w-6xl mx-auto px-6 relative">
+      <div class="reveal-section">
+        <div class="flex items-center gap-4 mb-12">
+          <span class="px-3 py-1 text-xs tracking-wider uppercase bg-[var(--accent-cyan)] text-[var(--bg-primary)] rounded font-semibold">Phase V</span>
+          <div class="flex-1 h-[1px] bg-[var(--border)]"></div>
+        </div>
+
+        <h2 class="font-display font-bold text-3xl md:text-5xl mb-4">The Verdict</h2>
+        <p class="text-[var(--fg-muted)] text-sm tracking-wider uppercase mb-12">Strategic characterization and final synthesis.</p>
+
+        <!-- Typology -->
+        <div class="mb-12">
+          <div class="inline-flex items-center gap-4 p-6 bg-[var(--bg-secondary)] border-2 border-[var(--accent-cyan)] rounded-xl">
+            <div class="w-16 h-16 rounded-xl bg-[var(--glow-cyan)] flex items-center justify-center">
+              <svg class="w-8 h-8 text-[var(--accent-cyan)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-xs text-[var(--fg-muted)] tracking-wider uppercase mb-1">Typology Classification</div>
+              <div class="font-display font-bold text-2xl text-[var(--accent-cyan)]">Strategic Bottleneck</div>
+              <div class="text-sm text-[var(--fg-secondary)] mt-1">High concentration + Low substitutability + Critical downstream dependency</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Three Column Verdict -->
+        <div class="grid md:grid-cols-3 gap-6 mb-12">
+          <div class="p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl">
+            <div class="w-10 h-10 rounded-lg bg-[var(--glow-amber)] flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-[var(--accent-amber)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+            </div>
+            <div class="font-display font-semibold text-[var(--fg-primary)] mb-2">Binding Constraint</div>
+            <p class="text-sm text-[var(--fg-secondary)]">
+              <strong class="text-[var(--accent-amber)]">Knowledge.</strong> Not capital, not materials. The integration of 100,000+ components into a coherent system requires tacit knowledge accumulated over decades.
+            </p>
+          </div>
+
+          <div class="p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl">
+            <div class="w-10 h-10 rounded-lg bg-[rgba(255,71,87,0.15)] flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-[var(--accent-red)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="font-display font-semibold text-[var(--fg-primary)] mb-2">Systemic Fragility</div>
+            <p class="text-sm text-[var(--fg-secondary)]">
+              <strong class="text-[var(--accent-red)]">Immediate halt.</strong> If ASML stopped shipping tomorrow, advanced chip production would cease within months. No buffer, no alternative.
+            </p>
+          </div>
+
+          <div class="p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl">
+            <div class="w-10 h-10 rounded-lg bg-[var(--glow-cyan)] flex items-center justify-center mb-4">
+              <svg class="w-5 h-5 text-[var(--accent-cyan)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+              </svg>
+            </div>
+            <div class="font-display font-semibold text-[var(--fg-primary)] mb-2">Value Migration</div>
+            <p class="text-sm text-[var(--fg-secondary)]">
+              <strong class="text-[var(--accent-cyan)]">Upstream.</strong> Value is consolidating at the constraint point. ASML's margins expand as nodes shrink.
+            </p>
+          </div>
+        </div>
+
+        <!-- Final Answer -->
+        <div class="relative p-8 md:p-12 bg-gradient-to-br from-[var(--bg-secondary)] to-[var(--bg-tertiary)] border border-[var(--accent-cyan)]/50 rounded-2xl overflow-hidden">
+          <div class="absolute top-0 right-0 w-96 h-96 bg-[var(--accent-cyan)] opacity-5 rounded-full blur-[100px]"></div>
+          
+          <div class="relative z-10">
+            <div class="text-xs text-[var(--fg-muted)] tracking-[0.3em] uppercase mb-4">Final Output Requirement</div>
+            
+            <blockquote class="font-display text-xl md:text-2xl lg:text-3xl font-light text-[var(--fg-primary)] leading-relaxed mb-6">
+              "Who captures the value in this chain, and why?"
+            </blockquote>
+            
+            <div class="border-l-4 border-[var(--accent-cyan)] pl-6">
+              <p class="text-[var(--fg-secondary)] leading-relaxed">
+                <strong class="text-[var(--fg-primary)]">ASML captures the value because they hold the knowledge.</strong> Not the patents — those can be licensed or invented around. Not the capital — sovereign wealth funds have more. They hold the <em class="text-[var(--accent-cyan)]">integration knowledge</em>: the invisible understanding of how to make 100,000 components work together at atomic precision. This knowledge cannot be bought, stolen, or reverse-engineered. It must be built, step by step, failure by failure, over decades. And that is why this monopoly is durable.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="relative py-12 z-10 border-t border-[var(--border)]">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent-cyan)] to-[var(--accent-green)] flex items-center justify-center">
+            <svg class="w-5 h-5 text-[var(--bg-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
+            </svg>
+          </div>
+          <span class="font-display font-semibold text-sm tracking-wider text-[var(--fg-muted)]">INDUSTRIAL ONTOLOGY</span>
+        </div>
+        
+        <div class="text-xs text-[var(--fg-muted)] tracking-wider">
+          Structural Analysis of Techno-Industrial Systems
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Initialize particles
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 30;
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 20 + 's';
+      particle.style.animationDuration = (15 + Math.random() * 15) + 's';
+      particlesContainer.appendChild(particle);
+    }
+
+    // Scroll reveal
+    const revealSections = document.querySelectorAll('.reveal-section');
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, index * 100);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    revealSections.forEach(section => revealObserver.observe(section));
+
+    // Counter animation
+    const counters = document.querySelectorAll('[data-counter]');
+    
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const target = parseFloat(entry.target.dataset.counter);
+          const duration = 2000;
+          const start = performance.now();
+          
+          const animate = (currentTime) => {
+            const elapsed = currentTime - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 4);
+            const current = target * eased;
+            
+            entry.target.textContent = target % 1 === 0 ? 
+              Math.round(current) : 
+              current.toFixed(1);
+            
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            }
+          };
+          
+          requestAnimationFrame(animate);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    counters.forEach(counter => counterObserver.observe(counter));
+
+    // Progress bar animation
+    const progressBars = document.querySelectorAll('.progress-fill');
+    
+    const progressObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('animate');
+            entry.target.style.transform = 'scaleX(0.98)';
+          }, 300);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    progressBars.forEach(bar => progressObserver.observe(bar));
+
+    // Network canvas visualization
+    const canvas = document.getElementById('network-canvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      const parent = canvas.parentElement;
+      
+      let width = 0;
+      let height = 0;
+      let nodes = [];
+      let animationId = null;
+      
+      function resize() {
+        width = parent.offsetWidth;
+        height = parent.offsetHeight;
+        canvas.width = width * window.devicePixelRatio;
+        canvas.height = height * window.devicePixelRatio;
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        
+        // Generate nodes
+        nodes = [];
+        const nodeCount = 40;
+        for (let i = 0; i < nodeCount; i++) {
+          nodes.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            radius: Math.random() * 2 + 1
+          });
+        }
+      }
+      
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+        
+        // Draw connections
+        ctx.strokeStyle = 'rgba(0, 212, 255, 0.1)';
+        ctx.lineWidth = 1;
+        
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const dx = nodes[j].x - nodes[i].x;
+            const dy = nodes[j].y - nodes[i].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            if (dist < 150) {
+              ctx.beginPath();
+              ctx.moveTo(nodes[i].x, nodes[i].y);
+              ctx.lineTo(nodes[j].x, nodes[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        // Draw nodes
+        nodes.forEach(node => {
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, Math.max(0.5, node.radius), 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(0, 212, 255, 0.6)';
+          ctx.fill();
+          
+          // Update position
+          node.x += node.vx;
+          node.y += node.vy;
+          
+          // Bounce off edges
+          if (node.x < 0 || node.x > width) node.vx *= -1;
+          if (node.y < 0 || node.y > height) node.vy *= -1;
+        });
+        
+        animationId = requestAnimationFrame(draw);
+      }
+      
+      // Check for reduced motion preference
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      
+      resize();
+      window.addEventListener('resize', resize);
+      
+      if (!prefersReducedMotion) {
+        draw();
+      } else {
+        // Draw static version
+        ctx.clearRect(0, 0, width, height);
+        nodes.forEach(node => {
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, Math.max(0.5, node.radius), 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(0, 212, 255, 0.6)';
+          ctx.fill();
+        });
+      }
+    }
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menu-toggle');
+    if (menuToggle) {
+      menuToggle.addEventListener('click', () => {
+        // Simple toggle for demo - would expand with mobile menu
+        menuToggle.classList.toggle('active');
+      });
+    }
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
