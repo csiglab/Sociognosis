@@ -1085,7 +1085,7 @@
     // =============================================
     async function loadData() {
       try {
-        const response = await fetch('data.json');
+        const response = await fetch('../data/index/data.json');
         if (!response.ok) throw new Error('Network response was not ok');
         
         const data = await response.json();
