@@ -1308,9 +1308,3 @@
 - Grupo Luksic
 - Financial Techniques (Relative Strengh Index)
 - How to think about debt in the national currency?
-
-- Use AI - To Faciliate some task as node generation - in the edit - node reclasification, etc.
-  - Make visible the spec - and actions.
-  - Spec (task specification) - server interaction - and update.
-
-- ...

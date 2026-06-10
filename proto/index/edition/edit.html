@@ -20,6 +20,7 @@
     --accent-cyan: #4dd4c4;
     --accent-rose: #d45a6d;
     --accent-violet: #8b6dd4;
+    --accent-emerald: #4dd494;
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-medium: rgba(255, 255, 255, 0.14);
     --glow-cyan: 0 0 30px rgba(77, 212, 196, 0.2);
@@ -145,6 +146,18 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     box-shadow: var(--glow-cyan);
 }
 
+.btn-ai {
+    background: linear-gradient(135deg, rgba(139, 109, 212, 0.15), rgba(139, 109, 212, 0.05));
+    border-color: rgba(139, 109, 212, 0.35);
+    color: var(--accent-violet);
+}
+
+.btn-ai:hover {
+    background: linear-gradient(135deg, rgba(139, 109, 212, 0.25), rgba(139, 109, 212, 0.1));
+    border-color: var(--accent-violet);
+    box-shadow: 0 0 20px rgba(139, 109, 212, 0.2);
+}
+
 .btn-danger {
     border-color: rgba(212, 90, 109, 0.35);
     color: var(--accent-rose);
@@ -155,9 +168,25 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     border-color: var(--accent-rose);
 }
 
+.btn-success {
+    background: linear-gradient(135deg, rgba(77, 212, 148, 0.15), rgba(77, 212, 148, 0.05));
+    border-color: rgba(77, 212, 148, 0.35);
+    color: var(--accent-emerald);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, rgba(77, 212, 148, 0.25), rgba(77, 212, 148, 0.1));
+    border-color: var(--accent-emerald);
+}
+
 .btn-sm {
     padding: 5px 10px;
     font-size: 0.65rem;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 /* Search Box */
@@ -367,6 +396,340 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     color: var(--text-secondary);
     line-height: 1.5;
 }
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 9, 13, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+    background: linear-gradient(180deg, #0d0f15 0%, var(--bg-void) 100%);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 720px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-style: italic;
+    color: var(--text-primary);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 20px;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.modal-close:hover { color: var(--accent-rose); }
+
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+.modal-body::-webkit-scrollbar { width: 4px; }
+.modal-body::-webkit-scrollbar-track { background: transparent; }
+.modal-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* Settings Modal */
+.settings-section {
+    margin-bottom: 24px;
+}
+
+.settings-section:last-child { margin-bottom: 0; }
+
+.settings-title {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 500;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.settings-title::before {
+    content: '';
+    width: 3px;
+    height: 12px;
+    background: var(--accent-gold);
+    border-radius: 1px;
+    opacity: 0.6;
+}
+
+.settings-row {
+    margin-bottom: 14px;
+}
+
+.settings-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+}
+
+.settings-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.settings-input:focus {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 0 2px rgba(77, 212, 196, 0.1);
+}
+
+.settings-input::placeholder { color: var(--text-muted); }
+
+.settings-textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.5;
+    font-family: var(--font-body);
+}
+
+.settings-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+}
+
+.status-indicator.connected { background: var(--accent-emerald); }
+.status-indicator.error { background: var(--accent-rose); }
+.status-indicator.loading { background: var(--accent-gold); animation: pulse 1s infinite; }
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* AI Create Modal */
+.ai-context-area {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.context-block {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+}
+
+.context-label {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.context-label svg { opacity: 0.6; }
+
+.context-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    padding: 0;
+    outline: none;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.context-textarea::placeholder { color: var(--text-muted); font-style: italic; }
+
+.ai-preview {
+    margin-top: 20px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.preview-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px 14px;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.preview-content {
+    padding: 14px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.preview-json {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--accent-cyan);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.preview-empty {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(139, 109, 212, 0.2);
+    border-top-color: var(--accent-violet);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Diff Visualizer */
+.diff-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.diff-panel {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.diff-panel-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.diff-panel-header.original { color: var(--text-muted); }
+.diff-panel-header.modified { color: var(--accent-emerald); }
+
+.diff-panel-content {
+    padding: 12px;
+    max-height: 350px;
+    overflow-y: auto;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.diff-line { padding: 1px 4px; border-radius: 2px; }
+.diff-line.added { background: rgba(77, 212, 148, 0.15); color: var(--accent-emerald); }
+.diff-line.removed { background: rgba(212, 90, 109, 0.15); color: var(--accent-rose); text-decoration: line-through; }
+.diff-line.changed { background: rgba(212, 168, 83, 0.15); }
+
+.diff-stats {
+    display: flex;
+    gap: 16px;
+    padding: 10px 14px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-sm);
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+}
+
+.diff-stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.diff-stat.additions { color: var(--accent-emerald); }
+.diff-stat.deletions { color: var(--accent-rose); }
 
 /* Edit Panel */
 .edit-panel {
@@ -865,6 +1228,7 @@ body.panel-collapsed .edit-panel {
     background: rgba(0,0,0,0.2);
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 /* Empty State */
@@ -918,6 +1282,13 @@ body.panel-collapsed .edit-panel {
 .form-section:nth-child(4) { animation-delay: 0.08s; }
 .form-section:nth-child(5) { animation-delay: 0.10s; }
 
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal { animation: modalIn 0.25s ease; }
+
 @media (prefers-reduced-motion: reduce) {
     * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
@@ -938,6 +1309,12 @@ body.panel-collapsed .edit-panel {
                 <div class="search-dropdown" id="search-dropdown"></div>
             </div>
             <div class="spacer"></div>
+            <button class="btn btn-ai" id="ai-create-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                AI Create
+            </button>
             <button class="btn btn-primary" id="add-node-btn">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
@@ -950,6 +1327,12 @@ body.panel-collapsed .edit-panel {
                     <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
                 </svg>
                 Save JSON
+            </button>
+            <button class="btn" id="settings-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                </svg>
+                Settings
             </button>
             <button class="btn" id="toggle-panel-btn">Panel</button>
         </div>
@@ -978,6 +1361,7 @@ body.panel-collapsed .edit-panel {
             <span>Nodes <span class="val" id="node-count">0</span></span>
             <span>Edges <span class="val" id="edge-count">0</span></span>
             <span>Selected <span class="val" id="selected-name">None</span></span>
+            <span id="ai-status"><span class="status-indicator" id="status-indicator"></span> AI: <span id="ai-status-text">Not configured</span></span>
         </div>
 
         <div id="tooltip">
@@ -1003,12 +1387,169 @@ body.panel-collapsed .edit-panel {
         </div>
 
         <div class="panel-actions" id="panel-actions" style="display:none">
+            <button class="btn btn-ai btn-sm" id="ai-improve-btn">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                AI Improve
+            </button>
             <button class="btn btn-danger btn-sm" id="delete-node-btn">Delete Node</button>
             <div class="spacer"></div>
             <button class="btn btn-sm" id="cancel-btn">Cancel</button>
             <button class="btn btn-primary btn-sm" id="apply-btn">Apply Changes</button>
         </div>
     </aside>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">AI Settings</div>
+                <button class="modal-close" id="settings-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <div class="settings-title">DeepSeek API Configuration</div>
+                    <div class="settings-row">
+                        <label class="settings-label">API Endpoint</label>
+                        <input type="text" class="settings-input" id="api-endpoint" placeholder="https://api.deepseek.com/v1/chat/completions">
+                    </div>
+                    <div class="settings-row">
+                        <label class="settings-label">API Token</label>
+                        <input type="password" class="settings-input" id="api-token" placeholder="Enter your DeepSeek API token">
+                    </div>
+                    <div class="settings-row">
+                        <label class="settings-label">Model</label>
+                        <input type="text" class="settings-input" id="api-model" value="deepseek-chat" placeholder="deepseek-chat">
+                    </div>
+                    <div class="settings-status">
+                        <span class="status-indicator" id="api-status-indicator"></span>
+                        <span id="api-status-text">Not connected</span>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-title">Schema Configuration</div>
+                    <div class="settings-row">
+                        <label class="settings-label">Schema Path</label>
+                        <input type="text" class="settings-input" id="schema-path" placeholder="../../docs/data/index/schema/schema.json">
+                    </div>
+                    <div class="settings-row" style="display:flex;gap:8px;">
+                        <button class="btn btn-sm" id="load-schema-btn">Load Schema</button>
+                        <span id="schema-status" style="color:var(--text-muted);font-size:0.72rem;display:flex;align-items:center;"></span>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-title">Global Context</div>
+                    <div class="settings-row">
+                        <label class="settings-label">Context for All AI Operations</label>
+                        <textarea class="settings-input settings-textarea" id="global-context" placeholder="Enter shared context that will be used for all AI operations. This helps the AI understand your ontology's domain, conventions, and specific requirements..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm" id="settings-cancel">Cancel</button>
+                <button class="btn btn-primary btn-sm" id="settings-save">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Create Modal -->
+    <div class="modal-overlay" id="ai-create-modal">
+        <div class="modal" style="max-width:800px;">
+            <div class="modal-header">
+                <div class="modal-title">AI Create Node</div>
+                <button class="modal-close" id="ai-create-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="ai-context-area">
+                    <div class="context-block">
+                        <div class="context-label">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            Specific Context for This Node
+                        </div>
+                        <textarea class="context-textarea" id="ai-specific-context" placeholder="Describe the new node you want to create. Include its purpose, category, key properties, relationships to existing nodes, and any specific requirements..."></textarea>
+                    </div>
+                </div>
+
+                <div class="ai-preview">
+                    <div class="preview-header">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        Generated JSON Preview
+                    </div>
+                    <div class="preview-content">
+                        <div id="ai-preview-content" class="preview-empty">Click "Generate" to create a node with AI</div>
+                    </div>
+                </div>
+                <div id="ai-create-error" class="json-error" style="display:none;margin-top:12px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm" id="ai-create-cancel">Cancel</button>
+                <button class="btn btn-ai btn-sm" id="ai-generate-btn">
+                    <span class="loading-spinner" id="ai-generate-spinner" style="display:none;"></span>
+                    Generate
+                </button>
+                <button class="btn btn-success btn-sm" id="ai-accept-btn" disabled>Accept & Add Node</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Improve Modal -->
+    <div class="modal-overlay" id="ai-improve-modal">
+        <div class="modal" style="max-width:900px;">
+            <div class="modal-header">
+                <div class="modal-title">AI Improve Node</div>
+                <button class="modal-close" id="ai-improve-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="context-block" style="margin-bottom:20px;">
+                    <div class="context-label">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        Improvement Instructions
+                    </div>
+                    <textarea class="context-textarea" id="ai-improve-instructions" placeholder="Describe what improvements you want for this node. E.g., 'Add more detailed description', 'Suggest relevant relationships', 'Improve the categorization', 'Add missing metadata'..."></textarea>
+                </div>
+
+                <div class="diff-container">
+                    <div class="diff-panel">
+                        <div class="diff-panel-header original">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                            Original
+                        </div>
+                        <div class="diff-panel-content" id="diff-original"></div>
+                    </div>
+                    <div class="diff-panel">
+                        <div class="diff-panel-header modified">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Improved
+                        </div>
+                        <div class="diff-panel-content" id="diff-modified"></div>
+                    </div>
+                </div>
+
+                <div class="diff-stats" id="diff-stats" style="display:none;">
+                    <div class="diff-stat additions">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <span id="diff-additions">0</span> additions
+                    </div>
+                    <div class="diff-stat deletions">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <span id="diff-deletions">0</span> deletions
+                    </div>
+                </div>
+                <div id="ai-improve-error" class="json-error" style="display:none;margin-top:12px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm" id="ai-improve-cancel">Cancel</button>
+                <button class="btn btn-ai btn-sm" id="ai-improve-generate-btn">
+                    <span class="loading-spinner" id="ai-improve-spinner" style="display:none;"></span>
+                    Generate Improvements
+                </button>
+                <button class="btn btn-success btn-sm" id="ai-apply-improve-btn" disabled>Apply Changes</button>
+            </div>
+        </div>
+    </div>
 
     <script>
 /* ═══════ UTILITIES ═══════ */
@@ -1088,7 +1629,6 @@ let nodes = [];
 let edges = [];
 let nodeMap = {};
 
-// Extracted suggestions from data
 let suggestions = {
     domainScope: [],
     functionalRoles: [],
@@ -1107,6 +1647,445 @@ let currentTab = 'form';
 
 const REPULSION = 280, LINK_DISTANCE = 100, ALPHA_DECAY = 0.995;
 let alpha = 1;
+
+/* ═══════ AI CONFIGURATION ═══════ */
+let aiConfig = {
+    endpoint: 'https://api.deepseek.com/v1/chat/completions',
+    token: '',
+    model: 'deepseek-chat',
+    schemaPath: '../../docs/data/index/schema/schema.json',
+    schema: null,
+    globalContext: ''
+};
+
+let generatedNodeData = null;
+let improvedNodeData = null;
+
+/* ═══════ AI FUNCTIONS ═══════ */
+async function loadSchema() {
+    const statusEl = document.getElementById('schema-status');
+    statusEl.textContent = 'Loading...';
+    statusEl.style.color = 'var(--accent-gold)';
+    
+    try {
+        const res = await fetch(aiConfig.schemaPath);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        aiConfig.schema = await res.json();
+        statusEl.textContent = 'Schema loaded successfully';
+        statusEl.style.color = 'var(--accent-emerald)';
+        updateAIStatus();
+        return true;
+    } catch (e) {
+        console.error('Schema load error:', e);
+        statusEl.textContent = 'Failed to load: ' + e.message;
+        statusEl.style.color = 'var(--accent-rose)';
+        return false;
+    }
+}
+
+async function callDeepSeekAPI(messages) {
+    if (!aiConfig.token) {
+        throw new Error('API token not configured. Please add your DeepSeek API token in Settings.');
+    }
+    
+    const response = await fetch(aiConfig.endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${aiConfig.token}`
+        },
+        body: JSON.stringify({
+            model: aiConfig.model,
+            messages: messages,
+            temperature: 0.7,
+            max_tokens: 4096
+        })
+    });
+    
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`API error (${response.status}): ${errorData.error?.message || response.statusText}`);
+    }
+    
+    const data = await response.json();
+    return data.choices[0].message.content;
+}
+
+function buildSystemPrompt(forCreation = true) {
+    let prompt = 'You are an expert ontology editor helping to manage an epistemic network knowledge graph.\n\n';
+    
+    if (aiConfig.schema) {
+        prompt += `SCHEMA:\n${JSON.stringify(aiConfig.schema, null, 2)}\n\n`;
+    }
+    
+    if (aiConfig.globalContext) {
+        prompt += `GLOBAL CONTEXT:\n${aiConfig.globalContext}\n\n`;
+    }
+    
+    const existingIds = nodes.map(n => n.id).join(', ');
+    prompt += `EXISTING NODE IDS: ${existingIds || 'None'}\n\n`;
+    
+    if (forCreation) {
+        prompt += `TASK: Create a new node as a valid JSON object. The JSON must include:
+- id: A unique identifier following the pattern "category.name" (e.g., "reality.market")
+- name: A human-readable name
+- category: One of the defined categories
+- description: A brief description
+- longDescription: A detailed explanation
+- functionalRoles: Array of roles
+- domainScope: Array of domains
+- relationships: Array of relationship objects with targetNodeId, relationshipType, relationshipFamily, description
+- metadata: Object with tags array, confidenceScore (0-1), sourceReference
+- inheritanceLevel: Integer (0+)
+- historicalContext: Object with summary and chronology array
+- specific: Object with onticLayer and onticCategory
+- references: Array of reference objects
+
+Return ONLY valid JSON with no additional text or explanation.`;
+    } else {
+        prompt += `TASK: Improve the provided node JSON according to the user's instructions.
+Return ONLY the improved JSON object with no additional text or explanation.
+Maintain all existing valid data and only modify what's requested.`;
+    }
+    
+    return prompt;
+}
+
+async function aiCreateNode(specificContext) {
+    const systemPrompt = buildSystemPrompt(true);
+    
+    const messages = [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: `Create a new node with the following context:\n\n${specificContext}` }
+    ];
+    
+    const result = await callDeepSeekAPI(messages);
+    
+    // Try to extract JSON from the response
+    let jsonStr = result;
+    const jsonMatch = result.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+        jsonStr = jsonMatch[0];
+    }
+    
+    return JSON.parse(jsonStr);
+}
+
+async function aiImproveNode(nodeData, instructions) {
+    const systemPrompt = buildSystemPrompt(false);
+    
+    const messages = [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: `Current node data:\n${JSON.stringify(nodeData, null, 2)}\n\nImprovement instructions: ${instructions}` }
+    ];
+    
+    const result = await callDeepSeekAPI(messages);
+    
+    let jsonStr = result;
+    const jsonMatch = result.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+        jsonStr = jsonMatch[0];
+    }
+    
+    return JSON.parse(jsonStr);
+}
+
+function updateAIStatus() {
+    const indicator = document.getElementById('status-indicator');
+    const statusText = document.getElementById('ai-status-text');
+    
+    if (!aiConfig.token) {
+        indicator.className = 'status-indicator';
+        statusText.textContent = 'Not configured';
+    } else if (aiConfig.schema) {
+        indicator.className = 'status-indicator connected';
+        statusText.textContent = 'Ready';
+    } else {
+        indicator.className = 'status-indicator loading';
+        statusText.textContent = 'Token set, no schema';
+    }
+}
+
+/* ═══════ DIFF VISUALIZATION ═══════ */
+function computeDiff(original, modified) {
+    const origLines = JSON.stringify(original, null, 2).split('\n');
+    const modLines = JSON.stringify(modified, null, 2).split('\n');
+    
+    let additions = 0;
+    let deletions = 0;
+    
+    const origHtml = origLines.map(line => {
+        if (!modLines.includes(line)) {
+            deletions++;
+            return `<div class="diff-line removed">${escHTML(line)}</div>`;
+        }
+        return `<div class="diff-line">${escHTML(line)}</div>`;
+    }).join('');
+    
+    const modHtml = modLines.map(line => {
+        if (!origLines.includes(line)) {
+            additions++;
+            return `<div class="diff-line added">${escHTML(line)}</div>`;
+        }
+        return `<div class="diff-line">${escHTML(line)}</div>`;
+    }).join('');
+    
+    return { origHtml, modHtml, additions, deletions };
+}
+
+/* ═══════ MODAL HANDLERS ═══════ */
+function openModal(id) {
+    document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+}
+
+function setupModals() {
+    // Settings modal
+    document.getElementById('settings-btn').addEventListener('click', () => {
+        document.getElementById('api-endpoint').value = aiConfig.endpoint;
+        document.getElementById('api-token').value = aiConfig.token;
+        document.getElementById('api-model').value = aiConfig.model;
+        document.getElementById('schema-path').value = aiConfig.schemaPath;
+        document.getElementById('global-context').value = aiConfig.globalContext;
+        updateAPIStatusIndicator();
+        openModal('settings-modal');
+    });
+    
+    document.getElementById('settings-close').addEventListener('click', () => closeModal('settings-modal'));
+    document.getElementById('settings-cancel').addEventListener('click', () => closeModal('settings-modal'));
+    
+    document.getElementById('load-schema-btn').addEventListener('click', async () => {
+        aiConfig.schemaPath = document.getElementById('schema-path').value;
+        await loadSchema();
+    });
+    
+    document.getElementById('settings-save').addEventListener('click', () => {
+        aiConfig.endpoint = document.getElementById('api-endpoint').value;
+        aiConfig.token = document.getElementById('api-token').value;
+        aiConfig.model = document.getElementById('api-model').value;
+        aiConfig.schemaPath = document.getElementById('schema-path').value;
+        aiConfig.globalContext = document.getElementById('global-context').value;
+        updateAIStatus();
+        closeModal('settings-modal');
+    });
+    
+    // AI Create modal
+    document.getElementById('ai-create-btn').addEventListener('click', () => {
+        generatedNodeData = null;
+        document.getElementById('ai-specific-context').value = '';
+        document.getElementById('ai-preview-content').innerHTML = '<div class="preview-empty">Click "Generate" to create a node with AI</div>';
+        document.getElementById('ai-accept-btn').disabled = true;
+        document.getElementById('ai-create-error').style.display = 'none';
+        openModal('ai-create-modal');
+    });
+    
+    document.getElementById('ai-create-close').addEventListener('click', () => closeModal('ai-create-modal'));
+    document.getElementById('ai-create-cancel').addEventListener('click', () => closeModal('ai-create-modal'));
+    
+    document.getElementById('ai-generate-btn').addEventListener('click', async () => {
+        const btn = document.getElementById('ai-generate-btn');
+        const spinner = document.getElementById('ai-generate-spinner');
+        const previewEl = document.getElementById('ai-preview-content');
+        const errorEl = document.getElementById('ai-create-error');
+        const acceptBtn = document.getElementById('ai-accept-btn');
+        const context = document.getElementById('ai-specific-context').value;
+        
+        if (!context.trim()) {
+            errorEl.textContent = 'Please provide specific context for the node.';
+            errorEl.style.display = 'block';
+            return;
+        }
+        
+        if (!aiConfig.token) {
+            errorEl.textContent = 'API token not configured. Please configure in Settings.';
+            errorEl.style.display = 'block';
+            return;
+        }
+        
+        btn.disabled = true;
+        spinner.style.display = 'inline-block';
+        errorEl.style.display = 'none';
+        previewEl.innerHTML = '<div class="preview-empty"><span class="loading-spinner"></span> Generating...</div>';
+        
+        try {
+            generatedNodeData = await aiCreateNode(context);
+            previewEl.innerHTML = `<pre class="preview-json">${escHTML(JSON.stringify(generatedNodeData, null, 2))}</pre>`;
+            acceptBtn.disabled = false;
+        } catch (e) {
+            errorEl.textContent = 'Error: ' + e.message;
+            errorEl.style.display = 'block';
+            previewEl.innerHTML = '<div class="preview-empty">Generation failed</div>';
+            acceptBtn.disabled = true;
+        } finally {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+        }
+    });
+    
+    document.getElementById('ai-accept-btn').addEventListener('click', () => {
+        if (!generatedNodeData) return;
+        
+        // Ensure unique ID
+        let id = generatedNodeData.id || 'ai.node.' + Date.now();
+        if (nodeMap[id]) {
+            id = id + '.' + Date.now();
+        }
+        generatedNodeData.id = id;
+        
+        data.push(generatedNodeData);
+        
+        const node = {
+            id: id,
+            name: generatedNodeData.name || id,
+            category: generatedNodeData.category || 'Reality',
+            x: (Math.random() - 0.5) * 200,
+            y: (Math.random() - 0.5) * 200,
+            vx: 0, vy: 0,
+            _data: generatedNodeData
+        };
+        
+        nodes.push(node);
+        nodeMap[id] = node;
+        
+        // Add edges for relationships
+        (generatedNodeData.relationships || []).forEach(rel => {
+            if (nodeMap[rel.targetNodeId]) {
+                edges.push({
+                    source: id,
+                    target: rel.targetNodeId,
+                    family: rel.relationshipFamily || 'STRUCTURAL',
+                    type: rel.relationshipType || 'RELATED',
+                    description: rel.description || ''
+                });
+            }
+        });
+        
+        extractSuggestions();
+        updateStats();
+        selectNode(node);
+        fitToNode(node);
+        alpha = 1;
+        
+        closeModal('ai-create-modal');
+    });
+    
+    // AI Improve modal
+    document.getElementById('ai-improve-btn').addEventListener('click', () => {
+        if (!selectedNode) return;
+        
+        improvedNodeData = null;
+        document.getElementById('ai-improve-instructions').value = '';
+        document.getElementById('diff-original').textContent = JSON.stringify(selectedNode._data, null, 2);
+        document.getElementById('diff-modified').innerHTML = '<div style="color:var(--text-muted);font-style:italic;">Click "Generate Improvements" to see changes</div>';
+        document.getElementById('diff-stats').style.display = 'none';
+        document.getElementById('ai-apply-improve-btn').disabled = true;
+        document.getElementById('ai-improve-error').style.display = 'none';
+        openModal('ai-improve-modal');
+    });
+    
+    document.getElementById('ai-improve-close').addEventListener('click', () => closeModal('ai-improve-modal'));
+    document.getElementById('ai-improve-cancel').addEventListener('click', () => closeModal('ai-improve-modal'));
+    
+    document.getElementById('ai-improve-generate-btn').addEventListener('click', async () => {
+        const btn = document.getElementById('ai-improve-generate-btn');
+        const spinner = document.getElementById('ai-improve-spinner');
+        const errorEl = document.getElementById('ai-improve-error');
+        const instructions = document.getElementById('ai-improve-instructions').value;
+        const statsEl = document.getElementById('diff-stats');
+        const applyBtn = document.getElementById('ai-apply-improve-btn');
+        
+        if (!instructions.trim()) {
+            errorEl.textContent = 'Please provide improvement instructions.';
+            errorEl.style.display = 'block';
+            return;
+        }
+        
+        if (!aiConfig.token) {
+            errorEl.textContent = 'API token not configured. Please configure in Settings.';
+            errorEl.style.display = 'block';
+            return;
+        }
+        
+        if (!selectedNode) {
+            errorEl.textContent = 'No node selected.';
+            errorEl.style.display = 'block';
+            return;
+        }
+        
+        btn.disabled = true;
+        spinner.style.display = 'inline-block';
+        errorEl.style.display = 'none';
+        document.getElementById('diff-modified').innerHTML = '<div style="color:var(--text-muted);"><span class="loading-spinner"></span> Generating improvements...</div>';
+        
+        try {
+            improvedNodeData = await aiImproveNode(selectedNode._data, instructions);
+            
+            const diff = computeDiff(selectedNode._data, improvedNodeData);
+            document.getElementById('diff-original').innerHTML = diff.origHtml;
+            document.getElementById('diff-modified').innerHTML = diff.modHtml;
+            document.getElementById('diff-additions').textContent = diff.additions;
+            document.getElementById('diff-deletions').textContent = diff.deletions;
+            statsEl.style.display = 'flex';
+            applyBtn.disabled = false;
+        } catch (e) {
+            errorEl.textContent = 'Error: ' + e.message;
+            errorEl.style.display = 'block';
+            document.getElementById('diff-modified').innerHTML = '<div style="color:var(--accent-rose);">Generation failed</div>';
+            applyBtn.disabled = true;
+        } finally {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+        }
+    });
+    
+    document.getElementById('ai-apply-improve-btn').addEventListener('click', () => {
+        if (!improvedNodeData || !selectedNode) return;
+        
+        // Update the node data
+        Object.assign(selectedNode._data, improvedNodeData);
+        selectedNode.name = improvedNodeData.name || selectedNode.id;
+        selectedNode.category = improvedNodeData.category || 'Reality';
+        
+        // Rebuild edges for this node
+        edges = edges.filter(e => e.source !== selectedNode.id);
+        (improvedNodeData.relationships || []).forEach(rel => {
+            if (nodeMap[rel.targetNodeId]) {
+                edges.push({
+                    source: selectedNode.id,
+                    target: rel.targetNodeId,
+                    family: rel.relationshipFamily || 'STRUCTURAL',
+                    type: rel.relationshipType || 'RELATED',
+                    description: rel.description || ''
+                });
+            }
+        });
+        
+        extractSuggestions();
+        updateStats();
+        renderForm(selectedNode._data);
+        
+        closeModal('ai-improve-modal');
+    });
+}
+
+function updateAPIStatusIndicator() {
+    const indicator = document.getElementById('api-status-indicator');
+    const text = document.getElementById('api-status-text');
+    
+    if (aiConfig.token && aiConfig.schema) {
+        indicator.className = 'status-indicator connected';
+        text.textContent = 'Ready';
+    } else if (aiConfig.token) {
+        indicator.className = 'status-indicator loading';
+        text.textContent = 'Token set, load schema';
+    } else {
+        indicator.className = 'status-indicator';
+        text.textContent = 'Not connected';
+    }
+}
 
 /* ═══════ EXTRACT SUGGESTIONS FROM DATA ═══════ */
 function extractSuggestions() {
@@ -1128,13 +2107,6 @@ function extractSuggestions() {
     suggestions.functionalRoles = Array.from(functionalRolesSet).sort();
     suggestions.tags = Array.from(tagsSet).sort();
     suggestions.sourceReference = Array.from(sourceReferenceSet).sort();
-    
-    console.log('Extracted suggestions:', {
-        domainScope: suggestions.domainScope.length,
-        functionalRoles: suggestions.functionalRoles.length,
-        tags: suggestions.tags.length,
-        sourceReference: suggestions.sourceReference.length
-    });
 }
 
 /* ═══════ SEARCHABLE SELECT COMPONENT ═══════ */
@@ -1788,7 +2760,6 @@ function renderForm(nodeData) {
     
     document.getElementById('panel-body').innerHTML = html;
     
-    // Initialize components
     initSearchableSelect('edit-category');
     initSearchableSelect('new-rel-type');
     initSearchableSelect('new-rel-family');
@@ -2051,6 +3022,9 @@ function setupEventHandlers() {
             document.getElementById('link-mode-btn').classList.remove('active');
             document.getElementById('link-indicator').classList.remove('visible');
             canvas.classList.remove('linking');
+            closeModal('settings-modal');
+            closeModal('ai-create-modal');
+            closeModal('ai-improve-modal');
         }
     });
     
@@ -2061,7 +3035,15 @@ function setupEventHandlers() {
 function animate() { simulate(); draw(); requestAnimationFrame(animate); }
 
 /* ═══════ INIT ═══════ */
-async function init() { setupCanvas(); await loadData(); setupEventHandlers(); animate(); selectNode(null); }
+async function init() {
+    setupCanvas();
+    await loadData();
+    setupEventHandlers();
+    setupModals();
+    updateAIStatus();
+    animate();
+    selectNode(null);
+}
 init();
     </script>
 </body>

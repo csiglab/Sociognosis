@@ -13,6 +13,12 @@ Features:
 4. Alow to add new nodes - both in json - and using the form - to fill the fields.
 5. Make sures that the dropdowns - if are always searcable.
 6. Use the data in the JSON file to facilitate the completion of the remaining fields in the same file.
+7. Use AI to help to create new notes - load the schema - ../../docs/data/index/schema/schema.json - and accept a more detail spect - as context- that can be shared - fixed accros sectiosn - of additions - the schema can be fixed also.
+    - Accept a particular conctext for each new node - in order to be able to speicfy whta - is the new element - from whch the new node should represent.
+    - Use the deepseek api  -  `deepseek-v4-flash` - to output the json - and used that to append the new node.
+8. Use AI also to help to fixed - nodes - and create a diff visualizer - to accept the new changes - use the stack of point 7.
+9. JSON Schema and DeepSeek API elements, such as the route and token, should be entered through the interface.
+
 
 ## Data Schema
 
