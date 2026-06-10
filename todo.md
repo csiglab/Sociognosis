@@ -1308,3 +1308,4 @@
 - Grupo Luksic
 - Financial Techniques (Relative Strengh Index)
 - How to think about debt in the national currency?
+- [Karl August von Hardenberg](https://en.wikipedia.org/wiki/Karl_August_von_Hardenberg)
