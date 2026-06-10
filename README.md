@@ -10,6 +10,7 @@ Goals:
 
 Sub Projects:
 
+- Index
 - Product Space
 - Firm Space
 - Literary Space
