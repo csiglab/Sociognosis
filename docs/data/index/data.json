@@ -16824,6 +16824,149 @@
     "references": []
   },
   {
+    "id": "reality.market",
+    "name": "Market",
+    "category": "Reality",
+    "inheritanceLevel": 2,
+    "description": "A socially constituted institutional structure that coordinates voluntary exchange among economic agents through mechanisms of price formation, allocation, competition, and contractual interaction.",
+    "longDescription": "A market is a synontic institutional configuration composed of agents, exchange protocols, property rights, contractual rules, information flows, and allocation mechanisms. Markets facilitate the discovery of prices, coordinate decentralized economic activity, transmit information regarding relative scarcity, and enable the exchange of goods, services, assets, labor, and other economic objects. Markets are emergent social structures sustained through repeated participation, legal enforcement, norms, and shared expectations. They are neither individual transactions nor specific organizations, but institutional environments within which such activities occur.",
+    "functionalRoles": [
+      "Resource Allocation",
+      "Price Discovery",
+      "Information Transmission",
+      "Exchange Coordination",
+      "Incentive Generation",
+      "Competition Facilitation",
+      "Economic Coordination"
+    ],
+    "domainScope": [
+      "Economics",
+      "Political Economy",
+      "Industrial Organization",
+      "International Trade",
+      "Financial Systems",
+      "Labor Systems"
+    ],
+    "historicalContext": {
+      "summary": "Markets have existed in various forms throughout human history, ranging from local barter arrangements to highly complex global financial and digital marketplaces.",
+      "chronology": [
+        {
+          "year": -3000,
+          "event": "Early Exchange Systems",
+          "context": "Emergence of organized exchange among agricultural and urban settlements."
+        },
+        {
+          "year": 1776,
+          "event": "Classical Market Theory",
+          "context": "Formal analysis of markets as coordination mechanisms in political economy."
+        },
+        {
+          "year": 1870,
+          "event": "Marginalist Revolution",
+          "context": "Markets modeled through supply, demand, and marginal utility."
+        },
+        {
+          "year": 1950,
+          "event": "Modern Market Design",
+          "context": "Formalization of market mechanisms using game theory and mechanism design."
+        },
+        {
+          "year": 2000,
+          "event": "Digital Platform Markets",
+          "context": "Expansion of algorithmically mediated and globally connected markets."
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "Synontic",
+      "onticCategory": "Institutional",
+      "realityDescription": "An emergent institutional structure governing exchange relationships among economic agents.",
+      "latentStructures": [
+        "Property Rights Systems",
+        "Contract Enforcement Mechanisms",
+        "Information Structures",
+        "Competitive Dynamics",
+        "Price Formation Mechanisms",
+        "Trust Networks",
+        "Regulatory Frameworks"
+      ]
+    },
+    "relationships": [
+      {
+        "relationshipFamily": "COMPOSITIONAL",
+        "relationshipType": "PART_OF",
+        "targetNodeId": "economic.system",
+        "description": "Markets are constituent institutional structures of economic systems."
+      },
+      {
+        "relationshipFamily": "STRUCTURAL",
+        "relationshipType": "DEPENDS_ON",
+        "targetNodeId": "property.rights",
+        "description": "Markets depend upon stable property rights definitions."
+      },
+      {
+        "relationshipFamily": "STRUCTURAL",
+        "relationshipType": "DEPENDS_ON",
+        "targetNodeId": "contract",
+        "description": "Market exchange relies on contractual arrangements."
+      },
+      {
+        "relationshipFamily": "STRUCTURAL",
+        "relationshipType": "DEPENDS_ON",
+        "targetNodeId": "price",
+        "description": "Prices function as key coordination signals within markets."
+      },
+      {
+        "relationshipFamily": "STRUCTURAL",
+        "relationshipType": "DEPENDS_ON",
+        "targetNodeId": "economic.agent",
+        "description": "Markets emerge from interactions among economic agents."
+      },
+      {
+        "relationshipFamily": "MARKET_RELATION",
+        "relationshipType": "ENABLES",
+        "targetNodeId": "exchange",
+        "description": "Markets provide the institutional environment for exchange."
+      },
+      {
+        "relationshipFamily": "MARKET_RELATION",
+        "relationshipType": "ENABLES",
+        "targetNodeId": "competition",
+        "description": "Markets enable competitive interaction among participants."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "market",
+        "institution",
+        "exchange",
+        "price-system",
+        "economic-coordination",
+        "competition",
+        "allocation"
+      ],
+      "confidenceScore": 0.97,
+      "sourceReference": "Sociognosis Economic Ontology",
+      "createdAt": "2026-06-10T00:00:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-10",
+          "reviewNote": "Initial ontology specification."
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Market Institution",
+        "description": "Institutional arrangement enabling economic exchange and coordination."
+      },
+      {
+        "title": "Price System",
+        "description": "Mechanism through which markets coordinate decentralized decisions."
+      }
+    ]
+  },
+  {
     "id": "productivity",
     "name": "Productivity",
     "category": "Reality",

@@ -499,7 +499,7 @@ body.panel-collapsed .edit-panel {
     margin-bottom: 6px;
 }
 
-.form-input, .form-textarea, .form-select {
+.form-input, .form-textarea {
     width: 100%;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border-subtle);
@@ -512,7 +512,7 @@ body.panel-collapsed .edit-panel {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.form-input:focus, .form-textarea:focus, .form-select:focus {
+.form-input:focus, .form-textarea:focus {
     border-color: var(--accent-cyan);
     box-shadow: 0 0 0 2px rgba(77, 212, 196, 0.1);
 }
@@ -521,15 +521,6 @@ body.panel-collapsed .edit-panel {
     min-height: 80px;
     resize: vertical;
     line-height: 1.5;
-}
-
-.form-select {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    padding-right: 32px;
 }
 
 .form-row-inline {
@@ -582,15 +573,12 @@ body.panel-collapsed .edit-panel {
     padding: 0 10px;
     font-size: 10px;
     transition: color 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
 }
 
-.ss-toggle:hover {
-    color: var(--text-secondary);
-}
-
-.ss-toggle.open {
-    transform: rotate(180deg);
-}
+.ss-toggle:hover { color: var(--text-secondary); }
+.ss-toggle.open { transform: rotate(180deg); }
 
 .ss-clear {
     background: none;
@@ -603,13 +591,8 @@ body.panel-collapsed .edit-panel {
     display: none;
 }
 
-.ss-clear.visible {
-    display: block;
-}
-
-.ss-clear:hover {
-    color: var(--accent-rose);
-}
+.ss-clear.visible { display: flex; align-items: center; }
+.ss-clear:hover { color: var(--accent-rose); }
 
 .ss-dropdown {
     position: absolute;
@@ -626,9 +609,7 @@ body.panel-collapsed .edit-panel {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-.ss-dropdown.open {
-    display: block;
-}
+.ss-dropdown.open { display: block; }
 
 .ss-option {
     padding: 8px 12px;
@@ -637,17 +618,9 @@ body.panel-collapsed .edit-panel {
     border-bottom: 1px solid var(--border-subtle);
 }
 
-.ss-option:last-child {
-    border-bottom: none;
-}
-
-.ss-option:hover, .ss-option.highlighted {
-    background: rgba(77, 212, 196, 0.08);
-}
-
-.ss-option.selected {
-    background: rgba(212, 168, 83, 0.1);
-}
+.ss-option:last-child { border-bottom: none; }
+.ss-option:hover, .ss-option.highlighted { background: rgba(77, 212, 196, 0.08); }
+.ss-option.selected { background: rgba(212, 168, 83, 0.1); }
 
 .ss-option-name {
     font-size: 0.76rem;
@@ -669,12 +642,9 @@ body.panel-collapsed .edit-panel {
     font-style: italic;
 }
 
-/* Array Input */
+/* Array Input with Autocomplete */
 .array-input-wrap {
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-sm);
-    background: rgba(0,0,0,0.2);
-    padding: 8px;
+    position: relative;
 }
 
 .array-items {
@@ -682,6 +652,7 @@ body.panel-collapsed .edit-panel {
     flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 8px;
+    min-height: 10px;
 }
 
 .array-item {
@@ -709,6 +680,10 @@ body.panel-collapsed .edit-panel {
 
 .array-item-remove:hover { color: var(--accent-rose); }
 
+.array-add-wrap {
+    position: relative;
+}
+
 .array-add-input {
     display: flex;
     gap: 6px;
@@ -719,13 +694,67 @@ body.panel-collapsed .edit-panel {
     background: rgba(0,0,0,0.3);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-sm);
-    padding: 6px 10px;
+    padding: 8px 10px;
     font-size: 0.72rem;
     color: var(--text-primary);
     outline: none;
 }
 
 .array-add-input input:focus { border-color: var(--accent-cyan); }
+
+/* Autocomplete Dropdown */
+.array-autocomplete {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 46px;
+    background: rgba(12, 14, 22, 0.98);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    max-height: 180px;
+    overflow-y: auto;
+    z-index: 40;
+    display: none;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.array-autocomplete.open { display: block; }
+
+.autocomplete-option {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.72rem;
+    color: var(--text-primary);
+    transition: background 0.1s;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.autocomplete-option:last-child { border-bottom: none; }
+.autocomplete-option:hover, .autocomplete-option.highlighted { background: rgba(77, 212, 196, 0.08); }
+
+.autocomplete-option mark {
+    background: rgba(212, 168, 83, 0.3);
+    color: var(--accent-gold);
+    padding: 0 1px;
+    border-radius: 2px;
+}
+
+.autocomplete-empty {
+    padding: 12px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    font-style: italic;
+}
+
+.autocomplete-count {
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border-top: 1px solid var(--border-subtle);
+    background: rgba(0,0,0,0.2);
+}
 
 /* Relationship Editor */
 .relationship-item {
@@ -736,9 +765,7 @@ body.panel-collapsed .edit-panel {
     margin-bottom: 8px;
 }
 
-.relationship-item:hover {
-    border-color: rgba(255,255,255,0.12);
-}
+.relationship-item:hover { border-color: rgba(255,255,255,0.12); }
 
 .rel-header {
     display: flex;
@@ -838,44 +865,6 @@ body.panel-collapsed .edit-panel {
     background: rgba(0,0,0,0.2);
     display: flex;
     gap: 10px;
-}
-
-/* Node List */
-.node-list { margin-top: 8px; }
-
-.node-list-item {
-    padding: 10px 12px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: background 0.15s;
-    border: 1px solid transparent;
-    margin-bottom: 4px;
-}
-
-.node-list-item:hover {
-    background: rgba(255,255,255,0.04);
-    border-color: var(--border-subtle);
-}
-
-.node-list-item.selected {
-    background: rgba(212, 168, 83, 0.08);
-    border-color: rgba(212, 168, 83, 0.25);
-}
-
-.node-list-item-name {
-    font-family: var(--font-display);
-    font-size: 0.82rem;
-    font-style: italic;
-    color: var(--text-primary);
-}
-
-.node-list-item-meta {
-    font-family: var(--font-mono);
-    font-size: 0.52rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-top: 2px;
 }
 
 /* Empty State */
@@ -1007,7 +996,6 @@ body.panel-collapsed .edit-panel {
         <div class="panel-tabs">
             <button class="panel-tab active" data-tab="form">Form</button>
             <button class="panel-tab" data-tab="json">JSON</button>
-            <button class="panel-tab" data-tab="list">List</button>
         </div>
 
         <div class="panel-body" id="panel-body">
@@ -1025,15 +1013,11 @@ body.panel-collapsed .edit-panel {
     <script>
 /* ═══════ UTILITIES ═══════ */
 function hexToRGBA(hex, alpha) {
-    if (!hex || typeof hex !== 'string') {
-        return `rgba(136,136,136,${alpha})`;
-    }
+    if (!hex || typeof hex !== 'string') return `rgba(136,136,136,${alpha})`;
     if (hex.startsWith('rgb')) return hex;
     if (!hex.startsWith('#')) hex = '#' + hex;
-    
     const hexMatch = hex.match(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/);
     if (!hexMatch) return `rgba(136,136,136,${alpha})`;
-    
     let r, g, b;
     if (hex.length === 4) {
         r = parseInt(hex[1] + hex[1], 16);
@@ -1058,30 +1042,16 @@ function friendlyLabel(k) {
     return k.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').replace(/^./, s => s.toUpperCase()).trim();
 }
 
-/* ═══════ CONSTANTS & STATE ═══════ */
+/* ═══════ CONSTANTS ═══════ */
 const CATEGORY_COLORS = {
-    'Epistemic Purpose': '#e8c468',
-    'Reality': '#4dd4c4',
-    'Observation Interface': '#68b8e8',
-    'Observation Encoding': '#68b8e8',
-    'Epistemic Representation Form (Epistemic Blueprint)': '#a888d8',
-    'Concrete Epistemic Artifact': '#d46888',
-    'Epistemic Gap': '#d49468',
-    'Epistemic Agent': '#68d494',
-    'Epistemic Goal': '#68d4c4',
-    'Epistemic Process (Activity)': '#94d468',
-    'Epistemic Standard': '#d4c468',
-    'Encoding Substrate': '#6894d4',
-    'Epistemic Domain (Target Domain)': '#d468b8',
-    'Epistemic Constraint': '#d46868',
-    'Epistemic Infrastructure': '#68b8b8',
-    'Epistemic Feedback': '#b8d468',
-    'Epistemic Act': '#6868d4',
-    'Epistemic Principle': '#d4b868',
-    'Epistemic Prior (Inductive Bias)': '#b868d4',
-    'Epistemic Strategy': '#68d4b8',
-    'Epistemic Framework': '#d48868',
-    'Epistemic Operator': '#8868d4'
+    'Epistemic Purpose': '#e8c468', 'Reality': '#4dd4c4', 'Observation Interface': '#68b8e8',
+    'Observation Encoding': '#68b8e8', 'Epistemic Representation Form (Epistemic Blueprint)': '#a888d8',
+    'Concrete Epistemic Artifact': '#d46888', 'Epistemic Gap': '#d49468', 'Epistemic Agent': '#68d494',
+    'Epistemic Goal': '#68d4c4', 'Epistemic Process (Activity)': '#94d468', 'Epistemic Standard': '#d4c468',
+    'Encoding Substrate': '#6894d4', 'Epistemic Domain (Target Domain)': '#d468b8',
+    'Epistemic Constraint': '#d46868', 'Epistemic Infrastructure': '#68b8b8', 'Epistemic Feedback': '#b8d468',
+    'Epistemic Act': '#6868d4', 'Epistemic Principle': '#d4b868', 'Epistemic Prior (Inductive Bias)': '#b868d4',
+    'Epistemic Strategy': '#68d4b8', 'Epistemic Framework': '#d48868', 'Epistemic Operator': '#8868d4'
 };
 
 const FALLBACK_COLOR = '#888888';
@@ -1112,58 +1082,84 @@ const RELATIONSHIP_TYPES = [
     'COMPETES_WITH', 'SUBSTITUTES_FOR', 'COMPLEMENTS', 'ORCHESTRATED_BY', 'EVOLVES_FROM', 'SUPERSEDES'
 ];
 
+/* ═══════ STATE ═══════ */
 let data = [];
 let nodes = [];
 let edges = [];
 let nodeMap = {};
 
-let canvas = null;
-let ctx = null;
-let mmCanvas = null;
-let mmCtx = null;
-let W = 0, H = 0;
+// Extracted suggestions from data
+let suggestions = {
+    domainScope: [],
+    functionalRoles: [],
+    tags: [],
+    sourceReference: []
+};
 
+let canvas = null, ctx = null, mmCanvas = null, mmCtx = null, W = 0, H = 0;
 let cam = { x: 0, y: 0, z: 1 };
-let hoveredNode = null;
-let selectedNode = null;
-let draggedNode = null;
-let linkSourceNode = null;
+let hoveredNode = null, selectedNode = null, draggedNode = null, linkSourceNode = null;
 let isPanning = false;
 let panStart = { x: 0, y: 0 };
 let mouseWorld = { x: 0, y: 0 };
-
 let linkMode = false;
 let currentTab = 'form';
 
-// Searchable select state
-let ssInstances = {};
-let activeSS = null;
-
-const REPULSION = 280;
-const LINK_DISTANCE = 100;
-const ALPHA_DECAY = 0.995;
+const REPULSION = 280, LINK_DISTANCE = 100, ALPHA_DECAY = 0.995;
 let alpha = 1;
 
+/* ═══════ EXTRACT SUGGESTIONS FROM DATA ═══════ */
+function extractSuggestions() {
+    const domainScopeSet = new Set();
+    const functionalRolesSet = new Set();
+    const tagsSet = new Set();
+    const sourceReferenceSet = new Set();
+    
+    data.forEach(d => {
+        (d.domainScope || []).forEach(v => { if (v && typeof v === 'string') domainScopeSet.add(v); });
+        (d.functionalRoles || []).forEach(v => { if (v && typeof v === 'string') functionalRolesSet.add(v); });
+        ((d.metadata || {}).tags || []).forEach(v => { if (v && typeof v === 'string') tagsSet.add(v); });
+        if ((d.metadata || {}).sourceReference && typeof d.metadata.sourceReference === 'string') {
+            sourceReferenceSet.add(d.metadata.sourceReference);
+        }
+    });
+    
+    suggestions.domainScope = Array.from(domainScopeSet).sort();
+    suggestions.functionalRoles = Array.from(functionalRolesSet).sort();
+    suggestions.tags = Array.from(tagsSet).sort();
+    suggestions.sourceReference = Array.from(sourceReferenceSet).sort();
+    
+    console.log('Extracted suggestions:', {
+        domainScope: suggestions.domainScope.length,
+        functionalRoles: suggestions.functionalRoles.length,
+        tags: suggestions.tags.length,
+        sourceReference: suggestions.sourceReference.length
+    });
+}
+
 /* ═══════ SEARCHABLE SELECT COMPONENT ═══════ */
-function createSearchableSelect(id, placeholder, options, selectedValue, onSelect) {
-    ssInstances[id] = {
-        options: options,
-        filtered: options,
-        selected: selectedValue,
+const ssRegistry = {};
+
+function createSearchableSelect(id, placeholder, options, selectedValue, onSelect, showId) {
+    ssRegistry[id] = {
+        options: options || [],
+        filtered: options || [],
+        selected: selectedValue || '',
         highlighted: -1,
         open: false,
-        onSelect: onSelect
+        onSelect: onSelect || null,
+        showId: showId !== false
     };
     
-    const selectedOpt = options.find(o => o.value === selectedValue);
+    const selectedOpt = (options || []).find(o => o.value === selectedValue);
     const displayText = selectedOpt ? selectedOpt.label : '';
     
     return `
         <div class="searchable-select" id="${id}-container">
             <div class="ss-input-wrap">
-                <input type="text" class="ss-input" id="${id}-input" placeholder="${placeholder}" value="${escHTML(displayText)}" autocomplete="off">
-                <button class="ss-clear ${selectedValue ? 'visible' : ''}" id="${id}-clear">&times;</button>
-                <button class="ss-toggle" id="${id}-toggle">
+                <input type="text" class="ss-input" id="${id}-input" placeholder="${escHTML(placeholder)}" value="${escHTML(displayText)}" autocomplete="off">
+                <button class="ss-clear ${selectedValue ? 'visible' : ''}" id="${id}-clear" type="button">&times;</button>
+                <button class="ss-toggle" id="${id}-toggle" type="button">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
@@ -1186,35 +1182,36 @@ function initSearchableSelect(id) {
     const clearBtn = document.getElementById(`${id}-clear`);
     const optionsContainer = document.getElementById(`${id}-options`);
     
-    const ss = ssInstances[id];
+    const ss = ssRegistry[id];
     if (!ss) return;
     
     function renderOptions() {
-        const filtered = ss.filtered;
+        const filtered = ss.filtered || [];
         if (!filtered.length) {
-            optionsContainer.innerHTML = '<div class="ss-empty">No matching nodes</div>';
+            optionsContainer.innerHTML = '<div class="ss-empty">No matches found</div>';
             return;
         }
         
-        optionsContainer.innerHTML = filtered.slice(0, 50).map((opt, i) => `
+        optionsContainer.innerHTML = filtered.slice(0, 100).map((opt, i) => `
             <div class="ss-option ${ss.selected === opt.value ? 'selected' : ''} ${ss.highlighted === i ? 'highlighted' : ''}" data-value="${escHTML(opt.value)}" data-idx="${i}">
                 <div class="ss-option-name">${escHTML(opt.label)}</div>
-                <div class="ss-option-id">${escHTML(opt.value)}</div>
+                ${ss.showId ? `<div class="ss-option-id">${escHTML(opt.value)}</div>` : ''}
             </div>
         `).join('');
         
         optionsContainer.querySelectorAll('.ss-option').forEach(el => {
-            el.addEventListener('click', () => selectOption(id, el.dataset.value, el.querySelector('.ss-option-name').textContent));
+            el.addEventListener('click', () => {
+                selectOption(id, el.dataset.value, el.querySelector('.ss-option-name').textContent);
+            });
         });
     }
     
     function openDropdown() {
         ss.open = true;
-        ss.filtered = ss.options;
+        ss.filtered = ss.options || [];
         ss.highlighted = -1;
         dropdown.classList.add('open');
         toggle.classList.add('open');
-        activeSS = id;
         renderOptions();
     }
     
@@ -1222,11 +1219,11 @@ function initSearchableSelect(id) {
         ss.open = false;
         dropdown.classList.remove('open');
         toggle.classList.remove('open');
-        if (activeSS === id) activeSS = null;
     }
     
     function selectOption(id, value, label) {
-        const ss = ssInstances[id];
+        const ss = ssRegistry[id];
+        if (!ss) return;
         ss.selected = value;
         input.value = label;
         clearBtn.classList.add('visible');
@@ -1238,9 +1235,8 @@ function initSearchableSelect(id) {
     
     input.addEventListener('input', () => {
         const q = input.value.toLowerCase().trim();
-        ss.filtered = ss.options.filter(opt => 
-            opt.label.toLowerCase().includes(q) || 
-            opt.value.toLowerCase().includes(q)
+        ss.filtered = (ss.options || []).filter(opt => 
+            opt.label.toLowerCase().includes(q) || opt.value.toLowerCase().includes(q)
         );
         ss.highlighted = -1;
         renderOptions();
@@ -1249,75 +1245,193 @@ function initSearchableSelect(id) {
     
     input.addEventListener('keydown', (e) => {
         if (!ss.open) {
-            if (e.key === 'ArrowDown' || e.key === 'Enter') {
-                e.preventDefault();
-                openDropdown();
-            }
+            if (e.key === 'ArrowDown' || e.key === 'Enter') { e.preventDefault(); openDropdown(); }
             return;
         }
-        
-        const maxIdx = Math.min(ss.filtered.length, 50) - 1;
-        
-        if (e.key === 'ArrowDown') {
+        const maxIdx = Math.min((ss.filtered || []).length, 100) - 1;
+        if (e.key === 'ArrowDown') { e.preventDefault(); ss.highlighted = Math.min(ss.highlighted + 1, maxIdx); renderOptions(); scrollToHighlighted(id); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); ss.highlighted = Math.max(ss.highlighted - 1, 0); renderOptions(); scrollToHighlighted(id); }
+        else if (e.key === 'Enter') {
             e.preventDefault();
-            ss.highlighted = Math.min(ss.highlighted + 1, maxIdx);
-            renderOptions();
-            scrollToHighlighted(id);
-        } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            ss.highlighted = Math.max(ss.highlighted - 1, 0);
-            renderOptions();
-            scrollToHighlighted(id);
-        } else if (e.key === 'Enter') {
-            e.preventDefault();
-            if (ss.highlighted >= 0 && ss.highlighted < ss.filtered.length) {
+            if (ss.highlighted >= 0 && ss.highlighted < (ss.filtered || []).length) {
                 const opt = ss.filtered[ss.highlighted];
                 selectOption(id, opt.value, opt.label);
             }
-        } else if (e.key === 'Escape') {
-            closeDropdown();
-        }
+        } else if (e.key === 'Escape') { closeDropdown(); }
     });
     
-    toggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (ss.open) closeDropdown();
-        else openDropdown();
-        input.focus();
-    });
-    
-    clearBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        ss.selected = '';
-        input.value = '';
-        clearBtn.classList.remove('visible');
-        if (ss.onSelect) ss.onSelect('');
-    });
-    
-    document.addEventListener('click', (e) => {
-        if (!container.contains(e.target)) {
-            closeDropdown();
-        }
-    });
+    toggle.addEventListener('click', (e) => { e.preventDefault(); if (ss.open) closeDropdown(); else openDropdown(); input.focus(); });
+    clearBtn.addEventListener('click', (e) => { e.stopPropagation(); ss.selected = ''; input.value = ''; clearBtn.classList.remove('visible'); if (ss.onSelect) ss.onSelect(''); });
+    document.addEventListener('click', (e) => { if (!container.contains(e.target)) closeDropdown(); });
 }
 
 function scrollToHighlighted(id) {
     const optionsContainer = document.getElementById(`${id}-options`);
+    if (!optionsContainer) return;
     const highlighted = optionsContainer.querySelector('.ss-option.highlighted');
-    if (highlighted) {
-        highlighted.scrollIntoView({ block: 'nearest' });
-    }
+    if (highlighted) highlighted.scrollIntoView({ block: 'nearest' });
 }
 
-function getSSValue(id) {
-    return ssInstances[id]?.selected || '';
+function getSSValue(id) { return ssRegistry[id]?.selected || ''; }
+
+/* ═══════ ARRAY INPUT WITH AUTOCOMPLETE ═══════ */
+function createArrayInput(field, values, suggestionList) {
+    return `
+        <div class="array-input-wrap" id="${field}-wrap">
+            <div class="array-items" id="${field}-items">
+                ${(values || []).map((v, i) => `<span class="array-item">${escHTML(v)}<button class="array-item-remove" data-field="${field}" data-idx="${i}">&times;</button></span>`).join('')}
+            </div>
+            <div class="array-add-wrap">
+                <div class="array-add-input">
+                    <input type="text" id="${field}-input" placeholder="Type to search or add new..." autocomplete="off">
+                    <button class="btn btn-sm array-add-btn" data-field="${field}">Add</button>
+                </div>
+                <div class="array-autocomplete" id="${field}-autocomplete"></div>
+            </div>
+        </div>
+    `;
 }
 
-function updateSSOptions(id, options) {
-    if (ssInstances[id]) {
-        ssInstances[id].options = options;
-        ssInstances[id].filtered = options;
+function initArrayInput(field, suggestionList) {
+    const wrap = document.getElementById(`${field}-wrap`);
+    if (!wrap) return;
+    
+    const input = document.getElementById(`${field}-input`);
+    const autocomplete = document.getElementById(`${field}-autocomplete`);
+    const itemsContainer = document.getElementById(`${field}-items`);
+    
+    let highlighted = -1;
+    let filtered = [];
+    let open = false;
+    
+    function getExistingValues() {
+        return Array.from(itemsContainer.children).map(span => span.textContent.replace('×', '').trim());
     }
+    
+    function renderAutocomplete(query) {
+        const existing = getExistingValues();
+        const q = (query || '').toLowerCase().trim();
+        
+        filtered = (suggestionList || []).filter(s => 
+            !existing.includes(s) && s.toLowerCase().includes(q)
+        );
+        
+        if (!filtered.length) {
+            if (query && query.trim()) {
+                autocomplete.innerHTML = `
+                    <div class="autocomplete-empty">Press Enter or click Add to create: "${escHTML(query.trim())}"</div>
+                `;
+            } else {
+                autocomplete.innerHTML = '<div class="autocomplete-empty">Start typing to search existing values...</div>';
+            }
+            highlighted = -1;
+            return;
+        }
+        
+        autocomplete.innerHTML = filtered.slice(0, 15).map((s, i) => {
+            const idx = s.toLowerCase().indexOf(q);
+            const highlightedText = q && idx >= 0 
+                ? s.substring(0, idx) + '<mark>' + s.substring(idx, idx + q.length) + '</mark>' + s.substring(idx + q.length)
+                : s;
+            return `<div class="autocomplete-option ${highlighted === i ? 'highlighted' : ''}" data-idx="${i}">${highlightedText}</div>`;
+        }).join('') + `<div class="autocomplete-count">${filtered.length} suggestion${filtered.length !== 1 ? 's' : ''} available</div>`;
+        
+        autocomplete.querySelectorAll('.autocomplete-option').forEach(el => {
+            el.addEventListener('click', () => {
+                const idx = parseInt(el.dataset.idx);
+                if (idx >= 0 && idx < filtered.length) {
+                    addValue(filtered[idx]);
+                }
+            });
+        });
+    }
+    
+    function openAutocomplete() {
+        open = true;
+        autocomplete.classList.add('open');
+        renderAutocomplete(input.value);
+    }
+    
+    function closeAutocomplete() {
+        open = false;
+        autocomplete.classList.remove('open');
+    }
+    
+    function addValue(value) {
+        if (!value || !value.trim()) return;
+        const existing = getExistingValues();
+        if (existing.includes(value.trim())) {
+            input.value = '';
+            closeAutocomplete();
+            return;
+        }
+        
+        const span = document.createElement('span');
+        span.className = 'array-item';
+        span.innerHTML = `${escHTML(value.trim())}<button class="array-item-remove">&times;</button>`;
+        itemsContainer.appendChild(span);
+        
+        span.querySelector('.array-item-remove').addEventListener('click', () => {
+            span.remove();
+            if (open) renderAutocomplete(input.value);
+        });
+        
+        input.value = '';
+        highlighted = -1;
+        renderAutocomplete('');
+        input.focus();
+    }
+    
+    input.addEventListener('focus', openAutocomplete);
+    input.addEventListener('input', () => { if (!open) openAutocomplete(); else renderAutocomplete(input.value); });
+    
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            highlighted = Math.min(highlighted + 1, Math.min(filtered.length, 15) - 1);
+            renderAutocomplete(input.value);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            highlighted = Math.max(highlighted - 1, -1);
+            renderAutocomplete(input.value);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (highlighted >= 0 && highlighted < filtered.length) {
+                addValue(filtered[highlighted]);
+            } else if (input.value.trim()) {
+                addValue(input.value.trim());
+            }
+        } else if (e.key === 'Escape') {
+            closeAutocomplete();
+        } else if (e.key === 'Tab') {
+            if (highlighted >= 0 && highlighted < filtered.length) {
+                e.preventDefault();
+                input.value = filtered[highlighted];
+            }
+            closeAutocomplete();
+        }
+    });
+    
+    wrap.querySelector('.array-add-btn').addEventListener('click', () => {
+        if (input.value.trim()) addValue(input.value.trim());
+    });
+    
+    wrap.querySelectorAll('.array-item-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.closest('.array-item').remove();
+            if (open) renderAutocomplete(input.value);
+        });
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!wrap.contains(e.target)) closeAutocomplete();
+    });
+}
+
+function getArrayValues(field) {
+    const container = document.getElementById(`${field}-items`);
+    if (!container) return [];
+    return Array.from(container.children).map(span => span.textContent.replace('×', '').trim());
 }
 
 /* ═══════ CANVAS SETUP ═══════ */
@@ -1331,25 +1445,18 @@ function setupCanvas() {
 
 function resizeCanvas() {
     const rect = canvas.parentElement.getBoundingClientRect();
-    W = rect.width;
-    H = rect.height;
+    W = rect.width; H = rect.height;
     canvas.width = W * devicePixelRatio;
     canvas.height = H * devicePixelRatio;
     ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-    
     mmCanvas.width = 160 * devicePixelRatio;
     mmCanvas.height = 110 * devicePixelRatio;
     mmCtx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 }
 
 /* ═══════ COORDINATE TRANSFORMS ═══════ */
-function worldToScreen(wx, wy) {
-    return { x: wx * cam.z + cam.x, y: wy * cam.z + cam.y };
-}
-
-function screenToWorld(sx, sy) {
-    return { x: (sx - cam.x) / cam.z, y: (sy - cam.y) / cam.z };
-}
+function worldToScreen(wx, wy) { return { x: wx * cam.z + cam.x, y: wy * cam.z + cam.y }; }
+function screenToWorld(sx, sy) { return { x: (sx - cam.x) / cam.z, y: (sy - cam.y) / cam.z }; }
 
 /* ═══════ DATA LOADING ═══════ */
 async function loadData() {
@@ -1360,37 +1467,19 @@ async function loadData() {
     } catch (e) {
         console.warn('Could not load data.json, using sample data');
         data = [{
-            "id": "reality.market",
-            "name": "Market",
-            "category": "Reality",
-            "inheritanceLevel": 2,
+            "id": "reality.market", "name": "Market", "category": "Reality", "inheritanceLevel": 2,
             "description": "A socially constituted institutional structure that coordinates voluntary exchange among economic agents.",
             "longDescription": "A market is a synontic institutional configuration composed of agents, exchange protocols, property rights, contractual rules, information flows, and allocation mechanisms.",
             "functionalRoles": ["Resource Allocation", "Price Discovery", "Information Transmission"],
             "domainScope": ["Economics", "Political Economy", "Industrial Organization"],
-            "historicalContext": {
-                "summary": "Markets have existed in various forms throughout human history.",
-                "chronology": [
-                    { "year": -3000, "event": "Early Exchange Systems", "context": "Emergence of organized exchange." },
-                    { "year": 1776, "event": "Classical Market Theory", "context": "Formal analysis of markets." }
-                ]
-            },
-            "specific": {
-                "onticLayer": "Synontic",
-                "onticCategory": "Institutional",
-                "realityDescription": "An emergent institutional structure governing exchange relationships."
-            },
+            "historicalContext": { "summary": "Markets have existed in various forms throughout human history.", "chronology": [] },
+            "specific": { "onticLayer": "Synontic", "onticCategory": "Institutional" },
             "relationships": [],
-            "metadata": {
-                "tags": ["market", "institution", "exchange"],
-                "confidenceScore": 0.97,
-                "sourceReference": "Sociognosis Economic Ontology",
-                "createdAt": "2024-06-10T00:00:00Z",
-                "auditTrail": []
-            },
+            "metadata": { "tags": ["market", "institution", "exchange"], "confidenceScore": 0.97, "sourceReference": "Sociognosis Economic Ontology", "createdAt": "2024-06-10T00:00:00Z", "auditTrail": [] },
             "references": []
         }];
     }
+    extractSuggestions();
     initGraph();
 }
 
@@ -1405,14 +1494,9 @@ function initGraph() {
         if (!d.name) d.name = d.id;
         
         const node = {
-            id: d.id,
-            name: d.name,
-            category: d.category,
-            x: (Math.random() - 0.5) * 600,
-            y: (Math.random() - 0.5) * 600,
-            vx: 0,
-            vy: 0,
-            _data: d
+            id: d.id, name: d.name, category: d.category,
+            x: (Math.random() - 0.5) * 600, y: (Math.random() - 0.5) * 600,
+            vx: 0, vy: 0, _data: d
         };
         nodes.push(node);
         nodeMap[d.id] = node;
@@ -1422,8 +1506,7 @@ function initGraph() {
         (d.relationships || []).forEach(rel => {
             if (nodeMap[d.id] && nodeMap[rel.targetNodeId]) {
                 edges.push({
-                    source: d.id,
-                    target: rel.targetNodeId,
+                    source: d.id, target: rel.targetNodeId,
                     family: rel.relationshipFamily || 'FUNCTIONAL',
                     type: rel.relationshipType || 'RELATED',
                     description: rel.description || ''
@@ -1444,56 +1527,35 @@ function simulate() {
     for (let i = 0; i < nodes.length; i++) {
         const a = nodes[i];
         if (a === draggedNode) continue;
-        
         let fx = 0, fy = 0;
         for (let j = 0; j < nodes.length; j++) {
             if (i === j) continue;
             const b = nodes[j];
-            const dx = a.x - b.x;
-            const dy = a.y - b.y;
+            const dx = a.x - b.x, dy = a.y - b.y;
             const d2 = dx * dx + dy * dy;
             if (d2 < 1) continue;
             const d = Math.sqrt(d2);
-            if (d < REPULSION) {
-                const f = (REPULSION - d) / d * 0.008 * alpha;
-                fx += dx * f;
-                fy += dy * f;
-            }
+            if (d < REPULSION) { const f = (REPULSION - d) / d * 0.008 * alpha; fx += dx * f; fy += dy * f; }
         }
-        a.vx += fx;
-        a.vy += fy;
+        a.vx += fx; a.vy += fy;
     }
     
     edges.forEach(e => {
-        const s = nodeMap[e.source];
-        const t = nodeMap[e.target];
+        const s = nodeMap[e.source], t = nodeMap[e.target];
         if (!s || !t) return;
-        
-        const dx = t.x - s.x;
-        const dy = t.y - s.y;
+        const dx = t.x - s.x, dy = t.y - s.y;
         const d = Math.sqrt(dx * dx + dy * dy);
         if (d < 1) return;
-        
         const f = (d - LINK_DISTANCE) / d * 0.003 * alpha;
-        if (s !== draggedNode) {
-            s.vx += dx * f;
-            s.vy += dy * f;
-        }
-        if (t !== draggedNode) {
-            t.vx -= dx * f;
-            t.vy -= dy * f;
-        }
+        if (s !== draggedNode) { s.vx += dx * f; s.vy += dy * f; }
+        if (t !== draggedNode) { t.vx -= dx * f; t.vy -= dy * f; }
     });
     
     nodes.forEach(n => {
         if (n === draggedNode) return;
-        n.vx -= n.x * 0.001 * alpha;
-        n.vy -= n.y * 0.001 * alpha;
-        n.vx *= 0.6;
-        n.vy *= 0.6;
-        n.x += n.vx;
-        n.y += n.vy;
-        
+        n.vx -= n.x * 0.001 * alpha; n.vy -= n.y * 0.001 * alpha;
+        n.vx *= 0.6; n.vy *= 0.6;
+        n.x += n.vx; n.y += n.vy;
         if (!isFinite(n.x)) n.x = (Math.random() - 0.5) * 100;
         if (!isFinite(n.y)) n.y = (Math.random() - 0.5) * 100;
     });
@@ -1504,98 +1566,50 @@ function draw() {
     ctx.clearRect(0, 0, W, H);
     
     edges.forEach(e => {
-        const s = nodeMap[e.source];
-        const t = nodeMap[e.target];
+        const s = nodeMap[e.source], t = nodeMap[e.target];
         if (!s || !t) return;
-        
-        const ss = worldToScreen(s.x, s.y);
-        const ts = worldToScreen(t.x, t.y);
-        
-        const isHovered = hoveredNode && (hoveredNode.id === e.source || hoveredNode.id === e.target);
-        const isSelected = selectedNode && (selectedNode.id === e.source || selectedNode.id === e.target);
-        const isLinkSrc = linkSourceNode && (linkSourceNode.id === e.source || linkSourceNode.id === e.target);
-        
-        ctx.beginPath();
-        ctx.moveTo(ss.x, ss.y);
-        ctx.lineTo(ts.x, ts.y);
-        ctx.strokeStyle = hexToRGBA('#4dd4c4', isHovered || isSelected || isLinkSrc ? 0.5 : 0.12);
-        ctx.lineWidth = isHovered || isSelected ? 1.5 : 0.8;
-        ctx.stroke();
+        const ss = worldToScreen(s.x, s.y), ts = worldToScreen(t.x, t.y);
+        const isH = hoveredNode && (hoveredNode.id === e.source || hoveredNode.id === e.target);
+        const isSel = selectedNode && (selectedNode.id === e.source || selectedNode.id === e.target);
+        const isLS = linkSourceNode && (linkSourceNode.id === e.source || linkSourceNode.id === e.target);
+        ctx.beginPath(); ctx.moveTo(ss.x, ss.y); ctx.lineTo(ts.x, ts.y);
+        ctx.strokeStyle = hexToRGBA('#4dd4c4', isH || isSel || isLS ? 0.5 : 0.12);
+        ctx.lineWidth = isH || isSel ? 1.5 : 0.8; ctx.stroke();
     });
     
     if (linkMode && linkSourceNode && hoveredNode && linkSourceNode !== hoveredNode) {
-        const ss = worldToScreen(linkSourceNode.x, linkSourceNode.y);
-        const ts = worldToScreen(hoveredNode.x, hoveredNode.y);
-        
-        ctx.beginPath();
-        ctx.moveTo(ss.x, ss.y);
-        ctx.lineTo(ts.x, ts.y);
-        ctx.strokeStyle = hexToRGBA('#8b6dd4', 0.6);
-        ctx.lineWidth = 2;
-        ctx.setLineDash([6, 4]);
-        ctx.stroke();
-        ctx.setLineDash([]);
+        const ss = worldToScreen(linkSourceNode.x, linkSourceNode.y), ts = worldToScreen(hoveredNode.x, hoveredNode.y);
+        ctx.beginPath(); ctx.moveTo(ss.x, ss.y); ctx.lineTo(ts.x, ts.y);
+        ctx.strokeStyle = hexToRGBA('#8b6dd4', 0.6); ctx.lineWidth = 2;
+        ctx.setLineDash([6, 4]); ctx.stroke(); ctx.setLineDash([]);
     }
     
     nodes.forEach(n => {
         const s = worldToScreen(n.x, n.y);
         const r = Math.max(3, (6 + (n._data.relationships || []).length * 0.8) * cam.z);
-        
-        const isHovered = hoveredNode === n;
-        const isSelected = selectedNode === n;
-        const isLinkSrc = linkSourceNode === n;
-        
+        const isH = hoveredNode === n, isSel = selectedNode === n, isLS = linkSourceNode === n;
         const color = getCategoryColor(n.category);
         
-        if (isHovered || isSelected || isLinkSrc) {
-            const glowColor = isLinkSrc ? '#8b6dd4' : isSelected ? '#d4a853' : '#ffffff';
+        if (isH || isSel || isLS) {
+            const gc = isLS ? '#8b6dd4' : isSel ? '#d4a853' : '#ffffff';
             const grd = ctx.createRadialGradient(s.x, s.y, r * 0.5, s.x, s.y, r + 12);
-            grd.addColorStop(0, hexToRGBA(glowColor, 0.2));
-            grd.addColorStop(1, hexToRGBA(glowColor, 0));
-            ctx.fillStyle = grd;
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, r + 12, 0, Math.PI * 2);
-            ctx.fill();
+            grd.addColorStop(0, hexToRGBA(gc, 0.2)); grd.addColorStop(1, hexToRGBA(gc, 0));
+            ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(s.x, s.y, r + 12, 0, Math.PI * 2); ctx.fill();
         }
         
         const nGrd = ctx.createRadialGradient(s.x - r * 0.2, s.y - r * 0.2, 0, s.x, s.y, r);
-        nGrd.addColorStop(0, hexToRGBA(color, 1));
-        nGrd.addColorStop(1, hexToRGBA(color, 0.7));
-        
-        ctx.fillStyle = nGrd;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
-        ctx.fill();
-        
+        nGrd.addColorStop(0, hexToRGBA(color, 1)); nGrd.addColorStop(1, hexToRGBA(color, 0.7));
+        ctx.fillStyle = nGrd; ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = hexToRGBA('#ffffff', 0.15);
-        ctx.beginPath();
-        ctx.arc(s.x - r * 0.2, s.y - r * 0.2, r * 0.4, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(s.x - r * 0.2, s.y - r * 0.2, r * 0.4, 0, Math.PI * 2); ctx.fill();
         
-        if (isSelected) {
-            ctx.strokeStyle = hexToRGBA('#d4a853', 0.6);
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, r + 3, 0, Math.PI * 2);
-            ctx.stroke();
-        }
-        
-        if (isLinkSrc) {
-            ctx.strokeStyle = hexToRGBA('#8b6dd4', 0.6);
-            ctx.lineWidth = 2;
-            ctx.setLineDash([3, 3]);
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, r + 5, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.setLineDash([]);
-        }
+        if (isSel) { ctx.strokeStyle = hexToRGBA('#d4a853', 0.6); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(s.x, s.y, r + 3, 0, Math.PI * 2); ctx.stroke(); }
+        if (isLS) { ctx.strokeStyle = hexToRGBA('#8b6dd4', 0.6); ctx.lineWidth = 2; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.arc(s.x, s.y, r + 5, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
         
         if (cam.z > 0.5) {
             const fontSize = Math.max(8, Math.min(11, r * 1.1));
-            ctx.font = `500 ${fontSize}px Inter`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'top';
-            ctx.fillStyle = hexToRGBA('#c8ccd8', isHovered ? 0.9 : 0.6);
+            ctx.font = `500 ${fontSize}px Inter`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+            ctx.fillStyle = hexToRGBA('#c8ccd8', isH ? 0.9 : 0.6);
             let label = n.name || n.id || 'Unknown';
             if (label.length > 18) label = label.substring(0, 16) + '…';
             ctx.fillText(label, s.x, s.y + r + 5);
@@ -1608,103 +1622,51 @@ function draw() {
 function drawMinimap() {
     mmCtx.clearRect(0, 0, 160, 110);
     if (!nodes.length) return;
-    
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-    nodes.forEach(n => {
-        if (n.x < minX) minX = n.x;
-        if (n.x > maxX) maxX = n.x;
-        if (n.y < minY) minY = n.y;
-        if (n.y > maxY) maxY = n.y;
-    });
-    
-    const pad = 10;
-    const gw = Math.max(1, maxX - minX + pad * 2);
-    const gh = Math.max(1, maxY - minY + pad * 2);
-    const s = Math.min(150 / gw, 100 / gh);
-    const ox = 80 - (minX + maxX) / 2 * s;
-    const oy = 55 - (minY + maxY) / 2 * s;
-    
-    nodes.forEach(n => {
-        const color = getCategoryColor(n.category);
-        mmCtx.fillStyle = hexToRGBA(color, 0.6);
-        mmCtx.fillRect(n.x * s + ox - 1, n.y * s + oy - 1, 2, 2);
-    });
-    
-    const vx1 = -cam.x / cam.z;
-    const vy1 = -cam.y / cam.z;
-    const vx2 = (W - cam.x) / cam.z;
-    const vy2 = (H - cam.y) / cam.z;
-    
-    mmCtx.strokeStyle = hexToRGBA('#4dd4c4', 0.4);
-    mmCtx.lineWidth = 1;
+    nodes.forEach(n => { if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x; if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y; });
+    const pad = 10, gw = Math.max(1, maxX - minX + pad * 2), gh = Math.max(1, maxY - minY + pad * 2);
+    const s = Math.min(150 / gw, 100 / gh), ox = 80 - (minX + maxX) / 2 * s, oy = 55 - (minY + maxY) / 2 * s;
+    nodes.forEach(n => { mmCtx.fillStyle = hexToRGBA(getCategoryColor(n.category), 0.6); mmCtx.fillRect(n.x * s + ox - 1, n.y * s + oy - 1, 2, 2); });
+    const vx1 = -cam.x / cam.z, vy1 = -cam.y / cam.z, vx2 = (W - cam.x) / cam.z, vy2 = (H - cam.y) / cam.z;
+    mmCtx.strokeStyle = hexToRGBA('#4dd4c4', 0.4); mmCtx.lineWidth = 1;
     mmCtx.strokeRect(vx1 * s + ox, vy1 * s + oy, (vx2 - vx1) * s, (vy2 - vy1) * s);
 }
 
 /* ═══════ HIT TESTING ═══════ */
 function hitTest(sx, sy) {
     const wp = screenToWorld(sx, sy);
-    let best = null;
-    let bestD = Infinity;
-    
+    let best = null, bestD = Infinity;
     nodes.forEach(n => {
-        const dx = n.x - wp.x;
-        const dy = n.y - wp.y;
-        const d2 = dx * dx + dy * dy;
+        const dx = n.x - wp.x, dy = n.y - wp.y, d2 = dx * dx + dy * dy;
         const r = 6 + (n._data.relationships || []).length * 0.8;
-        if (d2 < r * r * 4 && d2 < bestD) {
-            bestD = d2;
-            best = n;
-        }
+        if (d2 < r * r * 4 && d2 < bestD) { bestD = d2; best = n; }
     });
-    
     return best;
 }
 
 /* ═══════ CAMERA ═══════ */
 function fitCamera() {
     if (!nodes.length) return;
-    
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-    nodes.forEach(n => {
-        if (n.x < minX) minX = n.x;
-        if (n.x > maxX) maxX = n.x;
-        if (n.y < minY) minY = n.y;
-        if (n.y > maxY) maxY = n.y;
-    });
-    
-    const pad = 80;
-    const gw = Math.max(1, maxX - minX + pad * 2);
-    const gh = Math.max(1, maxY - minY + pad * 2);
+    nodes.forEach(n => { if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x; if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y; });
+    const pad = 80, gw = Math.max(1, maxX - minX + pad * 2), gh = Math.max(1, maxY - minY + pad * 2);
     const z = Math.min(W / gw, H / gh, 1.5);
-    
-    cam.z = z;
-    cam.x = W / 2 - (minX + maxX) / 2 * z;
-    cam.y = H / 2 - (minY + maxY) / 2 * z;
+    cam.z = z; cam.x = W / 2 - (minX + maxX) / 2 * z; cam.y = H / 2 - (minY + maxY) / 2 * z;
 }
 
 /* ═══════ TOOLTIP ═══════ */
 function showTooltip(node, sx, sy) {
     const tt = document.getElementById('tooltip');
-    const catColor = getCategoryColor(node.category);
-    
     document.getElementById('tt-cat').textContent = node.category || 'Unknown';
-    document.getElementById('tt-cat').style.color = catColor;
+    document.getElementById('tt-cat').style.color = getCategoryColor(node.category);
     document.getElementById('tt-name').textContent = node.name || node.id || 'Unknown';
     document.getElementById('tt-desc').textContent = node._data.description || '';
-    
-    let tx = sx + 16;
-    let ty = sy + 16;
-    if (tx + 260 > W) tx = sx - 276;
-    if (ty + 100 > H) ty = H - 110;
-    
-    tt.style.left = tx + 'px';
-    tt.style.top = ty + 'px';
-    tt.style.display = 'block';
+    let tx = sx + 16, ty = sy + 16;
+    if (tx + 260 > W) tx = sx - 276; if (ty + 100 > H) ty = H - 110;
+    tt.style.left = tx + 'px'; tt.style.top = ty + 'px'; tt.style.display = 'block';
 }
 
-function hideTooltip() {
-    document.getElementById('tooltip').style.display = 'none';
-}
+function hideTooltip() { document.getElementById('tooltip').style.display = 'none'; }
 
 /* ═══════ SELECTION & EDITING ═══════ */
 function selectNode(node) {
@@ -1720,31 +1682,18 @@ function selectNode(node) {
         document.getElementById('panel-title').textContent = 'Select a Node';
         document.getElementById('panel-subtitle').textContent = 'Click a node to edit';
         document.getElementById('panel-actions').style.display = 'none';
-        document.getElementById('panel-body').innerHTML = '<div class="empty-state"><div class="empty-state-icon">&#9675;</div><div class="empty-state-text">Click a node in the graph to edit its properties, or use the List tab to browse all nodes.</div></div>';
+        document.getElementById('panel-body').innerHTML = '<div class="empty-state"><div class="empty-state-icon">&#9675;</div><div class="empty-state-text">Click a node in the graph to edit its properties.</div></div>';
     }
 }
 
 function renderForm(nodeData) {
     if (!nodeData) return;
+    if (currentTab === 'json') { renderJsonEditor(nodeData); return; }
     
-    if (currentTab === 'list') {
-        renderNodeList();
-        return;
-    }
-    
-    if (currentTab === 'json') {
-        renderJsonEditor(nodeData);
-        return;
-    }
-    
-    // Get node options for searchable select (exclude current node)
-    const nodeOptions = nodes
-        .filter(n => n.id !== nodeData.id)
-        .map(n => ({
-            value: n.id,
-            label: n.name || n.id
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label));
+    const categoryOptions = CATEGORIES.map(c => ({ value: c, label: c }));
+    const nodeOptions = nodes.filter(n => n.id !== nodeData.id).map(n => ({ value: n.id, label: n.name || n.id })).sort((a, b) => a.label.localeCompare(b.label));
+    const familyOptions = RELATIONSHIP_FAMILIES.map(f => ({ value: f, label: friendlyLabel(f) }));
+    const typeOptions = RELATIONSHIP_TYPES.map(t => ({ value: t, label: friendlyLabel(t) }));
     
     const html = `
         <div class="form-section">
@@ -1760,9 +1709,7 @@ function renderForm(nodeData) {
             <div class="form-row-inline">
                 <div class="form-row">
                     <label class="form-label">Category</label>
-                    <select class="form-select" id="edit-category">
-                        ${CATEGORIES.map(c => `<option value="${c}" ${c === nodeData.category ? 'selected' : ''}>${c}</option>`).join('')}
-                    </select>
+                    ${createSearchableSelect('edit-category', 'Search category...', categoryOptions, nodeData.category || '', null, false)}
                 </div>
                 <div class="form-row">
                     <label class="form-label">Inheritance Level</label>
@@ -1786,12 +1733,12 @@ function renderForm(nodeData) {
         <div class="form-section">
             <div class="form-section-title">Classification</div>
             <div class="form-row">
-                <label class="form-label">Functional Roles</label>
-                ${renderArrayInput('functionalRoles', nodeData.functionalRoles || [])}
+                <label class="form-label">Functional Roles <span style="opacity:0.5;font-size:0.5em">(${suggestions.functionalRoles.length} suggestions)</span></label>
+                ${createArrayInput('functionalRoles', nodeData.functionalRoles || [], suggestions.functionalRoles)}
             </div>
             <div class="form-row">
-                <label class="form-label">Domain Scope</label>
-                ${renderArrayInput('domainScope', nodeData.domainScope || [])}
+                <label class="form-label">Domain Scope <span style="opacity:0.5;font-size:0.5em">(${suggestions.domainScope.length} suggestions)</span></label>
+                ${createArrayInput('domainScope', nodeData.domainScope || [], suggestions.domainScope)}
             </div>
         </div>
         
@@ -1804,20 +1751,16 @@ function renderForm(nodeData) {
                 <div class="add-rel-row">
                     <div>
                         <label class="form-label">Relationship Type</label>
-                        <select class="form-select" id="new-rel-type">
-                            ${RELATIONSHIP_TYPES.map(t => `<option value="${t}">${friendlyLabel(t)}</option>`).join('')}
-                        </select>
+                        ${createSearchableSelect('new-rel-type', 'Search type...', typeOptions, '', null, false)}
                     </div>
                     <div>
                         <label class="form-label">Family</label>
-                        <select class="form-select" id="new-rel-family">
-                            ${RELATIONSHIP_FAMILIES.map(f => `<option value="${f}">${friendlyLabel(f)}</option>`).join('')}
-                        </select>
+                        ${createSearchableSelect('new-rel-family', 'Search family...', familyOptions, '', null, false)}
                     </div>
                 </div>
                 <div>
                     <label class="form-label">Target Node</label>
-                    ${createSearchableSelect('new-rel-target', 'Search and select target node...', nodeOptions, '', (val) => {})}
+                    ${createSearchableSelect('new-rel-target', 'Search target node...', nodeOptions, '', null, true)}
                 </div>
                 <button class="btn btn-sm" id="add-rel-btn" style="margin-top:8px">Add Relationship</button>
             </div>
@@ -1826,8 +1769,8 @@ function renderForm(nodeData) {
         <div class="form-section">
             <div class="form-section-title">Metadata</div>
             <div class="form-row">
-                <label class="form-label">Tags</label>
-                ${renderArrayInput('tags', (nodeData.metadata || {}).tags || [])}
+                <label class="form-label">Tags <span style="opacity:0.5;font-size:0.5em">(${suggestions.tags.length} suggestions)</span></label>
+                ${createArrayInput('tags', (nodeData.metadata || {}).tags || [], suggestions.tags)}
             </div>
             <div class="form-row-inline">
                 <div class="form-row">
@@ -1836,48 +1779,30 @@ function renderForm(nodeData) {
                 </div>
                 <div class="form-row">
                     <label class="form-label">Source Reference</label>
-                    <input type="text" class="form-input" id="edit-source" value="${escHTML((nodeData.metadata || {}).sourceReference || '')}">
+                    <input type="text" class="form-input" id="edit-source" value="${escHTML((nodeData.metadata || {}).sourceReference || '')}" list="source-suggestions">
                 </div>
             </div>
+            ${suggestions.sourceReference.length ? `<datalist id="source-suggestions">${suggestions.sourceReference.map(s => `<option value="${escHTML(s)}">`).join('')}</datalist>` : ''}
         </div>
     `;
     
     document.getElementById('panel-body').innerHTML = html;
     
-    // Initialize searchable select
+    // Initialize components
+    initSearchableSelect('edit-category');
+    initSearchableSelect('new-rel-type');
+    initSearchableSelect('new-rel-family');
     initSearchableSelect('new-rel-target');
     
-    // Bind array input events
-    document.querySelectorAll('.array-add-btn').forEach(btn => {
-        btn.addEventListener('click', () => addArrayItem(btn.dataset.field));
-    });
-    
-    document.querySelectorAll('.array-item-remove').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const item = e.target.closest('.array-item');
-            if (item) item.remove();
-        });
-    });
+    initArrayInput('functionalRoles', suggestions.functionalRoles);
+    initArrayInput('domainScope', suggestions.domainScope);
+    initArrayInput('tags', suggestions.tags);
     
     document.querySelectorAll('.rel-remove-btn').forEach(btn => {
         btn.addEventListener('click', () => removeRelationship(parseInt(btn.dataset.idx)));
     });
     
     document.getElementById('add-rel-btn')?.addEventListener('click', addRelationship);
-}
-
-function renderArrayInput(field, values) {
-    return `
-        <div class="array-input-wrap">
-            <div class="array-items" id="${field}-items">
-                ${(values || []).map((v, i) => `<span class="array-item">${escHTML(v)}<button class="array-item-remove" data-field="${field}" data-idx="${i}">&times;</button></span>`).join('')}
-            </div>
-            <div class="array-add-input">
-                <input type="text" id="${field}-input" placeholder="Add ${friendlyLabel(field).toLowerCase()}...">
-                <button class="btn btn-sm array-add-btn" data-field="${field}">Add</button>
-            </div>
-        </div>
-    `;
 }
 
 function renderRelationshipItem(rel, idx) {
@@ -1895,110 +1820,40 @@ function renderRelationshipItem(rel, idx) {
 }
 
 function renderJsonEditor(nodeData) {
-    const html = `
+    document.getElementById('panel-body').innerHTML = `
         <div class="json-editor">
             <textarea class="json-textarea" id="json-textarea">${escHTML(JSON.stringify(nodeData, null, 2))}</textarea>
             <div id="json-error" class="json-error" style="display:none"></div>
         </div>
     `;
-    document.getElementById('panel-body').innerHTML = html;
-}
-
-function renderNodeList() {
-    const html = `
-        <div class="node-list">
-            ${nodes.map(n => `
-                <div class="node-list-item ${selectedNode === n ? 'selected' : ''}" data-id="${n.id}">
-                    <div class="node-list-item-name">${n.name || n.id}</div>
-                    <div class="node-list-item-meta">${n.category || 'Unknown'}</div>
-                </div>
-            `).join('')}
-        </div>
-    `;
-    document.getElementById('panel-body').innerHTML = html;
-    
-    document.querySelectorAll('.node-list-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const node = nodeMap[item.dataset.id];
-            if (node) {
-                selectNode(node);
-                fitToNode(node);
-            }
-        });
-    });
-}
-
-function addArrayItem(field) {
-    const input = document.getElementById(`${field}-input`);
-    if (!input || !input.value.trim()) return;
-    
-    const itemsContainer = document.getElementById(`${field}-items`);
-    const value = input.value.trim();
-    
-    const span = document.createElement('span');
-    span.className = 'array-item';
-    span.innerHTML = `${escHTML(value)}<button class="array-item-remove">&times;</button>`;
-    itemsContainer.appendChild(span);
-    
-    span.querySelector('.array-item-remove').addEventListener('click', () => span.remove());
-    input.value = '';
 }
 
 function addRelationship() {
     if (!selectedNode) return;
-    
-    const type = document.getElementById('new-rel-type').value;
+    const type = getSSValue('new-rel-type');
     const target = getSSValue('new-rel-target');
-    const family = document.getElementById('new-rel-family').value;
+    const family = getSSValue('new-rel-family');
+    if (!type || !target) { alert('Please select a relationship type and target node.'); return; }
     
-    if (!type || !target) {
-        alert('Please select a relationship type and target node.');
-        return;
-    }
-    
-    const rel = {
-        relationshipType: type,
-        targetNodeId: target,
-        relationshipFamily: family,
-        description: ''
-    };
-    
+    const rel = { relationshipType: type, targetNodeId: target, relationshipFamily: family || 'STRUCTURAL', description: '' };
     selectedNode._data.relationships = selectedNode._data.relationships || [];
     selectedNode._data.relationships.push(rel);
-    
-    edges.push({
-        source: selectedNode.id,
-        target: target,
-        family: family,
-        type: type,
-        description: ''
-    });
-    
+    edges.push({ source: selectedNode.id, target: target, family: family || 'STRUCTURAL', type: type, description: '' });
     updateStats();
     renderForm(selectedNode._data);
 }
 
 function removeRelationship(idx) {
     if (!selectedNode) return;
-    
     const rel = selectedNode._data.relationships[idx];
     selectedNode._data.relationships.splice(idx, 1);
-    
-    const edgeIdx = edges.findIndex(e => 
-        e.source === selectedNode.id && 
-        e.target === rel.targetNodeId && 
-        e.type === rel.relationshipType
-    );
+    const edgeIdx = edges.findIndex(e => e.source === selectedNode.id && e.target === rel.targetNodeId && e.type === rel.relationshipType);
     if (edgeIdx >= 0) edges.splice(edgeIdx, 1);
-    
     updateStats();
     renderForm(selectedNode._data);
 }
 
-function fitToNode(node) {
-    cam.x = W / 2 - node.x * cam.z;
-    cam.y = H / 2 - node.y * cam.z;
-}
+function fitToNode(node) { cam.x = W / 2 - node.x * cam.z; cam.y = H / 2 - node.y * cam.z; }
 
 /* ═══════ SAVE & ADD NODE ═══════ */
 function applyChanges() {
@@ -2006,8 +1861,7 @@ function applyChanges() {
     
     if (currentTab === 'json') {
         try {
-            const json = document.getElementById('json-textarea').value;
-            const parsed = JSON.parse(json);
+            const parsed = JSON.parse(document.getElementById('json-textarea').value);
             Object.assign(selectedNode._data, parsed);
             selectedNode.name = parsed.name || selectedNode.id;
             selectedNode.category = parsed.category || 'Reality';
@@ -2020,109 +1874,59 @@ function applyChanges() {
     } else {
         selectedNode._data.id = document.getElementById('edit-id').value;
         selectedNode._data.name = document.getElementById('edit-name').value;
-        selectedNode._data.category = document.getElementById('edit-category').value;
+        selectedNode._data.category = getSSValue('edit-category') || 'Reality';
         selectedNode._data.inheritanceLevel = parseInt(document.getElementById('edit-inheritance').value) || 0;
         selectedNode._data.description = document.getElementById('edit-description').value;
         selectedNode._data.longDescription = document.getElementById('edit-longdesc').value;
-        
         selectedNode._data.functionalRoles = getArrayValues('functionalRoles');
         selectedNode._data.domainScope = getArrayValues('domainScope');
-        
         if (!selectedNode._data.metadata) selectedNode._data.metadata = {};
         selectedNode._data.metadata.tags = getArrayValues('tags');
         selectedNode._data.metadata.confidenceScore = parseFloat(document.getElementById('edit-confidence').value) || 0.7;
         selectedNode._data.metadata.sourceReference = document.getElementById('edit-source').value;
-        
         selectedNode.name = selectedNode._data.name;
         selectedNode.category = selectedNode._data.category;
     }
     
     const idx = data.findIndex(d => d.id === selectedNode._data.id);
     if (idx >= 0) data[idx] = selectedNode._data;
-    
     document.getElementById('panel-title').textContent = selectedNode.name || selectedNode.id;
     document.getElementById('panel-subtitle').textContent = selectedNode.category || 'Unknown';
     updateStats();
 }
 
-function getArrayValues(field) {
-    const container = document.getElementById(`${field}-items`);
-    if (!container) return [];
-    return Array.from(container.children).map(span => span.textContent.replace('×', '').trim());
-}
-
 function addNewNode() {
     const id = 'new.node.' + Date.now();
     const newNodeData = {
-        id: id,
-        name: 'New Node',
-        category: 'Reality',
-        inheritanceLevel: 0,
-        description: '',
-        longDescription: '',
-        functionalRoles: [],
-        domainScope: [],
-        historicalContext: { summary: '', chronology: [] },
-        specific: {},
-        relationships: [],
-        metadata: {
-            tags: [],
-            confidenceScore: 0.7,
-            sourceReference: '',
-            createdAt: new Date().toISOString(),
-            auditTrail: []
-        },
+        id: id, name: 'New Node', category: 'Reality', inheritanceLevel: 0,
+        description: '', longDescription: '', functionalRoles: [], domainScope: [],
+        historicalContext: { summary: '', chronology: [] }, specific: {}, relationships: [],
+        metadata: { tags: [], confidenceScore: 0.7, sourceReference: '', createdAt: new Date().toISOString(), auditTrail: [] },
         references: []
     };
-    
     data.push(newNodeData);
-    
-    const node = {
-        id: id,
-        name: 'New Node',
-        category: 'Reality',
-        x: (Math.random() - 0.5) * 200,
-        y: (Math.random() - 0.5) * 200,
-        vx: 0,
-        vy: 0,
-        _data: newNodeData
-    };
-    
-    nodes.push(node);
-    nodeMap[id] = node;
-    
-    selectNode(node);
-    fitToNode(node);
-    alpha = 1;
-    updateStats();
+    const node = { id: id, name: 'New Node', category: 'Reality', x: (Math.random() - 0.5) * 200, y: (Math.random() - 0.5) * 200, vx: 0, vy: 0, _data: newNodeData };
+    nodes.push(node); nodeMap[id] = node;
+    selectNode(node); fitToNode(node); alpha = 1; updateStats();
 }
 
 function deleteNode() {
     if (!selectedNode) return;
     if (!confirm('Delete node "' + (selectedNode.name || selectedNode.id) + '"?')) return;
-    
     const dataIdx = data.findIndex(d => d.id === selectedNode.id);
     if (dataIdx >= 0) data.splice(dataIdx, 1);
-    
     edges = edges.filter(e => e.source !== selectedNode.id && e.target !== selectedNode.id);
-    
     const nodeIdx = nodes.indexOf(selectedNode);
     if (nodeIdx >= 0) nodes.splice(nodeIdx, 1);
-    
     delete nodeMap[selectedNode.id];
-    
-    selectNode(null);
-    updateStats();
+    selectNode(null); updateStats();
 }
 
 function saveJSON() {
     const json = JSON.stringify(data, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'data.json';
-    a.click();
+    const a = document.createElement('a'); a.href = url; a.download = 'data.json'; a.click();
     URL.revokeObjectURL(url);
 }
 
@@ -2134,41 +1938,16 @@ function updateStats() {
 /* ═══════ SEARCH ═══════ */
 function handleSearch(query) {
     const dropdown = document.getElementById('search-dropdown');
-    
-    if (!query.trim()) {
-        dropdown.classList.remove('open');
-        return;
-    }
-    
+    if (!query.trim()) { dropdown.classList.remove('open'); return; }
     const q = query.toLowerCase();
-    const results = nodes.filter(n => 
-        (n.name && n.name.toLowerCase().includes(q)) || 
-        (n.id && n.id.toLowerCase().includes(q)) ||
-        (n.category && n.category.toLowerCase().includes(q))
-    ).slice(0, 10);
-    
-    if (!results.length) {
-        dropdown.innerHTML = '<div class="search-result"><div class="search-result-name" style="color:var(--text-muted)">No results</div></div>';
-    } else {
-        dropdown.innerHTML = results.map(n => `
-            <div class="search-result" data-id="${n.id}">
-                <div class="search-result-name">${n.name || n.id}</div>
-                <div class="search-result-cat">${n.category || 'Unknown'}</div>
-            </div>
-        `).join('');
-    }
-    
+    const results = nodes.filter(n => (n.name && n.name.toLowerCase().includes(q)) || (n.id && n.id.toLowerCase().includes(q)) || (n.category && n.category.toLowerCase().includes(q))).slice(0, 10);
+    if (!results.length) { dropdown.innerHTML = '<div class="search-result"><div class="search-result-name" style="color:var(--text-muted)">No results</div></div>'; }
+    else { dropdown.innerHTML = results.map(n => `<div class="search-result" data-id="${n.id}"><div class="search-result-name">${n.name || n.id}</div><div class="search-result-cat">${n.category || 'Unknown'}</div></div>`).join(''); }
     dropdown.classList.add('open');
-    
     dropdown.querySelectorAll('.search-result').forEach(item => {
         item.addEventListener('click', () => {
             const node = nodeMap[item.dataset.id];
-            if (node) {
-                selectNode(node);
-                fitToNode(node);
-                dropdown.classList.remove('open');
-                document.getElementById('search-input').value = '';
-            }
+            if (node) { selectNode(node); fitToNode(node); dropdown.classList.remove('open'); document.getElementById('search-input').value = ''; }
         });
     });
 }
@@ -2177,68 +1956,32 @@ function handleSearch(query) {
 function setupEventHandlers() {
     canvas.addEventListener('mousedown', e => {
         const rect = canvas.getBoundingClientRect();
-        const sx = e.clientX - rect.left;
-        const sy = e.clientY - rect.top;
-        
+        const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
         const node = hitTest(sx, sy);
-        
         if (linkMode && node) {
             if (linkSourceNode && linkSourceNode !== node) {
-                const rel = {
-                    relationshipType: 'RELATED',
-                    targetNodeId: node.id,
-                    relationshipFamily: 'STRUCTURAL',
-                    description: ''
-                };
+                const rel = { relationshipType: 'RELATED', targetNodeId: node.id, relationshipFamily: 'STRUCTURAL', description: '' };
                 linkSourceNode._data.relationships = linkSourceNode._data.relationships || [];
                 linkSourceNode._data.relationships.push(rel);
-                
-                edges.push({
-                    source: linkSourceNode.id,
-                    target: node.id,
-                    family: 'STRUCTURAL',
-                    type: 'RELATED',
-                    description: ''
-                });
-                
-                updateStats();
-                if (selectedNode === linkSourceNode) renderForm(linkSourceNode._data);
+                edges.push({ source: linkSourceNode.id, target: node.id, family: 'STRUCTURAL', type: 'RELATED', description: '' });
+                updateStats(); if (selectedNode === linkSourceNode) renderForm(linkSourceNode._data);
             }
             linkSourceNode = node;
             document.getElementById('link-source-name').textContent = node.name || node.id;
-        } else if (node) {
-            draggedNode = node;
-            canvas.style.cursor = 'grabbing';
-        } else {
-            isPanning = true;
-            panStart = { x: e.clientX - cam.x, y: e.clientY - cam.y };
-            canvas.style.cursor = 'grabbing';
-        }
+        } else if (node) { draggedNode = node; canvas.style.cursor = 'grabbing'; }
+        else { isPanning = true; panStart = { x: e.clientX - cam.x, y: e.clientY - cam.y }; canvas.style.cursor = 'grabbing'; }
     });
     
     canvas.addEventListener('mousemove', e => {
         const rect = canvas.getBoundingClientRect();
-        const sx = e.clientX - rect.left;
-        const sy = e.clientY - rect.top;
+        const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
         mouseWorld = screenToWorld(sx, sy);
-        
-        if (draggedNode) {
-            draggedNode.x = mouseWorld.x;
-            draggedNode.y = mouseWorld.y;
-            draggedNode.vx = 0;
-            draggedNode.vy = 0;
-        } else if (isPanning) {
-            cam.x = e.clientX - panStart.x;
-            cam.y = e.clientY - panStart.y;
-        } else {
+        if (draggedNode) { draggedNode.x = mouseWorld.x; draggedNode.y = mouseWorld.y; draggedNode.vx = 0; draggedNode.vy = 0; }
+        else if (isPanning) { cam.x = e.clientX - panStart.x; cam.y = e.clientY - panStart.y; }
+        else {
             const node = hitTest(sx, sy);
-            if (node !== hoveredNode) {
-                hoveredNode = node;
-                if (node) showTooltip(node, sx, sy);
-                else hideTooltip();
-            } else if (node) {
-                showTooltip(node, sx, sy);
-            }
+            if (node !== hoveredNode) { hoveredNode = node; if (node) showTooltip(node, sx, sy); else hideTooltip(); }
+            else if (node) showTooltip(node, sx, sy);
             canvas.style.cursor = node ? 'pointer' : 'grab';
         }
     });
@@ -2246,76 +1989,44 @@ function setupEventHandlers() {
     canvas.addEventListener('mouseup', e => {
         if (draggedNode && !isPanning) {
             const rect = canvas.getBoundingClientRect();
-            const sx = e.clientX - rect.left;
-            const sy = e.clientY - rect.top;
-            const node = hitTest(sx, sy);
-            
-            if (node === draggedNode) {
-                selectNode(node);
-            }
+            const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+            if (hitTest(sx, sy) === draggedNode) selectNode(draggedNode);
         }
-        
-        draggedNode = null;
-        isPanning = false;
+        draggedNode = null; isPanning = false;
         canvas.style.cursor = hoveredNode ? 'pointer' : 'grab';
     });
     
-    canvas.addEventListener('mouseleave', () => {
-        hoveredNode = null;
-        hideTooltip();
-        draggedNode = null;
-        isPanning = false;
-    });
-    
+    canvas.addEventListener('mouseleave', () => { hoveredNode = null; hideTooltip(); draggedNode = null; isPanning = false; });
     canvas.addEventListener('wheel', e => {
         e.preventDefault();
         const rect = canvas.getBoundingClientRect();
-        const sx = e.clientX - rect.left;
-        const sy = e.clientY - rect.top;
+        const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
         const wp = screenToWorld(sx, sy);
-        
         const factor = e.deltaY > 0 ? 0.9 : 1.1;
         const nz = clamp(cam.z * factor, 0.1, 5);
-        
-        cam.x = sx - wp.x * nz;
-        cam.y = sy - wp.y * nz;
-        cam.z = nz;
+        cam.x = sx - wp.x * nz; cam.y = sy - wp.y * nz; cam.z = nz;
     }, { passive: false });
     
     document.getElementById('fit-btn').addEventListener('click', fitCamera);
-    
     document.getElementById('link-mode-btn').addEventListener('click', () => {
-        linkMode = !linkMode;
-        linkSourceNode = linkMode ? selectedNode : null;
+        linkMode = !linkMode; linkSourceNode = linkMode ? selectedNode : null;
         document.getElementById('link-mode-btn').classList.toggle('active', linkMode);
         document.getElementById('link-indicator').classList.toggle('visible', linkMode);
         canvas.classList.toggle('linking', linkMode);
-        if (linkSourceNode) {
-            document.getElementById('link-source-name').textContent = linkSourceNode.name || linkSourceNode.id;
-        }
+        if (linkSourceNode) document.getElementById('link-source-name').textContent = linkSourceNode.name || linkSourceNode.id;
     });
     
     document.getElementById('add-node-btn').addEventListener('click', addNewNode);
     document.getElementById('save-btn').addEventListener('click', saveJSON);
-    document.getElementById('toggle-panel-btn').addEventListener('click', () => {
-        document.body.classList.toggle('panel-collapsed');
-    });
-    
+    document.getElementById('toggle-panel-btn').addEventListener('click', () => document.body.classList.toggle('panel-collapsed'));
     document.getElementById('apply-btn').addEventListener('click', applyChanges);
     document.getElementById('cancel-btn').addEventListener('click', () => selectNode(null));
     document.getElementById('delete-node-btn').addEventListener('click', deleteNode);
     
     const searchInput = document.getElementById('search-input');
     searchInput.addEventListener('input', e => handleSearch(e.target.value));
-    searchInput.addEventListener('focus', e => {
-        if (e.target.value) handleSearch(e.target.value);
-    });
-    
-    document.addEventListener('click', e => {
-        if (!e.target.closest('.search-container')) {
-            document.getElementById('search-dropdown').classList.remove('open');
-        }
-    });
+    searchInput.addEventListener('focus', e => { if (e.target.value) handleSearch(e.target.value); });
+    document.addEventListener('click', e => { if (!e.target.closest('.search-container')) document.getElementById('search-dropdown').classList.remove('open'); });
     
     document.querySelectorAll('.panel-tab').forEach(tab => {
         tab.addEventListener('click', () => {
@@ -2323,28 +2034,20 @@ function setupEventHandlers() {
             tab.classList.add('active');
             currentTab = tab.dataset.tab;
             if (selectedNode) renderForm(selectedNode._data);
-            else if (currentTab === 'list') renderNodeList();
         });
     });
     
     document.addEventListener('keydown', e => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-        
         if (e.key === 'f') fitCamera();
         if (e.key === 'l') {
-            linkMode = !linkMode;
-            linkSourceNode = linkMode ? selectedNode : null;
+            linkMode = !linkMode; linkSourceNode = linkMode ? selectedNode : null;
             document.getElementById('link-mode-btn').classList.toggle('active', linkMode);
             document.getElementById('link-indicator').classList.toggle('visible', linkMode);
             canvas.classList.toggle('linking', linkMode);
-            if (linkSourceNode) {
-                document.getElementById('link-source-name').textContent = linkSourceNode.name || linkSourceNode.id;
-            }
         }
         if (e.key === 'Escape') {
-            selectNode(null);
-            linkMode = false;
-            linkSourceNode = null;
+            selectNode(null); linkMode = false; linkSourceNode = null;
             document.getElementById('link-mode-btn').classList.remove('active');
             document.getElementById('link-indicator').classList.remove('visible');
             canvas.classList.remove('linking');
@@ -2355,21 +2058,10 @@ function setupEventHandlers() {
 }
 
 /* ═══════ MAIN LOOP ═══════ */
-function animate() {
-    simulate();
-    draw();
-    requestAnimationFrame(animate);
-}
+function animate() { simulate(); draw(); requestAnimationFrame(animate); }
 
 /* ═══════ INIT ═══════ */
-async function init() {
-    setupCanvas();
-    await loadData();
-    setupEventHandlers();
-    animate();
-    selectNode(null);
-}
-
+async function init() { setupCanvas(); await loadData(); setupEventHandlers(); animate(); selectNode(null); }
 init();
     </script>
 </body>
