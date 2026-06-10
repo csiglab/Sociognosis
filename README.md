@@ -24,3 +24,4 @@ Sub Projects:
 - [Social Ontology](https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Guide/)
 - [Section of Reality Template](https://app.notion.com/p/Section-of-Reality-Template-334c0f5171ec804b8115c177dbc245a8?source=copy_link)
 - [Philosophia Naturalis](https://app.notion.com/p/Philosophia-Naturalis-32ac0f5171ec807b9388c870ab664abf?source=copy_link)
+- [Graphify](https://github.com/safishamsi/graphify)

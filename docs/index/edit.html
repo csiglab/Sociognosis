@@ -21,6 +21,7 @@
     --accent-rose: #d45a6d;
     --accent-violet: #8b6dd4;
     --accent-emerald: #4dd494;
+    --accent-amber: #d4944d;
     --border-subtle: rgba(255, 255, 255, 0.08);
     --border-medium: rgba(255, 255, 255, 0.14);
     --glow-cyan: 0 0 30px rgba(77, 212, 196, 0.2);
@@ -156,6 +157,18 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     background: linear-gradient(135deg, rgba(139, 109, 212, 0.25), rgba(139, 109, 212, 0.1));
     border-color: var(--accent-violet);
     box-shadow: 0 0 20px rgba(139, 109, 212, 0.2);
+}
+
+.btn-amber {
+    background: linear-gradient(135deg, rgba(212, 148, 77, 0.15), rgba(212, 148, 77, 0.05));
+    border-color: rgba(212, 148, 77, 0.35);
+    color: var(--accent-amber);
+}
+
+.btn-amber:hover {
+    background: linear-gradient(135deg, rgba(212, 148, 77, 0.25), rgba(212, 148, 77, 0.1));
+    border-color: var(--accent-amber);
+    box-shadow: 0 0 20px rgba(212, 148, 77, 0.2);
 }
 
 .btn-danger {
@@ -664,6 +677,126 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+/* Suggested Relations */
+.suggested-relations {
+    margin-top: 16px;
+}
+
+.suggested-relation {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.suggested-relation:hover {
+    border-color: rgba(212, 148, 77, 0.3);
+    background: rgba(212, 148, 77, 0.05);
+}
+
+.suggested-relation.selected {
+    border-color: var(--accent-amber);
+    background: rgba(212, 148, 77, 0.1);
+}
+
+.sr-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.sr-checkbox {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--border-medium);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.suggested-relation.selected .sr-checkbox {
+    background: var(--accent-amber);
+    border-color: var(--accent-amber);
+}
+
+.sr-checkbox svg {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.suggested-relation.selected .sr-checkbox svg {
+    opacity: 1;
+}
+
+.sr-type {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    padding: 2px 8px;
+    background: rgba(212, 148, 77, 0.15);
+    border: 1px solid rgba(212, 148, 77, 0.25);
+    border-radius: 3px;
+    color: var(--accent-amber);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.sr-target {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--text-primary);
+}
+
+.sr-desc {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-left: 26px;
+}
+
+.sr-confidence {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 26px;
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--text-muted);
+}
+
+.confidence-bar {
+    width: 60px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.confidence-fill {
+    height: 100%;
+    background: var(--accent-amber);
+    border-radius: 2px;
+    transition: width 0.3s;
+}
+
+.sr-existing {
+    margin-left: 26px;
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    color: var(--accent-rose);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
 /* Diff Visualizer */
@@ -1393,16 +1526,23 @@ body.panel-collapsed .edit-panel {
         </div>
 
         <div class="panel-actions" id="panel-actions" style="display:none">
+            <button class="btn btn-amber btn-sm" id="ai-relations-btn">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                </svg>
+                AI Improve Relations
+            </button>
             <button class="btn btn-ai btn-sm" id="ai-improve-btn">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                 </svg>
                 AI Improve
             </button>
-            <button class="btn btn-danger btn-sm" id="delete-node-btn">Delete Node</button>
-            <div class="spacer"></div>
+            <!-- <div class="spacer"></div> -->
             <button class="btn btn-sm" id="cancel-btn">Cancel</button>
             <button class="btn btn-primary btn-sm" id="apply-btn">Apply Changes</button>
+            <button class="btn btn-danger btn-sm" id="delete-node-btn">Delete Node</button>
         </div>
     </aside>
 
@@ -1450,7 +1590,7 @@ body.panel-collapsed .edit-panel {
                     <div class="settings-title">Global Context</div>
                     <div class="settings-row">
                         <label class="settings-label">Context URL</label>
-                        <input type="text" class="settings-input" id="global-context-url" value="../docs/index/schema/notes.md" placeholder="../data/index/schema/notes.md">
+                        <input type="text" class="settings-input" id="global-context-url" value="../data/index/schema/notes.md" placeholder="../data/index/schema/notes.md">
                     </div>
                     <div class="settings-row" style="display:flex;gap:8px;">
                         <button class="btn btn-sm" id="load-context-btn">Load Context</button>
@@ -1505,6 +1645,38 @@ body.panel-collapsed .edit-panel {
                     Generate
                 </button>
                 <button class="btn btn-success btn-sm" id="ai-accept-btn" disabled>Accept & Add Node</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Relations Modal -->
+    <div class="modal-overlay" id="ai-relations-modal">
+        <div class="modal" style="max-width:900px;">
+            <div class="modal-header">
+                <div class="modal-title">AI Discover Relations</div>
+                <button class="modal-close" id="ai-relations-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="context-block" style="margin-bottom:20px;">
+                    <div class="context-label">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Analysis Instructions (Optional)
+                    </div>
+                    <textarea class="context-textarea" id="ai-relations-instructions" placeholder="Optional: Provide specific instructions for relation discovery. E.g., 'Focus on causal relationships' or 'Look for ontological connections to Reality nodes'..."></textarea>
+                </div>
+
+                <div class="suggested-relations" id="suggested-relations">
+                    <div class="preview-empty">Click "Discover Relations" to analyze this node against all other nodes in the graph.</div>
+                </div>
+                <div id="ai-relations-error" class="json-error" style="display:none;margin-top:12px;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm" id="ai-relations-cancel">Cancel</button>
+                <button class="btn btn-amber btn-sm" id="ai-discover-btn">
+                    <span class="loading-spinner" id="ai-relations-spinner" style="display:none;"></span>
+                    Discover Relations
+                </button>
+                <button class="btn btn-success btn-sm" id="ai-apply-relations-btn" disabled>Apply Selected Relations</button>
             </div>
         </div>
     </div>
@@ -1597,7 +1769,7 @@ function friendlyLabel(k) {
     return k.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').replace(/^./, s => s.toUpperCase()).trim();
 }
 
-/* ═══════ CONSTANTS - UPDATED SCHEMA ═══════ */
+/* ═══════ CONSTANTS ═══════ */
 const CATEGORIES = [
     'Epistemic Purpose', 'Reality', 'Observation Interface', 'Observation Encoding',
     'Epistemic Representation Form (Epistemic Blueprint)', 'Concrete Epistemic Artifact',
@@ -1654,7 +1826,6 @@ function getCategoryColor(category) {
     return CATEGORY_COLORS[category] || FALLBACK_COLOR;
 }
 
-/* Specific field enums per category */
 const SPECIFIC_ENUMS = {
     purposeType: ['explanation', 'prediction', 'control', 'diagnosis', 'discovery', 'description', 'forecasting', 'intervention', 'understanding', 'other'],
     onticLayer: ['ontic', 'synontic', 'meta_ontic'],
@@ -1714,6 +1885,7 @@ let aiConfig = {
 
 let generatedNodeData = null;
 let improvedNodeData = null;
+let suggestedRelations = [];
 
 /* ═══════ AI FUNCTIONS ═══════ */
 async function loadSchema() {
@@ -1818,11 +1990,6 @@ function buildSystemPrompt(forCreation = true) {
 - references: Array of reference objects with title, optional link, and description
 
 Return ONLY valid JSON with no additional text or explanation.`;
-    } else {
-        prompt += `TASK: Improve the provided node JSON according to the user's instructions.
-Return ONLY the improved JSON object with no additional text or explanation.
-Maintain all existing valid data and only modify what's requested.
-Ensure the output conforms to the Sociognosis schema.`;
     }
     
     return prompt;
@@ -1859,6 +2026,67 @@ async function aiImproveNode(nodeData, instructions) {
     
     let jsonStr = result;
     const jsonMatch = result.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+        jsonStr = jsonMatch[0];
+    }
+    
+    return JSON.parse(jsonStr);
+}
+
+async function aiDiscoverRelations(sourceNode, otherNodes, instructions) {
+    const systemPrompt = `You are an expert ontology analyst specializing in discovering meaningful relationships in epistemic networks.
+
+Your task is to analyze a source node against all other nodes in the graph and identify potential relationships.
+
+RELATIONSHIP FAMILIES: ${RELATIONSHIP_FAMILIES.join(', ')}
+
+RELATIONSHIP TYPES: ${RELATIONSHIP_TYPES.join(', ')}
+
+ ${aiConfig.globalContext ? `GLOBAL CONTEXT:\n${aiConfig.globalContext}\n\n` : ''}
+
+IMPORTANT RULES:
+1. Only suggest relationships that are conceptually meaningful and well-justified
+2. Use appropriate relationship types from the provided list
+3. Provide a confidence score (0.0-1.0) for each suggestion
+4. Include a clear description explaining why this relationship makes sense
+5. Do NOT suggest relationships that already exist in the source node's relationships array
+6. Return ONLY a JSON array of suggested relationships
+
+RESPONSE FORMAT (JSON array only, no markdown):
+[
+  {
+    "targetNodeId": "id.of.target.node",
+    "relationshipType": "type_from_list",
+    "relationshipFamily": "family_from_list", 
+    "description": "Explanation of why this relationship is relevant",
+    "confidence": 0.85
+  }
+]`;
+
+    const otherNodesSummary = otherNodes.map(n => ({
+        id: n.id,
+        name: n.name,
+        category: n.category,
+        description: n._data?.description || ''
+    }));
+
+    const messages = [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: `SOURCE NODE:
+ ${JSON.stringify(sourceNode._data, null, 2)}
+
+OTHER NODES IN GRAPH:
+ ${JSON.stringify(otherNodesSummary, null, 2)}
+
+ ${instructions ? `ADDITIONAL INSTRUCTIONS:\n${instructions}` : ''}
+
+Analyze the source node against all other nodes and suggest meaningful relationships. Return only the JSON array.` }
+    ];
+    
+    const result = await callDeepSeekAPI(messages);
+    
+    let jsonStr = result;
+    const jsonMatch = result.match(/\[[\s\S]*\]/);
     if (jsonMatch) {
         jsonStr = jsonMatch[0];
     }
@@ -2034,7 +2262,6 @@ function setupModals() {
         nodes.push(node);
         nodeMap[id] = node;
         
-        // Add edges for relationships
         if (generatedNodeData.relationships) {
             generatedNodeData.relationships.forEach(rel => {
                 if (nodeMap[rel.targetNodeId]) {
@@ -2056,6 +2283,117 @@ function setupModals() {
         alpha = 1;
         
         closeModal('ai-create-modal');
+    });
+    
+    // AI Relations modal
+    document.getElementById('ai-relations-btn').addEventListener('click', () => {
+        if (!selectedNode) return;
+        
+        suggestedRelations = [];
+        document.getElementById('ai-relations-instructions').value = '';
+        document.getElementById('suggested-relations').innerHTML = '<div class="preview-empty">Click "Discover Relations" to analyze this node against all other nodes in the graph.</div>';
+        document.getElementById('ai-apply-relations-btn').disabled = true;
+        document.getElementById('ai-relations-error').style.display = 'none';
+        openModal('ai-relations-modal');
+    });
+    
+    document.getElementById('ai-relations-close').addEventListener('click', () => closeModal('ai-relations-modal'));
+    document.getElementById('ai-relations-cancel').addEventListener('click', () => closeModal('ai-relations-modal'));
+    
+    document.getElementById('ai-discover-btn').addEventListener('click', async () => {
+        if (!selectedNode) return;
+        
+        const btn = document.getElementById('ai-discover-btn');
+        const spinner = document.getElementById('ai-relations-spinner');
+        const container = document.getElementById('suggested-relations');
+        const errorEl = document.getElementById('ai-relations-error');
+        const applyBtn = document.getElementById('ai-apply-relations-btn');
+        const instructions = document.getElementById('ai-relations-instructions').value;
+        
+        if (!aiConfig.token) {
+            errorEl.textContent = 'API token not configured. Please configure in Settings.';
+            errorEl.style.display = 'block';
+            return;
+        }
+        
+        const otherNodes = nodes.filter(n => n.id !== selectedNode.id);
+        if (otherNodes.length === 0) {
+            errorEl.textContent = 'No other nodes exist in the graph to compare with.';
+            errorEl.style.display = 'block';
+            return;
+        }
+        
+        btn.disabled = true;
+        spinner.style.display = 'inline-block';
+        errorEl.style.display = 'none';
+        container.innerHTML = '<div class="preview-empty"><span class="loading-spinner"></span> Analyzing node relationships...</div>';
+        
+        try {
+            suggestedRelations = await aiDiscoverRelations(selectedNode, otherNodes, instructions);
+            
+            if (!Array.isArray(suggestedRelations) || suggestedRelations.length === 0) {
+                container.innerHTML = '<div class="preview-empty">No new relationships were discovered.</div>';
+                applyBtn.disabled = true;
+            } else {
+                // Filter out existing relationships
+                const existingRels = (selectedNode._data.relationships || []).map(r => r.targetNodeId);
+                suggestedRelations = suggestedRelations.filter(sr => !existingRels.includes(sr.targetNodeId));
+                
+                if (suggestedRelations.length === 0) {
+                    container.innerHTML = '<div class="preview-empty">All discovered relationships already exist.</div>';
+                    applyBtn.disabled = true;
+                } else {
+                    renderSuggestedRelations(suggestedRelations);
+                    applyBtn.disabled = false;
+                }
+            }
+        } catch (e) {
+            errorEl.textContent = 'Error: ' + e.message;
+            errorEl.style.display = 'block';
+            container.innerHTML = '<div class="preview-empty">Analysis failed</div>';
+            applyBtn.disabled = true;
+        } finally {
+            btn.disabled = false;
+            spinner.style.display = 'none';
+        }
+    });
+    
+    document.getElementById('ai-apply-relations-btn').addEventListener('click', () => {
+        if (!selectedNode || suggestedRelations.length === 0) return;
+        
+        const selectedRels = suggestedRelations.filter(sr => sr._selected);
+        if (selectedRels.length === 0) {
+            alert('Please select at least one relationship to apply.');
+            return;
+        }
+        
+        selectedNode._data.relationships = selectedNode._data.relationships || [];
+        
+        selectedRels.forEach(rel => {
+            const newRel = {
+                targetNodeId: rel.targetNodeId,
+                relationshipType: rel.relationshipType,
+                relationshipFamily: rel.relationshipFamily,
+                description: rel.description
+            };
+            selectedNode._data.relationships.push(newRel);
+            
+            if (nodeMap[rel.targetNodeId]) {
+                edges.push({
+                    source: selectedNode.id,
+                    target: rel.targetNodeId,
+                    family: rel.relationshipFamily,
+                    type: rel.relationshipType,
+                    description: rel.description
+                });
+            }
+        });
+        
+        extractSuggestions();
+        updateStats();
+        renderForm(selectedNode._data);
+        
+        closeModal('ai-relations-modal');
     });
     
     // AI Improve modal
@@ -2155,6 +2493,74 @@ function setupModals() {
         
         closeModal('ai-improve-modal');
     });
+}
+
+function renderSuggestedRelations(relations) {
+    const container = document.getElementById('suggested-relations');
+    
+    // Initialize all as selected by default
+    relations.forEach(r => r._selected = true);
+    
+    container.innerHTML = `
+        <div style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-family:var(--font-mono);font-size:0.62rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;">
+                ${relations.length} relationship${relations.length !== 1 ? 's' : ''} discovered
+            </span>
+            <button class="btn btn-sm" id="toggle-all-rels">Deselect All</button>
+        </div>
+        ${relations.map((rel, idx) => renderSuggestedRelation(rel, idx)).join('')}
+    `;
+    
+    // Add click handlers
+    container.querySelectorAll('.suggested-relation').forEach((el, idx) => {
+        el.addEventListener('click', () => {
+            relations[idx]._selected = !relations[idx]._selected;
+            el.classList.toggle('selected', relations[idx]._selected);
+        });
+    });
+    
+    // Toggle all button
+    const toggleBtn = document.getElementById('toggle-all-rels');
+    let allSelected = true;
+    toggleBtn.addEventListener('click', () => {
+        allSelected = !allSelected;
+        relations.forEach(r => r._selected = allSelected);
+        container.querySelectorAll('.suggested-relation').forEach((el, idx) => {
+            el.classList.toggle('selected', allSelected);
+        });
+        toggleBtn.textContent = allSelected ? 'Deselect All' : 'Select All';
+    });
+}
+
+function renderSuggestedRelation(rel, idx) {
+    const targetNode = nodeMap[rel.targetNodeId];
+    const confidence = Math.round((rel.confidence || 0.5) * 100);
+    
+    // Check if relationship already exists
+    const existingRels = (selectedNode._data.relationships || []);
+    const alreadyExists = existingRels.some(r => r.targetNodeId === rel.targetNodeId);
+    
+    return `
+        <div class="suggested-relation ${rel._selected ? 'selected' : ''}" data-idx="${idx}">
+            <div class="sr-header">
+                <div class="sr-checkbox">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <span class="sr-type">${friendlyLabel(rel.relationshipType || 'not_specified')}</span>
+                <span class="sr-target">${targetNode ? (targetNode.name || targetNode.id) : rel.targetNodeId}</span>
+            </div>
+            <div class="sr-desc">${escHTML(rel.description || 'No description provided')}</div>
+            <div class="sr-confidence">
+                <span>Confidence: ${confidence}%</span>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" style="width:${confidence}%"></div>
+                </div>
+            </div>
+            ${alreadyExists ? '<div class="sr-existing">Already exists</div>' : ''}
+        </div>
+    `;
 }
 
 function updateAPIStatusIndicator() {
@@ -2533,6 +2939,17 @@ async function loadData() {
             "relationships": [],
             "metadata": { "tags": ["market", "institution", "exchange"], "inheritanceLevel": 2, "confidenceScore": 0.97, "sourceReference": "Sociognosis Economic Ontology", "createdAt": "2024-06-10T00:00:00Z", "auditTrail": [] },
             "references": []
+        },
+        {
+            "id": "agent.trader", "name": "Trader", "category": "Epistemic Agent",
+            "description": "An economic agent who participates in market exchanges.",
+            "longDescription": "A trader is an individual or institution that buys and sells financial instruments in markets.",
+            "functionalRoles": ["Price Formation", "Liquidity Provision"],
+            "historicalContext": { "summary": "Traders have existed as long as markets have.", "chronology": [] },
+            "specific": { "agentType": "individualHuman", "domain": "economic" },
+            "relationships": [],
+            "metadata": { "tags": ["agent", "market", "trading"], "inheritanceLevel": 1, "confidenceScore": 0.92, "sourceReference": "Sociognosis Economic Ontology", "createdAt": "2024-06-10T00:00:00Z", "auditTrail": [] },
+            "references": []
         }];
     }
     extractSuggestions();
@@ -2617,11 +3034,10 @@ function simulate() {
     });
 }
 
-/* ═══════ DRAWING - OXFORD STYLE NODES ═══════ */
+/* ═══════ DRAWING ═══════ */
 function draw() {
     ctx.clearRect(0, 0, W, H);
     
-    // Draw edges
     edges.forEach(e => {
         const s = nodeMap[e.source], t = nodeMap[e.target];
         if (!s || !t) return;
@@ -2638,7 +3054,6 @@ function draw() {
         ctx.stroke();
     });
     
-    // Link preview line
     if (linkMode && linkSourceNode && hoveredNode && linkSourceNode !== hoveredNode) {
         const ss = worldToScreen(linkSourceNode.x, linkSourceNode.y), ts = worldToScreen(hoveredNode.x, hoveredNode.y);
         ctx.beginPath(); ctx.moveTo(ss.x, ss.y); ctx.lineTo(ts.x, ts.y);
@@ -2646,7 +3061,6 @@ function draw() {
         ctx.setLineDash([5, 3]); ctx.stroke(); ctx.setLineDash([]);
     }
     
-    // Draw nodes with Oxford-style elegance
     nodes.forEach(n => {
         const s = worldToScreen(n.x, n.y);
         const baseR = 7;
@@ -2654,7 +3068,6 @@ function draw() {
         const isH = hoveredNode === n, isSel = selectedNode === n, isLS = linkSourceNode === n;
         const color = getCategoryColor(n.category);
         
-        // Outer glow for selected/hovered
         if (isH || isSel || isLS) {
             const gc = isLS ? '#7b5ea7' : isSel ? '#c9a227' : '#e8e4d9';
             const glowGrd = ctx.createRadialGradient(s.x, s.y, r * 0.6, s.x, s.y, r + 16);
@@ -2666,7 +3079,6 @@ function draw() {
             ctx.fill();
         }
         
-        // Main node - elegant shaded disc
         const nodeGrd = ctx.createRadialGradient(s.x - r * 0.3, s.y - r * 0.3, 0, s.x, s.y, r);
         nodeGrd.addColorStop(0, hexToRGBA(lightenColor(color, 30), 1)); 
         nodeGrd.addColorStop(0.7, hexToRGBA(color, 1)); 
@@ -2677,20 +3089,17 @@ function draw() {
         ctx.arc(s.x, s.y, r, 0, Math.PI * 2); 
         ctx.fill();
         
-        // Subtle inner highlight
         ctx.fillStyle = hexToRGBA('#ffffff', 0.12);
         ctx.beginPath(); 
         ctx.arc(s.x - r * 0.25, s.y - r * 0.25, r * 0.35, 0, Math.PI * 2); 
         ctx.fill();
         
-        // Thin border ring
         ctx.strokeStyle = hexToRGBA(darkenColor(color, 30), 0.4);
         ctx.lineWidth = 0.5;
         ctx.beginPath();
         ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
         ctx.stroke();
         
-        // Selection ring
         if (isSel) { 
             ctx.strokeStyle = hexToRGBA('#c9a227', 0.55); 
             ctx.lineWidth = 1.5; 
@@ -2708,7 +3117,6 @@ function draw() {
             ctx.setLineDash([]); 
         }
         
-        // Label with serif font - Oxford style
         if (cam.z > 0.45) {
             const fontSize = Math.max(9, Math.min(12, r * 1.2));
             ctx.font = `400 ${fontSize}px Cormorant Garamond, serif`; 
@@ -2874,8 +3282,7 @@ function renderForm(nodeData) {
                 <label class="form-label">Chronology <span style="opacity:0.5;font-size:0.5em">(${(historicalContext.chronology || []).length} entries)</span></label>
                 <div id="chronology-container">
                     ${(historicalContext.chronology || []).map((entry, i) => renderChronologyEntry(entry, i)).join('')}
-                </div>
-                <div class="add-chronology-form" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle);">
+                                <div class="add-chronology-form" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle);">
                     <div class="form-row-inline">
                         <div class="form-row">
                             <label class="form-label">Year</label>
@@ -3029,7 +3436,6 @@ function addChronologyEntry() {
         context: context
     });
     
-    // Clear inputs
     document.getElementById('new-chron-year').value = '';
     document.getElementById('new-chron-event').value = '';
     document.getElementById('new-chron-context').value = '';
@@ -3145,18 +3551,14 @@ function applyChanges() {
         selectedNode._data.longDescription = document.getElementById('edit-longdesc').value;
         selectedNode._data.functionalRoles = getArrayValues('functionalRoles');
         
-        // Historical Context - preserve chronology
         selectedNode._data.historicalContext = selectedNode._data.historicalContext || { summary: '', chronology: [] };
         selectedNode._data.historicalContext.summary = document.getElementById('edit-hist-summary').value;
-        // chronology is already preserved from form interactions
         
-        // Specific properties
         selectedNode._data.specific = selectedNode._data.specific || {};
         selectedNode._data.specific.onticLayer = getSSValue('edit-ontic-layer');
         selectedNode._data.specific.onticCategory = getSSValue('edit-ontic-cat');
         selectedNode._data.specific.domain = getSSValue('edit-domain');
         
-        // Metadata
         if (!selectedNode._data.metadata) selectedNode._data.metadata = {};
         selectedNode._data.metadata.tags = getArrayValues('tags');
         selectedNode._data.metadata.inheritanceLevel = parseInt(document.getElementById('edit-inheritance').value) || 0;
@@ -3222,7 +3624,7 @@ function handleSearch(query) {
     const q = query.toLowerCase();
     const results = nodes.filter(n => (n.name && n.name.toLowerCase().includes(q)) || (n.id && n.id.toLowerCase().includes(q)) || (n.category && n.category.toLowerCase().includes(q))).slice(0, 10);
     if (!results.length) { dropdown.innerHTML = '<div class="search-result"><div class="search-result-name" style="color:var(--text-muted)">No results</div></div>'; }
-    else { dropdown.innerHTML = results.map(n    => `<div class="search-result" data-id="${n.id}"><div class="search-result-name">${escHTML(n.name || n.id)}</div><div class="search-result-cat">${escHTML(n.category || 'Unknown')}</div></div>`).join(''); }
+    else { dropdown.innerHTML = results.map(n => `<div class="search-result" data-id="${n.id}"><div class="search-result-name">${escHTML(n.name || n.id)}</div><div class="search-result-cat">${escHTML(n.category || 'Unknown')}</div></div>`).join(''); }
     dropdown.classList.add('open');
     dropdown.querySelectorAll('.search-result').forEach(item => {
         item.addEventListener('click', () => {
@@ -3334,6 +3736,7 @@ function setupEventHandlers() {
             closeModal('settings-modal');
             closeModal('ai-create-modal');
             closeModal('ai-improve-modal');
+            closeModal('ai-relations-modal');
         }
     });
     
@@ -3353,7 +3756,6 @@ async function init() {
     animate();
     selectNode(null);
     
-    // Attempt to load context on startup
     try {
         await loadGlobalContext();
     } catch (e) {
