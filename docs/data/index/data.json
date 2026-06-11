@@ -1666,34 +1666,139 @@
   },
   {
     "id": "12",
-    "name": "Private Military Co.",
-    "category": "Institution",
+    "name": "Private Military Company",
+    "category": "Reality",
     "inheritanceLevel": 0,
-    "description": "Private companies providing armed combat or security services.",
-    "longDescription": "N/A",
+    "description": "Private companies providing armed combat or security services, typically under contract to governments or non-state actors.",
+    "longDescription": "Private military companies (PMCs) are corporate entities that supply military expertise, combat forces, and security services. They operate in conflict zones, often supplementing state military capabilities. As organizations, they have hierarchical structures, profit motives, and legal status. Their role in modern warfare raises questions about accountability, regulation, and the privatization of violence.",
     "functionalRoles": [
-      "Militant"
+      "Militant",
+      "Security Contractor"
     ],
     "domainScope": [
       "Militant"
     ],
     "historicalContext": {
-      "summary": "N/A",
-      "chronology": []
+      "summary": "Rise of PMCs accelerated after the Cold War, with notable expansion during the Iraq War (2003–2011).",
+      "chronology": [
+        {
+          "year": 1990,
+          "event": "Post-Cold War reduction in military forces creates demand for private security.",
+          "context": "Many former soldiers seek employment in private sector."
+        },
+        {
+          "year": 2001,
+          "event": "US operations in Afghanistan increase reliance on PMCs for logistics and security.",
+          "context": "Blackwater, DynCorp, and others receive large contracts."
+        },
+        {
+          "year": 2007,
+          "event": "Nisour Square shooting by Blackwater contractors in Iraq sparks international debate on PMC accountability.",
+          "context": "Leads to legal reforms and stricter oversight."
+        },
+        {
+          "year": 2020,
+          "event": "Continued use of PMCs in asymmetric conflicts and private security for corporate assets.",
+          "context": "Industry estimated at $200 billion annually."
+        }
+      ]
     },
-    "specific": {},
-    "relationships": [],
+    "specific": {
+      "onticLayer": "ontic",
+      "onticCategory": "entity",
+      "onticSubtype": "organization",
+      "domain": "social",
+      "realityDescription": "Private companies providing armed combat or security services under contract.",
+      "constitutiveProperties": [
+        "profit-driven motive",
+        "provides military services",
+        "contractual relationship with clients",
+        "hierarchical organizational structure"
+      ],
+      "stateVariables": [
+        "number of active employees",
+        "total contract value",
+        "current operational regions"
+      ],
+      "emergentProperties": [
+        "influence on conflict dynamics",
+        "blurring of public-private use of force"
+      ],
+      "latentStructures": [
+        "informal networks with state intelligence agencies"
+      ],
+      "boundaryConditions": [
+        "subject to national and international law",
+        "limited accountability in non-signatory states"
+      ]
+    },
+    "relationships": [
+      {
+        "targetNodeId": "46",
+        "relationshipType": "subtype_of",
+        "relationshipFamily": "classification",
+        "description": "Private Military Company is a corporate, institutionalized subtype of mercenary group, formalizing private combat for profit under legal contracts."
+      },
+      {
+        "targetNodeId": "3",
+        "relationshipType": "subtype_of",
+        "relationshipFamily": "classification",
+        "description": "Many Private Military Companies operate across multiple countries, making them a subtype of Multinational Corporation with a specialized service focus."
+      },
+      {
+        "targetNodeId": "74",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "Private Military Companies depend on arms manufacturers for weapons, equipment, and military technology to fulfill their contracts."
+      },
+      {
+        "targetNodeId": "5",
+        "relationshipType": "competes_with",
+        "relationshipFamily": "interaction",
+        "description": "Private Military Companies are often contracted by governments to combat insurgent groups, leading to direct conflict and competition for territorial control."
+      },
+      {
+        "targetNodeId": "reality.market",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Private Military Companies operate as suppliers in the market for security services, interacting with market dynamics of supply, demand, and pricing."
+      },
+      {
+        "targetNodeId": "9",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "Private Military Companies rely on financial institutions for funding, payment processing, and capital to sustain operations and secure contracts."
+      },
+      {
+        "targetNodeId": "33",
+        "relationshipType": "constrained_by",
+        "relationshipFamily": "constraint",
+        "description": "Private Military Companies are subject to international law and may face legal constraints from international courts regarding accountability and conduct."
+      }
+    ],
     "metadata": {
       "tags": [
-        "type",
-        "actor"
+        "reality",
+        "entity",
+        "organization",
+        "private-military",
+        "security-contractor"
       ],
+      "inheritanceLevel": 0,
       "confidenceScore": 0.8,
-      "sourceReference": "N/A",
+      "sourceReference": "Wikipedia: Private Military Company",
       "createdAt": "2023-10-27T00:00:00Z",
       "auditTrail": []
     },
-    "references": []
+    "references": [
+      {
+        "title": "Private Military Company – Wikipedia",
+        "link": "https://en.wikipedia.org/wiki/Private_military_company",
+        "description": "General overview of private military companies."
+      }
+    ],
+    "relationshipFamily": "not_specified",
+    "relationshipType": "not_specified"
   },
   {
     "id": "13",
