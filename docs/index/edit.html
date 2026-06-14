@@ -62,6 +62,108 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ═══════ BEAUTIFICATION: Gilt text selection — fine bookbinding gilt edge ═══════ */
+::selection {
+    background: rgba(201, 149, 108, 0.28);
+    color: var(--parchment);
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.3);
+}
+::-moz-selection {
+    background: rgba(201, 149, 108, 0.28);
+    color: var(--parchment);
+}
+
+/* ═══════ BEAUTIFICATION: Themed scrollbars — slim graphite rails with copper hover ═══════ */
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
+*::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background 0.2s ease;
+}
+*::-webkit-scrollbar-thumb:hover {
+    background: rgba(201, 149, 108, 0.4);
+    background-clip: padding-box;
+}
+* { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.08) transparent; }
+
+/* ═══════ BEAUTIFICATION: Number-input spinners — refined dark-theme controls ═══════ */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* ═══════ BEAUTIFICATION: Autofill — keep the dark velvet palette intact ═══════ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-primary) !important;
+    -webkit-box-shadow: 0 0 0 1000px rgba(18, 20, 26, 0.95) inset !important;
+    caret-color: var(--text-primary);
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ═══════ BEAUTIFICATION: focus-visible — accessible copper keyboard rings ═══════ */
+.btn:focus-visible,
+.qa-btn:focus-visible,
+.panel-tab:focus-visible,
+.modal-close:focus-visible,
+.sb-chip:focus-visible,
+.search-mode-toggle:focus-visible,
+.ss-toggle:focus-visible,
+.ss-clear:focus-visible,
+.array-add-btn:focus-visible,
+.search-clear:focus-visible {
+    outline: 2px solid var(--accent-copper);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+.form-input:focus-visible,
+.form-textarea:focus-visible,
+.settings-input:focus-visible,
+.search-input:focus-visible,
+.ss-input:focus-visible,
+.help-search:focus-visible,
+.json-textarea:focus-visible {
+    outline: none;
+    border-color: var(--accent-copper);
+    box-shadow: 0 0 0 2px rgba(201, 149, 108, 0.18);
+}
+
+/* ═══════ BEAUTIFICATION: Search clear (×) button ═══════ */
+.search-clear {
+    position: absolute;
+    right: 36px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 2px 4px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+    z-index: 5;
+}
+.search-clear.visible { display: flex; }
+.search-clear:hover { color: var(--accent-rose); }
+.btn-group .search-clear { right: 34px; font-size: 14px; padding: 1px 3px; }
+
 body {
     background: var(--bg-deep);
     color: var(--text-primary);
@@ -469,7 +571,7 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
 /* Quick Actions */
 .quick-actions {
     position: absolute;
-    bottom: 24px;
+    bottom: 64px;
     right: 24px;
     z-index: 15;
     display: flex;
@@ -527,22 +629,34 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
 #minimap-canvas { width: 100%; height: 100%; }
 
 /* Status Bar */
+/* Floating glass status pill — premium single-corner element, no full-width strip */
 .status-bar {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 28px;
-    background: linear-gradient(90deg, rgba(18,20,26,0), rgba(18,20,26,0.92) 15%, rgba(18,20,26,0.92) 85%, rgba(18,20,26,0));
+    bottom: 20px;
+    right: 24px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding: 0 20px;
+    gap: 4px;
+    padding: 5px 8px;
+    background: rgba(31, 35, 45, 0.88);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
     z-index: 10;
     font-family: var(--font-mono);
     font-size: 0.6rem;
     color: var(--text-muted);
     letter-spacing: 0.05em;
+}
+
+/* Editorial divider between raw counts and state chips */
+.status-bar .sb-sep {
+    width: 1px;
+    height: 16px;
+    background: var(--border-medium);
+    margin: 0 6px;
+    flex-shrink: 0;
 }
 
 .status-bar span { padding: 0 12px; position: relative; }
@@ -839,7 +953,7 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     border-radius: 8px; flex-shrink: 0;
 }
 
-/* Tooltip */
+/* Tooltip — smooth fade + slide-up entrance */
 #tooltip {
     position: absolute;
     display: none;
@@ -853,7 +967,12 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     z-index: 100;
     border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
     box-shadow: var(--shadow-lg);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
 }
+#tooltip.visible { display: block; }
+#tooltip.shown { opacity: 1; transform: translateY(0); }
 
 .tt-category {
     font-family: var(--font-mono);
@@ -2643,12 +2762,11 @@ body.panel-collapsed .edit-panel {
         </div>
 
         <div class="status-bar">
-            <div class="status-bar-left">
+            <div class="status-bar-counts">
                 <span>Nodes <span class="val" id="node-count">0</span></span>
                 <span>Edges <span class="val" id="edge-count">0</span></span>
-                <span class="status-bar-metric" id="density-metric" title="Click for full statistics">Density <span class="val" id="sb-density">0.0%</span></span>
-                <span class="status-bar-metric" id="clustering-metric" title="Click for full statistics">Clustering <span class="val" id="sb-clustering">0.00</span></span>
             </div>
+            <div class="sb-sep"></div>
             <div class="status-bar-right">
                 <span id="sb-search"></span>
                 <span class="sb-chip sb-selection" id="selection-chip">
@@ -4777,10 +4895,17 @@ function showTooltip(node, sx, sy) {
     document.getElementById('tt-desc').textContent = node._data.description || '';
     let tx = sx + 18, ty = sy + 18;
     if (tx + 280 > W) tx = sx - 298; if (ty + 110 > H) ty = H - 120;
-    tt.style.left = tx + 'px'; tt.style.top = ty + 'px'; tt.style.display = 'block';
+    tt.style.left = tx + 'px'; tt.style.top = ty + 'px';
+    tt.style.display = 'block';
+    // Trigger fade/slide-in transition (harmless if CSS lacks the transition)
+    requestAnimationFrame(() => tt.classList.add('shown'));
 }
 
-function hideTooltip() { document.getElementById('tooltip').style.display = 'none'; }
+function hideTooltip() {
+    const tt = document.getElementById('tooltip');
+    tt.classList.remove('shown');
+    tt.style.display = 'none';
+}
 
 /* ═══════ DIRTY-STATE TRACKING ═══════ */
 let nodeSnapshot = null; // JSON snapshot for dirty comparison
@@ -6048,44 +6173,9 @@ function renderStatsModal() {
     openModal('stats-modal');
 }
 
-/* Update the status bar live metrics + selection/search state */
+/* Update the floating status pill — search/selection state only.
+   Density/clustering metrics live in the Statistics modal (click Stats). */
 function updateStatusBar() {
-    const V = nodes.length;
-    const E = edges.length;
-
-    // Live scholarly metrics
-    const density = V > 1 ? (2 * E) / (V * (V - 1)) : 0;
-    const densityEl = document.getElementById('sb-density');
-    if (densityEl) densityEl.textContent = (density * 100).toFixed(1) + '%';
-
-    // Compute approximate clustering for status bar (quick version)
-    const clusteringEl = document.getElementById('sb-clustering');
-    if (clusteringEl) {
-        const adj = {};
-        nodes.forEach(n => { adj[n.id] = []; });
-        edges.forEach(e => {
-            if (adj[e.source]) adj[e.source].push(e.target);
-            if (adj[e.target]) adj[e.target].push(e.source);
-        });
-        let total = 0, count = 0;
-        nodes.forEach(n => {
-            const neighbors = adj[n.id] || [];
-            const k = neighbors.length;
-            if (k < 2) return;
-            const neighborSet = new Set(neighbors);
-            let links = 0;
-            for (let i = 0; i < neighbors.length; i++) {
-                for (let j = i + 1; j < neighbors.length; j++) {
-                    if (adj[neighbors[i]] && adj[neighbors[i]].includes(neighbors[j])) links++;
-                }
-            }
-            total += (2 * links) / (k * (k - 1));
-            count++;
-        });
-        clusteringEl.textContent = count > 0 ? (total / count).toFixed(2) : '0.00';
-    }
-
-    // Search status
     const searchEl = document.getElementById('sb-search');
     if (searchEl) {
         if (searchMatchCount > 0) {
@@ -6182,10 +6272,6 @@ function setupEventHandlers() {
     document.getElementById('stats-modal').addEventListener('click', (e) => {
         if (e.target === e.currentTarget) closeModal('stats-modal');
     });
-
-    // Status bar metric launchers
-    document.getElementById('density-metric').addEventListener('click', renderStatsModal);
-    document.getElementById('clustering-metric').addEventListener('click', renderStatsModal);
 
     // Inline deselect button
     document.getElementById('deselect-btn').addEventListener('click', resetSelection);
