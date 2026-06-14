@@ -1337,7 +1337,6 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     border: 1px solid rgba(212, 168, 87, 0.2);
     border-radius: 4px;
     color: var(--accent-amber);
-    text-transform: uppercase;
     letter-spacing: 0.1em;
 }
 
@@ -2046,6 +2045,8 @@ body.panel-collapsed .edit-panel {
     background: rgba(155, 126, 176, 0.12);
     border: 1px solid rgba(155, 126, 176, 0.2);
     color: var(--accent-plum);
+    /* Relationship types must respect the model's case (not ALL CAPS) */
+    text-transform: none;
 }
 
 .badge-amber {

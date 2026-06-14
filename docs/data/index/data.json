@@ -1166,53 +1166,70 @@
       }
     ]
   },
+
   {
-    "id": "market_agricultural_land",
-    "name": "Agricultural Land Market",
-    "category": "Market",
-    "inheritanceLevel": 1,
-    "description": "Market for the allocation, sale, lease, and valuation of land used primarily for agricultural production.",
-    "functionalRoles": [
-      "Allocate farmland",
-      "Support agricultural investment",
-      "Enable agricultural production"
-    ],
-    "domainScope": [
-      "Agriculture",
-      "Food Production",
-      "Livestock"
-    ],
-    "historicalContext": {
-      "summary": "Agricultural land markets emerged with formalized property rights and commercial agriculture.",
-      "chronology": []
-    },
-    "specific": {},
-    "relationships": [
-      {
-        "relationshipFamily": "CLASSIFICATION",
-        "relationshipType": "SPECIALIZES",
-        "targetNodeId": "market_land",
-        "description": "Specialized segment of the land market."
-      }
-    ],
-    "metadata": {
-      "tags": [
-        "land",
-        "agriculture",
-        "market"
-      ],
-      "confidenceScore": 0.99,
-      "sourceReference": "Ontology Design",
-      "createdAt": "2026-06-08T00:00:00Z",
-      "auditTrail": []
-    },
-    "references": [
-      {
-        "title": "Agricultural Economics",
-        "description": "Analysis of agricultural land allocation and valuation."
-      }
-    ]
+  "id": "market_agricultural_land",
+  "name": "Agricultural Land Market",
+  "category": "Reality",
+  "inheritanceLevel": 1,
+  "description": "Market for the allocation, sale, lease, and valuation of land used primarily for agricultural production. This is a segment of social/economic reality.",
+  "functionalRoles": [
+    "Allocate farmland",
+    "Support agricultural investment",
+    "Enable agricultural production"
+  ],
+  "domainScope": [
+    "Agriculture",
+    "Food Production",
+    "Livestock"
+  ],
+  "historicalContext": {
+    "summary": "Agricultural land markets emerged with formalized property rights and commercial agriculture.",
+    "chronology": []
   },
+  "specific": {
+    "onticLayer": "synontic",
+    "onticCategory": "system",
+    "onticSubtype": "economic_system",
+    "domain": "economic",
+    "realityDescription": "Institutional and allocative system for agricultural land as a factor of production, governed by property rights, lease agreements, and market transactions.",
+    "constitutiveProperties": [],
+    "stateVariables": [],
+    "emergentProperties": [],
+    "latentStructures": [],
+    "boundaryConditions": []
+  },
+  "relationships": [
+    {
+      "relationshipFamily": "CLASSIFICATION",
+      "relationshipType": "SPECIALIZES",
+      "targetNodeId": "market_land",
+      "description": "Specialized segment of the land market."
+    }
+  ],
+  "metadata": {
+    "tags": [
+      "land",
+      "agriculture",
+      "market"
+    ],
+    "inheritanceLevel": 1,
+    "confidenceScore": 0.99,
+    "sourceReference": "Ontology Design",
+    "createdAt": "2026-06-08T00:00:00Z",
+    "auditTrail": []
+  },
+  "references": [
+    {
+      "title": "Agricultural Economics",
+      "description": "Analysis of agricultural land allocation and valuation."
+    }
+  ],
+  "longDescription": "",
+  "relationshipFamily": "classification",
+  "relationshipType": "specializes"
+},
+  
   {
     "id": "market_residential_land",
     "name": "Residential Land Market",
