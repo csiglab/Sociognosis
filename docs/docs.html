@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sociognosis · Documentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            bg: 'var(--bg)',
+            fg: 'var(--fg)',
+            muted: 'var(--muted)',
+            accent: 'var(--accent)',
+            accentDark: 'var(--accent-dark)',
+            card: 'var(--card)',
+            border: 'var(--border)',
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            body: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #FAFBFC;
+      --fg: #1E293B;
+      --muted: #64748B;
+      --accent: #4A6FA5;
+      --accent-dark: #3A5A8A;
+      --accent-glow: rgba(74, 111, 165, 0.15);
+      --card: #FFFFFF;
+      --border: #E2E8F0;
+      --border-hover: #CBD5E1;
+      --input-bg: #FFFFFF;
+      --skeleton-from: #f1f5f9;
+      --skeleton-to: #e2e8f0;
+      --footer-bg: #0B1A2B;
+      --footer-fg: #E8EDF3;
+      --footer-muted: #6B8299;
+      --footer-dim: #4A6075;
+      --footer-border: rgba(107, 130, 153, 0.2);
+      --dropdown-shadow: rgba(0, 0, 0, 0.12);
+      --card-shadow: rgba(0, 0, 0, 0.06);
+      --tag-bg: rgba(30, 41, 59, 0.06);
+      --tag-selected-border: #1E293B;
+      --nav-bg: rgba(250, 251, 252, 0.8);
+      --overlay-bg: rgba(0, 0, 0, 0.4);
+      --code-bg: #F1F5F9;
+      --code-fg: #334155;
+    }
+
+    .dark {
+      --bg: #0D1926;
+      --fg: #E8EDF3;
+      --muted: #8BA3BC;
+      --accent: #6B9BD1;
+      --accent-dark: #4A7AB0;
+      --accent-glow: rgba(107, 155, 209, 0.2);
+      --card: #152238;
+      --border: #243B55;
+      --border-hover: #3A5470;
+      --input-bg: #0F1D2D;
+      --skeleton-from: #1a2d45;
+      --skeleton-to: #243B55;
+      --dropdown-shadow: rgba(0, 0, 0, 0.4);
+      --card-shadow: rgba(0, 0, 0, 0.3);
+      --tag-bg: rgba(107, 155, 209, 0.12);
+      --tag-selected-border: #6B9BD1;
+      --nav-bg: rgba(13, 25, 38, 0.85);
+      --overlay-bg: rgba(0, 0, 0, 0.6);
+      --code-bg: #1a2d45;
+      --code-fg: #C9D9E8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 200ms ease-out, color 200ms ease-out;
+    }
+
+    .main-content { flex: 1 0 auto; }
+    .site-footer { flex-shrink: 0; }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-entrance { opacity: 0; animation: fadeInUp 250ms ease-out forwards; }
+    .delay-1 { animation-delay: 0ms; }
+    .delay-2 { animation-delay: 80ms; }
+    .delay-3 { animation-delay: 150ms; }
+    .delay-4 { animation-delay: 220ms; }
+    .delay-5 { animation-delay: 290ms; }
+    @media (prefers-reduced-motion: reduce) {
+      .animate-entrance { animation: none; opacity: 1; }
+    }
+
+    /* Navigation */
+    .nav-bar {
+      position: sticky; top: 0; z-index: 100;
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-content {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--fg); }
+    .nav-brand img { height: 28px; width: auto; }
+    .nav-brand h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; letter-spacing: 0.02em; }
+    .nav-link { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.05em; color: var(--muted); text-transform: uppercase; }
+
+    /* Top Controls */
+    .top-controls {
+      position: fixed;
+      top: 80px;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .top-controls-inner {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      pointer-events: auto;
+    }
+    .controls-group { display: flex; align-items: center; gap: 8px; }
+
+    .icon-btn {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 150ms ease-out;
+      box-shadow: 0 2px 8px var(--card-shadow);
+    }
+    .icon-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--fg);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px var(--card-shadow);
+    }
+    .icon-btn:active { transform: translateY(0); }
+
+    /* Theme Toggle Animation */
+    .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: opacity 200ms ease-out, transform 200ms ease-out; }
+    .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+    .theme-toggle .icon-sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+    .dark .theme-toggle .icon-moon { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    .dark .theme-toggle .icon-sun { opacity: 1; transform: rotate(0deg) scale(1); }
+
+    /* Focus & Accessibility */
+    button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+    /* Footer Styles */
+    .site-footer { background-color: var(--footer-bg); color: var(--footer-fg); }
+    .footer-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--footer-dim);
+      margin-bottom: 1rem;
+    }
+    .footer-link {
+      color: var(--footer-muted);
+      text-decoration: none;
+      font-size: 0.8125rem;
+      transition: color 150ms ease-out;
+      display: inline-block;
+      padding: 0.125rem 0;
+    }
+    .footer-link:hover { color: var(--footer-fg); }
+
+    /* Docs Page Specific Styles */
+    .docs-hero {
+      padding-top: 4rem;
+      padding-bottom: 2rem;
+    }
+
+    .section-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 3rem 0;
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.875rem;
+      font-weight: 500;
+      color: var(--fg);
+      margin-bottom: 1.5rem;
+    }
+
+    .docs-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 150ms ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+    .docs-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--card-shadow);
+      border-color: var(--accent);
+    }
+
+    .docs-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .docs-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--tag-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .docs-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: var(--fg);
+    }
+
+    .docs-card-body {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.625;
+    }
+
+    .docs-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 0.75rem;
+    }
+
+    .docs-list li {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      padding: 0.25rem 0 0.25rem 1rem;
+      position: relative;
+    }
+
+    .docs-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--border);
+    }
+
+    /* Code Block */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      color: var(--code-fg);
+      line-height: 1.7;
+    }
+
+    .code-block .key { color: var(--accent); }
+    .code-block .string { color: #059669; }
+    .dark .code-block .string { color: #34D399; }
+    .code-block .comment { color: var(--muted); font-style: italic; }
+
+    /* TOC */
+    .toc-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 6px;
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.8125rem;
+      transition: all 150ms ease-out;
+      border-left: 2px solid transparent;
+    }
+    .toc-link:hover {
+      color: var(--fg);
+      background: var(--tag-bg);
+      border-left-color: var(--accent);
+    }
+    .toc-link.active {
+      color: var(--accent);
+      font-weight: 500;
+      border-left-color: var(--accent);
+    }
+
+    /* Table */
+    .schema-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+    }
+    .schema-table th {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .schema-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--fg);
+    }
+    .schema-table tr:last-child td { border-bottom: none; }
+    .schema-table tr:hover td { background: var(--tag-bg); }
+
+    .tag-pill {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.625rem;
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      background: var(--tag-bg);
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    /* Callout */
+    .callout {
+      background: var(--tag-bg);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    .callout strong { color: var(--fg); }
+
+    .anchor-offset { scroll-margin-top: 100px; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="nav-bar">
+    <div class="nav-content">
+      <a href="index.html" class="nav-brand">
+        <img src="img/logo.png" alt="Logo" onerror="this.style.display='none'">
+        <h1>Sociognosis</h1>
+      </a>
+      <div class="flex items-center gap-6">
+        <a href="index.html" class="nav-link hidden sm:block hover:text-fg transition-colors">Introduction</a>
+        <a href="methodology.html" class="nav-link hidden sm:block hover:text-fg transition-colors">Methodology</a>
+        <span class="nav-link hidden sm:block" style="color: var(--fg);">Docs</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Top Controls -->
+  <div class="top-controls animate-entrance">
+    <div class="top-controls-inner">
+      <div class="controls-group">
+        <button class="icon-btn theme-toggle relative" id="themeToggle" aria-label="Toggle dark mode" type="button">
+          <svg class="icon-moon w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
+          </svg>
+          <svg class="icon-sun w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0a3.75 3.75 0 017.5 0z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+
+    <!-- Hero Section -->
+    <header class="docs-hero px-6">
+      <div class="max-w-5xl mx-auto">
+        <div class="animate-entrance delay-1">
+          <p class="section-label">Reference</p>
+          <h1 class="font-display text-4xl md:text-5xl font-medium tracking-tight text-fg mb-4">
+            Documentation
+          </h1>
+          <p class="text-base md:text-lg text-muted leading-relaxed max-w-3xl">
+            A comprehensive guide to the Sociognosis project—its architecture, data model, sub-projects, and tools for navigating social reality through structured epistemic artifacts.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Table of Contents + Content Layout -->
+    <div class="max-w-5xl mx-auto px-6 pb-16">
+
+      <!-- TOC (horizontal on mobile) -->
+      <nav class="animate-entrance delay-2 mt-8 mb-4 flex flex-wrap gap-2" aria-label="On this page">
+        <a href="#overview" class="toc-link">Overview</a>
+        <a href="#concepts" class="toc-link">Core Concepts</a>
+        <a href="#schema" class="toc-link">Epistemic Schema</a>
+        <a href="#sub-projects" class="toc-link">Sub-Projects</a>
+        <a href="#data-model" class="toc-link">Data Model</a>
+        <a href="#tools" class="toc-link">Tools</a>
+        <a href="#references" class="toc-link">References</a>
+      </nav>
+
+      <!-- Overview -->
+      <section id="overview" class="anchor-offset animate-entrance delay-3 mt-12">
+        <p class="section-label">01 — Overview</p>
+        <h2 class="section-title">What is Sociognosis?</h2>
+        <p class="text-fg leading-relaxed mb-4">
+          <strong>Sociognosis</strong> aims to identify and formalize the set of epistemic elements that enable an agent to effectively navigate—through understanding and action—social reality.
+        </p>
+        <p class="text-muted leading-relaxed mb-4">
+          At its core, the project stabilizes a generative system that produces a <strong class="text-accent">Domain Epistemic Artifact Set (DESA)</strong> representing social reality. This artifact set renders social phenomena intelligible as a structured domain of analysis and action, connecting abstract epistemic categories to real-world decision-making processes.
+        </p>
+        <div class="callout">
+          <strong>Cognoscere ad agendum.</strong> — To know in order to act. The project bridges the gap between understanding social structures and intervening within them.
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Core Concepts -->
+      <section id="concepts" class="anchor-offset animate-entrance delay-3">
+        <p class="section-label">02 — Core Concepts</p>
+        <h2 class="section-title">Foundational Framework</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+
+          <div class="docs-card">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/>
+                </svg>
+              </div>
+              <h3 class="docs-card-title">Ontology & Epistemology</h3>
+            </div>
+            <p class="docs-card-body">
+              Ontology and epistemology are the right and left hand of knowledge construction—mutually constraining duals of the same epistemic act. Ontology defines what <em>is</em>; epistemology defines how it is <em>accessed and represented</em>.
+            </p>
+          </div>
+
+          <div class="docs-card">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                </svg>
+              </div>
+              <h3 class="docs-card-title">DESA</h3>
+            </div>
+            <p class="docs-card-body">
+              The <strong>Domain Epistemic Artifact Set</strong> is the complete collection of instantiated epistemic objects—models, datasets, equations, graphs—produced to describe, explain, predict, and manipulate a specific domain of reality.
+            </p>
+          </div>
+
+          <div class="docs-card">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+                </svg>
+              </div>
+              <h3 class="docs-card-title">Reality Section</h3>
+            </div>
+            <p class="docs-card-body">
+              A Reality Section is a bounded segment of reality targeted by epistemic practice. It encompasses observable and unobservable phenomena, latent mechanisms, causal architectures, and state trajectories across time.
+            </p>
+          </div>
+
+          <div class="docs-card">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/>
+                </svg>
+              </div>
+              <h3 class="docs-card-title">Generative System</h3>
+            </div>
+            <p class="docs-card-body">
+              The underlying system that produces and organizes the DESA. It is the subject of continuous study, refinement, and improvement—with emphasis on consistency, expressiveness, and explanatory power.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Epistemic Schema -->
+      <section id="schema" class="anchor-offset animate-entrance delay-4">
+        <p class="section-label">03 — Epistemic Schema</p>
+        <h2 class="section-title">Categories of Epistemic Elements</h2>
+        <p class="text-muted leading-relaxed mb-6">
+          The Sociognosis Index operates on a formal ontic-epistemic schema. Each node in the index belongs to one of the following categories, organized into functional groups.
+        </p>
+
+        <div class="overflow-x-auto docs-card" style="padding: 0;">
+          <table class="schema-table">
+            <thead>
+              <tr>
+                <th>Group</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Scaffold</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="tag-pill">Foundational</span></td>
+                <td><strong>Reality</strong></td>
+                <td>The ontological substrate—actual states, structures, processes, entities, and causal dynamics.</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Foundational</span></td>
+                <td><strong>Epistemic Domain</strong></td>
+                <td>Segment of reality that the epistemic practice targets or models.</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Foundational</span></td>
+                <td><strong>Epistemic Gap</strong></td>
+                <td>Portion of reality for which no adequate artifact or explanatory structure exists.</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Observation</span></td>
+                <td><strong>Observation Interface</strong></td>
+                <td>The sensorimotor boundary that transduces reality into a persistent encoded artifact.</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Observation</span></td>
+                <td><strong>Observation Encoding</strong></td>
+                <td>Formal standard for encoded observational data.</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Observation</span></td>
+                <td><strong>Encoding Substrate</strong></td>
+                <td>The medium in which information is physically instantiated (paper, signal, etc.).</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Representation</span></td>
+                <td><strong>Epistemic Representation Form</strong></td>
+                <td>Encoding format or substrate in which artifacts are expressed (DAG, equation, graph).</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Representation</span></td>
+                <td><strong>Concrete Epistemic Artifact</strong></td>
+                <td>Structured object encoding claims over reality—models, datasets, equations.</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Agency</span></td>
+                <td><strong>Epistemic Agent</strong></td>
+                <td>Entity that performs epistemic operations—scientists, institutions, ML systems.</td>
+                <td>No</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Agency</span></td>
+                <td><strong>Epistemic Act</strong></td>
+                <td>Primitive operation: attending, discriminating, remembering, intervening.</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Agency</span></td>
+                <td><strong>Epistemic Process</strong></td>
+                <td>Ordered sequence of tool applications over time—the dynamics of knowledge construction.</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Teleology</span></td>
+                <td><strong>Epistemic Purpose</strong></td>
+                <td>The telos motivating inquiry—explanation, prediction, control, discovery.</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Teleology</span></td>
+                <td><strong>Epistemic Goal</strong></td>
+                <td>Specific desired epistemic outcomes guiding inquiry and validation.</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Normative</span></td>
+                <td><strong>Epistemic Standard</strong></td>
+                <td>Normative criteria for evaluating validity—consistency, significance, reproducibility.</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Normative</span></td>
+                <td><strong>Epistemic Constraint</strong></td>
+                <td>Limitations bounding what can be known—noise, complexity, identifiability.</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Infrastructure</span></td>
+                <td><strong>Epistemic Infrastructure</strong></td>
+                <td>Supporting environment—sensors, laboratories, databases, publications.</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Infrastructure</span></td>
+                <td><strong>Epistemic Feedback</strong></td>
+                <td>Signal from reality that confirms or resists prior predictions—driver of learning.</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Methodological</span></td>
+                <td><strong>Epistemic Principle</strong></td>
+                <td>Foundational rules governing inquiry—empiricism, falsifiability, parsimony.</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Methodological</span></td>
+                <td><strong>Epistemic Strategy</strong></td>
+                <td>Adaptive planning logic for resource allocation and inquiry sequencing.</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Methodological</span></td>
+                <td><strong>Epistemic Framework</strong></td>
+                <td>Conceptual systems structuring interpretation—logic, causal inference, game theory.</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><span class="tag-pill">Methodological</span></td>
+                <td><strong>Epistemic Operator</strong></td>
+                <td>Formal mechanism for constructing, transforming, or validating artifacts.</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Sub-Projects -->
+      <section id="sub-projects" class="anchor-offset animate-entrance delay-4">
+        <p class="section-label">04 — Sub-Projects</p>
+        <h2 class="section-title">Analytical Spaces</h2>
+        <p class="text-muted leading-relaxed mb-6">
+          Sociognosis decomposes social reality into distinct analytical spaces, each rendering a specific dimension of the social world intelligible and comparable.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <a href="index/index.html" class="docs-card block no-underline">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="docs-card-title">Index</h3>
+                <span class="tag-pill">Interactive</span>
+              </div>
+            </div>
+            <p class="docs-card-body">
+              The central epistemic index—a force-directed graph visualization mapping the architecture of epistemic capabilities, categories, and their relationships.
+            </p>
+            <ul class="docs-list">
+              <li>Space Explorer (graph canvas)</li>
+              <li>Node Editor</li>
+              <li>JSON-backed data model</li>
+            </ul>
+          </a>
+
+          <div class="docs-card">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+                </svg>
+              </div>
+              <h3 class="docs-card-title">Product Space</h3>
+            </div>
+            <p class="docs-card-body">
+              Analysis of economic products and their relationships within the global production network. Maps industrial complexity, export capabilities, and productive knowledge.
+            </p>
+            <ul class="docs-list">
+              <li>Technique → Product Matrix</li>
+              <li>Capability mapping</li>
+              <li>Industrial complexity metrics</li>
+            </ul>
+          </div>
+
+          <div class="docs-card">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/>
+                </svg>
+              </div>
+              <h3 class="docs-card-title">Firm Space</h3>
+            </div>
+            <p class="docs-card-body">
+              Mapping organizational structures and corporate entities within economic systems. Includes modeling templates for firm types, financial structures, and industrial sections.
+            </p>
+            <ul class="docs-list">
+              <li>Actor type templates</li>
+              <li>Corporate structure modeling</li>
+              <li>Financial sub-spaces (IB, UB, FoF, IF)</li>
+            </ul>
+          </div>
+
+          <div class="docs-card">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+                </svg>
+              </div>
+              <h3 class="docs-card-title">Literary Space</h3>
+            </div>
+            <p class="docs-card-body">
+              Exploration of literary works as social artifacts and their role in shaping cultural reality. Treats texts as epistemic objects encoding social knowledge.
+            </p>
+            <ul class="docs-list">
+              <li>Text-as-artifact analysis</li>
+              <li>Cultural representation mapping</li>
+              <li>Narrative structure indexing</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Data Model -->
+      <section id="data-model" class="anchor-offset animate-entrance delay-5">
+        <p class="section-label">05 — Data Model</p>
+        <h2 class="section-title">Node Schema</h2>
+        <p class="text-muted leading-relaxed mb-4">
+          The Sociognosis Index is built on a JSON Schema (<code class="font-mono text-xs px-1.5 py-0.5 rounded" style="background: var(--tag-bg); color: var(--accent);">data/index/schema/schema.json</code>) that defines the structure of each node in the epistemic graph.
+        </p>
+
+        <div class="callout">
+          <strong>Required Fields:</strong> Every node must specify <code class="font-mono text-xs">id</code>, <code class="font-mono text-xs">name</code>, <code class="font-mono text-xs">category</code>, <code class="font-mono text-xs">description</code>, <code class="font-mono text-xs">functionalRoles</code>, <code class="font-mono text-xs">historicalContext</code>, <code class="font-mono text-xs">specific</code>, <code class="font-mono text-xs">relationships</code>, <code class="font-mono text-xs">metadata</code>, and <code class="font-mono text-xs">references</code>.
+        </div>
+
+        <div class="code-block mt-4">
+<span class="comment">// Core node structure (simplified)</span>
+{
+  <span class="key">"id"</span>: <span class="string">"node-bayesian-network"</span>,
+  <span class="key">"name"</span>: <span class="string">"Bayesian Network"</span>,
+  <span class="key">"category"</span>: <span class="string">"Epistemic Representation Form (Epistemic Blueprint)"</span>,
+  <span class="key">"description"</span>: <span class="string">"A DAG representing probabilistic dependencies..."</span>,
+  <span class="key">"functionalRoles"</span>: [<span class="string">"modeling"</span>, <span class="string">"inference"</span>],
+  <span class="key">"historicalContext"</span>: {
+    <span class="key">"summary"</span>: <span class="string">"Developed in the 1980s..."</span>,
+    <span class="key">"chronology"</span>: [
+      { <span class="key">"year"</span>: 1985, <span class="key">"event"</span>: <span class="string">"..."</span>, <span class="key">"context"</span>: <span class="string">"..."</span> }
+    ]
+  },
+  <span class="key">"specific"</span>: { <span class="comment">/* category-specific fields */</span> },
+  <span class="key">"relationships"</span>: [ { <span class="key">"type"</span>: <span class="string">"realizes"</span>, <span class="key">"target"</span>: <span class="string">"..."</span> } ],
+  <span class="key">"metadata"</span>: {
+    <span class="key">"tags"</span>: [<span class="string">"probability"</span>, <span class="string">"graph"</span>],
+    <span class="key">"confidenceScore"</span>: 0.92,
+    <span class="key">"createdAt"</span>: <span class="string">"2024-01-15T00:00:00Z"</span>
+  },
+  <span class="key">"references"</span>: [{ <span class="key">"title"</span>: <span class="string">"..."</span>, <span class="key">"link"</span>: <span class="string">"https://..."</span> }]
+}</div>
+
+        <h3 class="font-display text-lg font-medium text-fg mt-8 mb-3">Relationship Types</h3>
+        <p class="text-muted text-sm leading-relaxed mb-4">
+          Nodes are connected through typed relationships organized into families: <strong>ontological</strong>, <strong>causal</strong>, <strong>dependency</strong>, <strong>representational</strong>, <strong>epistemic</strong>, <strong>inferential</strong>, <strong>temporal</strong>, and others. The schema defines over 100 relationship types including:
+        </p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+          <span class="tag-pill text-center">instance_of</span>
+          <span class="tag-pill text-center">part_of</span>
+          <span class="tag-pill text-center">causes</span>
+          <span class="tag-pill text-center">depends_on</span>
+          <span class="tag-pill text-center">represents</span>
+          <span class="tag-pill text-center">models</span>
+          <span class="tag-pill text-center">derives_from</span>
+          <span class="tag-pill text-center">enables</span>
+          <span class="tag-pill text-center">predicts</span>
+          <span class="tag-pill text-center">explains</span>
+          <span class="tag-pill text-center">generates</span>
+          <span class="tag-pill text-center">constrains</span>
+        </div>
+        <p class="text-muted text-xs mt-3">
+          See <code class="font-mono">schema.json</code> → <code class="font-mono">relationshipType</code> enum for the complete list.
+        </p>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Tools -->
+      <section id="tools" class="anchor-offset animate-entrance delay-5">
+        <p class="section-label">06 — Tools & Interfaces</p>
+        <h2 class="section-title">Software Artifacts</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+
+          <a href="index/index.html" class="docs-card block no-underline">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <circle cx="5" cy="6" r="3"/>
+                  <circle cx="19" cy="6" r="3"/>
+                  <circle cx="12" cy="18" r="3"/>
+                  <line x1="5" y1="9" x2="12" y2="15"/>
+                  <line x1="19" y1="9" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="docs-card-title">Space Explorer</h3>
+                <span class="tag-pill">Graph Visualization</span>
+              </div>
+            </div>
+            <p class="docs-card-body">
+              An interactive force-directed graph canvas for exploring the epistemic space. Features temporal scope filtering, category-based visual lenses, search, and node focus modes.
+            </p>
+            <ul class="docs-list">
+              <li>Force-directed layout simulation</li>
+              <li>Temporal range slider</li>
+              <li>Category hulls & centrality sizing</li>
+              <li>Confidence gradient coloring</li>
+            </ul>
+          </a>
+
+          <a href="index/edit.html" class="docs-card block no-underline">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="docs-card-title">Node Editor</h3>
+                <span class="tag-pill">Data Entry</span>
+              </div>
+            </div>
+            <p class="docs-card-body">
+              A form-based interface for creating and editing nodes in the epistemic index. Validates input against the JSON Schema and manages relationships between nodes.
+            </p>
+            <ul class="docs-list">
+              <li>Schema-validated entry forms</li>
+              <li>Relationship management</li>
+              <li>Metadata & audit trail tracking</li>
+              <li>Reference linking</li>
+            </ul>
+          </a>
+
+        </div>
+
+        <h3 class="font-display text-lg font-medium text-fg mt-8 mb-3">Data Files</h3>
+        <div class="overflow-x-auto docs-card" style="padding: 0;">
+          <table class="schema-table">
+            <thead>
+              <tr>
+                <th>Path</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code class="font-mono text-xs">data/index/schema/schema.json</code></td>
+                <td>JSON Schema defining node structure and category-specific extensions</td>
+              </tr>
+              <tr>
+                <td><code class="font-mono text-xs">data/index/schema/notes</code></td>
+                <td>Contextual notes enriching schema generation and category definitions</td>
+              </tr>
+              <tr>
+                <td><code class="font-mono text-xs">data/index/data.json</code></td>
+                <td>The instantiated index data—nodes and edges of the epistemic graph</td>
+              </tr>
+              <tr>
+                <td><code class="font-mono text-xs">data/actor/</code></td>
+                <td>Actor data organized by type (firms, parties, techniques, etc.)</td>
+              </tr>
+              <tr>
+                <td><code class="font-mono text-xs">data/product/dataset.json</code></td>
+                <td>Product space dataset for economic complexity analysis</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- References -->
+      <section id="references" class="anchor-offset animate-entrance delay-5">
+        <p class="section-label">07 — References</p>
+        <h2 class="section-title">External Resources</h2>
+        <p class="text-muted leading-relaxed mb-6">
+          Foundational frameworks, ontological guides, and tools referenced by the Sociognosis project.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          <a href="https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Noetic/Actor/" target="_blank" rel="noopener noreferrer" class="docs-card block no-underline">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="docs-card-title">Actor</h3>
+                <span class="tag-pill">Ontology</span>
+              </div>
+            </div>
+            <p class="docs-card-body">Ontological framework for social actors and their noetic properties.</p>
+          </a>
+
+          <a href="https://www.bremontix.xyz/lab/ar/Locus-Instrumentorum/Toolset/Representation/Space/Actor/Actor/" target="_blank" rel="noopener noreferrer" class="docs-card block no-underline">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="docs-card-title">Actor Space</h3>
+                <span class="tag-pill">Representation</span>
+              </div>
+            </div>
+            <p class="docs-card-body">Spatial representation of actor relationships within the toolset.</p>
+          </a>
+
+          <a href="https://www.bremontix.xyz/lab/ar/Locus-Instrumentorum/Toolset/Representation/" target="_blank" rel="noopener noreferrer" class="docs-card block no-underline">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M2.25 18.75h19.5a.75.75 0 00.75-.75V6a.75.75 0 00-.75-.75H2.25a.75.75 0 00-.75.75v12c0 .414.336.75.75.75z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="docs-card-title">Representation</h3>
+                <span class="tag-pill">Toolset</span>
+              </div>
+            </div>
+            <p class="docs-card-body">Tools and methods for the structured representation of reality.</p>
+          </a>
+
+          <a href="https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Guide/" target="_blank" rel="noopener noreferrer" class="docs-card block no-underline">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="docs-card-title">Social Ontology</h3>
+                <span class="tag-pill">Guide</span>
+              </div>
+            </div>
+            <p class="docs-card-body">Comprehensive guide to social ontology and interaction units.</p>
+          </a>
+
+          <a href="https://app.notion.com/p/Section-of-Reality-Template-334c0f5171ec804b8115c177dbc245a8?source=copy_link" target="_blank" rel="noopener noreferrer" class="docs-card block no-underline">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="docs-card-title">Section of Reality</h3>
+                <span class="tag-pill">Template</span>
+              </div>
+            </div>
+            <p class="docs-card-body">Template for analyzing and formalizing sections of reality.</p>
+          </a>
+
+          <a href="https://github.com/safishamsi/graphify" target="_blank" rel="noopener noreferrer" class="docs-card block no-underline">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="docs-card-title">Graphify</h3>
+                <span class="tag-pill">Tool</span>
+              </div>
+            </div>
+            <p class="docs-card-body">Graph visualization library referenced in the Space Explorer implementation.</p>
+          </a>
+
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer mt-12 py-16 md:py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-12">
+
+        <!-- Brand Column -->
+        <div class="md:col-span-5 text-center md:text-left">
+          <p class="font-display text-lg font-medium tracking-[0.25em] uppercase mb-3" style="color: var(--footer-fg);">
+            SOCIOGNOSIS
+          </p>
+          <p class="font-body text-xs leading-relaxed max-w-xs mx-auto md:mx-0" style="color: var(--footer-muted);">
+            Identifying and formalizing epistemic elements that enable effective navigation of social reality.
+          </p>
+        </div>
+
+        <!-- Navigation Column -->
+        <div class="md:col-span-3 text-center md:text-left">
+          <p class="footer-label">Navigation</p>
+          <nav class="flex flex-col items-center md:items-start gap-2" aria-label="Footer navigation">
+            <a href="index.html" class="footer-link">Introduction</a>
+            <a href="methodology.html" class="footer-link">Methodology</a>
+            <a href="docs.html" class="footer-link">Documentation</a>
+            <a href="index/index.html" class="footer-link">Space Explorer</a>
+          </nav>
+        </div>
+
+        <!-- Project Status Column -->
+        <div class="md:col-span-4 text-center md:text-right">
+          <p class="footer-label">Project Status</p>
+          <div class="space-y-2 font-mono text-xs flex flex-col items-center md:items-end">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.25rem 0;">
+              <span style="color: var(--footer-dim);">Sub-Projects</span>
+              <span style="color: var(--footer-fg);">4 Active</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.25rem 0;">
+              <span style="color: var(--footer-dim);">Phase</span>
+              <span style="color: var(--footer-fg);">Development</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.25rem 0;">
+              <span style="color: var(--footer-dim);">Last Revised</span>
+              <span style="color: var(--footer-fg);" id="footerLastRevision">—</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-4" style="border-color: var(--footer-border);">
+         <p class="font-mono text-[10px] tracking-[0.15em] uppercase" style="color: var(--footer-dim);">
+           Sociognosis <span id="footerVersion">v1.0</span>
+         </p>
+         <p class="font-display text-sm italic tracking-wide" style="color: var(--footer-muted);">
+           Cognoscere ad agendum.
+         </p>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    // =============================================
+    // THEME MANAGEMENT
+    // =============================================
+    const themeToggle = document.getElementById('themeToggle');
+
+    function initTheme() {
+      if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    }
+
+    themeToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    initTheme();
+
+    // =============================================
+    // FOOTER METADATA
+    // =============================================
+    const footerLastRevision = document.getElementById('footerLastRevision');
+    footerLastRevision.textContent = new Date().toISOString().split('T')[0];
+
+    // =============================================
+    // TOC ACTIVE STATE ON SCROLL
+    // =============================================
+    const tocLinks = document.querySelectorAll('.toc-link');
+    const sections = document.querySelectorAll('.anchor-offset');
+
+    function updateActiveTOC() {
+      let current = '';
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 120) {
+          current = section.id;
+        }
+      });
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveTOC, { passive: true });
+    updateActiveTOC();
+  </script>
+</body>
+</html>
