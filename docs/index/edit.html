@@ -3674,7 +3674,7 @@ async function aiImproveNode(nodeData, instructions) {
     
     const messages = [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Current node data:\n${JSON.stringify(nodeData, null, 2)}\n\nImprovement instructions: ${instructions}` }
+        { role: 'user', content: `Current node data:\n${JSON.stringify(stripRelationships(nodeData), null, 2)}\n\nImprovement instructions: ${instructions}` }
     ];
     
     const result = await callDeepSeekAPI(messages);
@@ -3771,6 +3771,17 @@ function updateAIStatus() {
 }
 
 /* ═══════ DIFF VISUALIZATION ═══════ */
+/**
+ * Strip the `relationships` field from a node's data so that it is never
+ * sent to the AI model nor shown in the Improve diff view.
+ * Returns a shallow copy (original is not mutated).
+ */
+function stripRelationships(nodeData) {
+    const copy = { ...nodeData };
+    delete copy.relationships;
+    return copy;
+}
+
 function computeDiff(original, modified) {
     const origLines = JSON.stringify(original, null, 2).split('\n');
     const modLines = JSON.stringify(modified, null, 2).split('\n');
@@ -3977,7 +3988,7 @@ function setupModals() {
             contextLabel.lastChild.textContent = ' Improvement Instructions';
             instructionsEl.placeholder = 'Describe what improvements you want for this node. E.g., \'Add more detailed description\', \'Suggest relevant relationships\', \'Improve the categorization\', \'Add missing metadata\'...';
             document.querySelector('.diff-container').style.display = '';
-            document.getElementById('diff-original').textContent = JSON.stringify(selectedNode._data, null, 2);
+            document.getElementById('diff-original').textContent = JSON.stringify(stripRelationships(selectedNode._data), null, 2);
             document.getElementById('diff-modified').innerHTML = '<div style="color:var(--text-muted);font-style:italic;">Click "Generate Improvements" to see changes</div>';
             document.getElementById('diff-stats').style.display = 'none';
         }
@@ -4030,7 +4041,7 @@ function setupModals() {
                 statsEl.style.display = 'none';
             } else {
                 improvedNodeData = await aiImproveNode(selectedNode._data, instructions);
-                const diff = computeDiff(selectedNode._data, improvedNodeData);
+                const diff = computeDiff(stripRelationships(selectedNode._data), stripRelationships(improvedNodeData));
                 document.getElementById('diff-original').innerHTML = diff.origHtml;
                 document.getElementById('diff-modified').innerHTML = diff.modHtml;
                 document.getElementById('diff-additions').textContent = diff.additions;
@@ -4052,24 +4063,19 @@ function setupModals() {
     document.getElementById('ai-apply-improve-btn').addEventListener('click', () => {
         if (!improvedNodeData || !selectedNode) return;
         
+        // Preserve existing relationships — AI Improve deliberately does NOT
+        // touch the `relationships` field (it is stripped before sending to
+        // the model and hidden from the diff view). Use "AI Discover Relations"
+        // to manage relationships instead. See the Docs modal for details.
+        const preservedRelationships = selectedNode._data.relationships || [];
         Object.assign(selectedNode._data, improvedNodeData);
+        selectedNode._data.relationships = preservedRelationships;
         selectedNode.name = improvedNodeData.name || selectedNode.id;
         selectedNode.category = improvedNodeData.category || 'Reality';
         
-        edges = edges.filter(e => e.source !== selectedNode.id);
-        if (improvedNodeData.relationships) {
-            improvedNodeData.relationships.forEach(rel => {
-                if (nodeMap[rel.targetNodeId]) {
-                    edges.push({
-                        source: selectedNode.id,
-                        target: rel.targetNodeId,
-                        family: rel.relationshipFamily || 'not_specified',
-                        type: rel.relationshipType || 'not_specified',
-                        description: rel.description || ''
-                    });
-                }
-            });
-        }
+        // Do NOT rebuild edges from improvedNodeData.relationships — the
+        // model never receives them, so any relationships it returns are
+        // noise. Keep the existing edges untouched.
         
         extractSuggestions();
         updateStats();

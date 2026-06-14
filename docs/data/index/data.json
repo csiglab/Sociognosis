@@ -1007,165 +1007,165 @@
       }
     ]
   },
-  {
-    "id": "market_land",
-    "name": "Land Market",
-    "category": "Market",
-    "inheritanceLevel": 0,
-    "description": "A market system through which rights over land are allocated, exchanged, leased, valued, and transferred among economic actors.",
-    "longDescription": "The land market is an institutional and economic mechanism governing the exchange of land-related rights. It encompasses transactions involving ownership, leasing, development rights, mineral rights, and other legally recognized claims over land. Because land is immobile, heterogeneous, and location-specific, the land market is typically composed of numerous specialized submarkets differentiated by geography, land use, legal regime, and economic function.",
-    "functionalRoles": [
-      "Allocation of land resources",
-      "Price discovery for land rights",
-      "Transfer of ownership",
-      "Transfer of usage rights",
-      "Capital formation",
-      "Investment channel",
-      "Resource coordination",
-      "Spatial allocation of economic activity"
-    ],
-    "domainScope": [
-      "Agriculture",
-      "Real Estate",
-      "Urban Development",
-      "Industrial Development",
-      "Mining",
-      "Infrastructure",
-      "Energy",
-      "Forestry",
-      "Environmental Management"
-    ],
-    "historicalContext": {
-      "summary": "Land markets emerged alongside formal property rights systems and evolved into complex institutional mechanisms for allocating access to land and land-based economic opportunities.",
-      "chronology": [
-        {
-          "year": -3000,
-          "event": "Early Property Systems",
-          "context": "Civilizations developed formal mechanisms for assigning and transferring land rights."
-        },
-        {
-          "year": 1200,
-          "event": "Feudal Land Tenure",
-          "context": "Land allocation became embedded within hierarchical political and economic structures."
-        },
-        {
-          "year": 1700,
-          "event": "Commercialization of Land",
-          "context": "Land increasingly became a tradable economic asset."
-        },
-        {
-          "year": 1900,
-          "event": "Modern Real Estate Markets",
-          "context": "Specialized land markets emerged for residential, industrial, commercial, and agricultural uses."
-        }
-      ]
-    },
-    "specific": {
-      "tradedObject": "Land rights",
-      "marketType": "Factor Market",
-      "assetCharacteristics": [
-        "Immobile",
-        "Heterogeneous",
-        "Finite Supply",
-        "Location Specific",
-        "Durable"
-      ],
-      "primaryTransactionForms": [
-        "Sale",
-        "Lease",
-        "Concession",
-        "Licensing",
-        "Development Rights Transfer"
-      ],
-      "priceDeterminants": [
-        "Location",
-        "Accessibility",
-        "Infrastructure Access",
-        "Regulatory Environment",
-        "Permitted Land Use",
-        "Natural Resource Endowment",
-        "Market Demand"
-      ]
-    },
-    "relationships": [
+
+{
+  "id": "market_land",
+  "name": "Land Market",
+  "category": "Market",
+  "inheritanceLevel": 0,
+  "description": "A market system through which rights over land are allocated, exchanged, leased, valued, and transferred among economic actors.",
+  "longDescription": "The land market is an institutional and economic mechanism governing the exchange of land-related rights. It encompasses transactions involving ownership, leasing, development rights, mineral rights, and other legally recognized claims over land. Because land is immobile, heterogeneous, and location-specific, the land market is typically composed of numerous specialized submarkets differentiated by geography, land use, legal regime, and economic function.",
+  "functionalRoles": [
+    "Allocation of land resources",
+    "Price discovery for land rights",
+    "Transfer of ownership",
+    "Transfer of usage rights",
+    "Capital formation",
+    "Investment channel",
+    "Resource coordination",
+    "Spatial allocation of economic activity"
+  ],
+  "domainScope": [
+    "Agriculture",
+    "Real Estate",
+    "Urban Development",
+    "Industrial Development",
+    "Mining",
+    "Infrastructure",
+    "Energy",
+    "Forestry",
+    "Environmental Management"
+  ],
+  "historicalContext": {
+    "summary": "Land markets emerged alongside formal property rights systems and evolved into complex institutional mechanisms for allocating access to land and land-based economic opportunities.",
+    "chronology": [
       {
-        "relationshipFamily": "MARKET_RELATION",
-        "relationshipType": "CONSUMES",
-        "targetNodeId": "resource_land",
-        "description": "Allocates and exchanges rights associated with land resources."
+        "year": -3000,
+        "event": "Early Property Systems",
+        "context": "Civilizations developed formal mechanisms for assigning and transferring land rights."
       },
       {
-        "relationshipFamily": "GOVERNANCE",
-        "relationshipType": "DEPENDS_ON",
-        "targetNodeId": "institution_property_rights",
-        "description": "Requires legally defined property rights and enforcement mechanisms."
+        "year": 1200,
+        "event": "Feudal Land Tenure",
+        "context": "Land allocation became embedded within hierarchical political and economic structures."
       },
       {
-        "relationshipFamily": "COMPOSITIONAL",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "market_agricultural_land",
-        "description": "Serves as a parent category for agricultural land markets."
+        "year": 1700,
+        "event": "Commercialization of Land",
+        "context": "Land increasingly became a tradable economic asset."
       },
       {
-        "relationshipFamily": "COMPOSITIONAL",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "market_industrial_land",
-        "description": "Serves as a parent category for industrial land markets."
-      },
-      {
-        "relationshipFamily": "COMPOSITIONAL",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "market_residential_land",
-        "description": "Serves as a parent category for residential land markets."
-      },
-      {
-        "relationshipFamily": "COMPOSITIONAL",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "market_commercial_land",
-        "description": "Serves as a parent category for commercial land markets."
-      },
-      {
-        "relationshipFamily": "STRUCTURAL",
-        "relationshipType": "COMPLEMENTS",
-        "targetNodeId": "infrastructure_transportation",
-        "description": "Land values and market activity are strongly influenced by transportation infrastructure."
-      }
-    ],
-    "metadata": {
-      "tags": [
-        "land",
-        "market",
-        "factor-market",
-        "real-estate",
-        "property-rights",
-        "resource-allocation",
-        "economic-geography"
-      ],
-      "confidenceScore": 0.98,
-      "sourceReference": "Urban Economics, Real Estate Economics, Economic Geography, Institutional Economics",
-      "createdAt": "2026-06-08T00:00:00Z",
-      "auditTrail": [
-        {
-          "reviewDate": "2026-06-08",
-          "reviewNote": "Initial abstract land market node."
-        }
-      ]
-    },
-    "references": [
-      {
-        "title": "Urban Economics",
-        "description": "Analysis of land markets, location choice, and spatial allocation."
-      },
-      {
-        "title": "Real Estate Economics",
-        "description": "Study of land valuation, transactions, and property rights."
-      },
-      {
-        "title": "Institutional Economics",
-        "description": "Role of property rights and governance structures in land allocation."
+        "year": 1900,
+        "event": "Modern Real Estate Markets",
+        "context": "Specialized land markets emerged for residential, industrial, commercial, and agricultural uses."
       }
     ]
   },
+  "specific": {},
+  "relationships": [
+    {
+      "targetNodeId": "reality.market",
+      "relationshipType": "subtype_of",
+      "relationshipFamily": "classification",
+      "description": "The Land Market is a specialized form of market, inheriting characteristics of price formation, allocation, and exchange from the general market institution."
+    },
+    {
+      "targetNodeId": "413",
+      "relationshipType": "depends_on",
+      "relationshipFamily": "dependency",
+      "description": "The Land Market relies on a Land Registry for official recording and verification of ownership and property rights during transactions."
+    },
+    {
+      "targetNodeId": "496",
+      "relationshipType": "depends_on",
+      "relationshipFamily": "dependency",
+      "description": "The Land Market is shaped by urban planning regulations that determine permitted land uses, densities, and development constraints."
+    },
+    {
+      "targetNodeId": "49",
+      "relationshipType": "depends_on",
+      "relationshipFamily": "dependency",
+      "description": "Municipalities enact zoning laws, building codes, and land use policies that directly constrain and regulate land market transactions."
+    },
+    {
+      "targetNodeId": "69",
+      "relationshipType": "interacts_with",
+      "relationshipFamily": "interaction",
+      "description": "Landowner Associations represent property owners who participate in and influence land market dynamics through collective bargaining and advocacy."
+    },
+    {
+      "targetNodeId": "resource_land",
+      "relationshipType": "depends_on",
+      "relationshipFamily": "dependency",
+      "description": "The Land Market fundamentally depends on Land as the physical resource that is allocated, exchanged, and valued through market transactions."
+    },
+    {
+      "targetNodeId": "market_agricultural_land",
+      "relationshipType": "generalizes",
+      "relationshipFamily": "classification",
+      "description": "The Land Market is a broader category that generalizes the Agricultural Land Market, which is a specialized submarket for land used in agricultural production."
+    },
+    {
+      "targetNodeId": "market_residential_land",
+      "relationshipType": "generalizes",
+      "relationshipFamily": "classification",
+      "description": "The Land Market is a broader category that generalizes the Residential Land Market, which is a specialized submarket for land used for housing."
+    },
+    {
+      "targetNodeId": "market_commercial_land",
+      "relationshipType": "generalizes",
+      "relationshipFamily": "classification",
+      "description": "The Land Market is a broader category that generalizes the Commercial Land Market, which is a specialized submarket for land used for retail, office, and services."
+    },
+    {
+      "targetNodeId": "market_industrial_land",
+      "relationshipType": "generalizes",
+      "relationshipFamily": "classification",
+      "description": "The Land Market is a broader category that generalizes the Industrial Land Market, which is a specialized submarket for land used for manufacturing and logistics."
+    },
+    {
+      "targetNodeId": "9",
+      "relationshipType": "interacts_with",
+      "relationshipFamily": "interaction",
+      "description": "Financial Institutions (banks, mortgage lenders) provide the capital for land purchases and development, strongly influencing land market liquidity and price levels."
+    }
+  ],
+  "metadata": {
+    "tags": [
+      "land",
+      "market",
+      "factor-market",
+      "real-estate",
+      "property-rights",
+      "resource-allocation",
+      "economic-geography"
+    ],
+    "confidenceScore": 0.98,
+    "sourceReference": "Urban Economics, Real Estate Economics, Economic Geography, Institutional Economics",
+    "createdAt": "2026-06-08T00:00:00Z",
+    "auditTrail": [
+      {
+        "reviewDate": "2026-06-08",
+        "reviewNote": "Initial abstract land market node."
+      }
+    ],
+    "inheritanceLevel": 0
+  },
+  "references": [
+    {
+      "title": "Urban Economics",
+      "description": "Analysis of land markets, location choice, and spatial allocation."
+    },
+    {
+      "title": "Real Estate Economics",
+      "description": "Study of land valuation, transactions, and property rights."
+    },
+    {
+      "title": "Institutional Economics",
+      "description": "Role of property rights and governance structures in land allocation."
+    }
+  ]
+},
 
   {
   "id": "market_agricultural_land",
