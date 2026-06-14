@@ -1,3 +1,0 @@
-# Product Space Representation Index
-
-> ...

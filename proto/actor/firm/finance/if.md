@@ -1,7 +1,0 @@
-# Investment Fund
-
-> ...
-
-## References
-
-- ...
