@@ -414,6 +414,58 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     margin-top: 3px;
 }
 
+/* Full-text search result snippet */
+.search-result-snippet {
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.search-result-snippet mark {
+    background: rgba(77, 212, 196, 0.25);
+    color: var(--accent-cyan, #4dd4c4);
+    border-radius: 2px;
+    padding: 0 2px;
+}
+
+/* Search mode toggle button */
+.search-mode-toggle {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(201, 149, 108, 0.12);
+    border: 1px solid rgba(201, 149, 108, 0.2);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 3px 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+.search-mode-toggle:hover {
+    color: var(--accent-copper);
+    border-color: var(--accent-copper);
+}
+.search-mode-toggle.active {
+    background: rgba(77, 212, 196, 0.15);
+    border-color: rgba(77, 212, 196, 0.4);
+    color: #4dd4c4;
+}
+.btn-group .search-mode-toggle {
+    right: 6px;
+    padding: 2px 5px;
+}
+
 /* Quick Actions */
 .quick-actions {
     position: absolute;
@@ -504,6 +556,288 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     background: var(--border-subtle);
 }
 .status-bar .val { color: var(--text-secondary); font-weight: 500; }
+
+/* Status bar zones */
+.status-bar-left {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+}
+.status-bar-right {
+    display: flex;
+    align-items: center;
+}
+.status-bar-metric {
+    padding: 0 12px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.status-bar-metric:hover .val { color: var(--accent-copper); }
+.status-bar-metric .val { transition: color 0.2s; }
+.status-bar .deselect-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.72rem;
+    padding: 0 4px;
+    margin-left: 6px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+.status-bar .deselect-btn:hover { color: var(--accent-rose); }
+
+/* Status bar chip styles — refined pills for selected/ai/search */
+.sb-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 10px 2px 8px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid transparent;
+    transition: all 150ms ease-out;
+    cursor: default;
+    height: 22px;
+    position: relative;
+    margin: 0 2px;
+}
+
+.sb-chip .sb-chip-icon {
+    flex-shrink: 0;
+    opacity: 0.5;
+    transition: opacity 150ms ease-out;
+}
+
+.sb-chip .sb-chip-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.sb-chip .sb-chip-value {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Selection chip — interactive hover */
+.sb-selection {
+    cursor: pointer;
+}
+.sb-selection:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--border-subtle);
+}
+.sb-selection:hover .sb-chip-icon {
+    opacity: 0.8;
+}
+
+.sb-selection .sb-deselect-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    opacity: 0.5;
+    transition: all 150ms ease-out;
+    flex-shrink: 0;
+}
+.sb-selection:hover .sb-deselect-btn {
+    display: flex;
+}
+.sb-deselect-btn:hover {
+    opacity: 1;
+    color: var(--accent-rose);
+}
+
+/* AI chip — clickable, color-coded */
+.sb-ai {
+    cursor: pointer;
+    transition: background 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+.sb-ai:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--border-subtle);
+    box-shadow: var(--shadow-sm);
+}
+.sb-ai:active {
+    transform: translateY(0);
+}
+
+.sb-ai.unconfigured {
+    background: rgba(196, 125, 138, 0.08);
+    border-color: rgba(196, 125, 138, 0.15);
+}
+.sb-ai.unconfigured .sb-chip-label {
+    color: var(--accent-rose);
+}
+.sb-ai.unconfigured .sb-chip-icon {
+    opacity: 0.6;
+    color: var(--accent-rose);
+}
+.sb-ai.unconfigured:hover {
+    background: rgba(196, 125, 138, 0.14);
+    border-color: rgba(196, 125, 138, 0.25);
+}
+
+.sb-ai.loading {
+    background: rgba(212, 168, 87, 0.08);
+    border-color: rgba(212, 168, 87, 0.15);
+}
+.sb-ai.loading .sb-chip-label {
+    color: var(--accent-amber);
+}
+.sb-ai.loading .sb-chip-icon {
+    opacity: 0.6;
+    color: var(--accent-amber);
+}
+.sb-ai.loading:hover {
+    background: rgba(212, 168, 87, 0.14);
+}
+
+.sb-ai.ready {
+    background: rgba(123, 163, 136, 0.08);
+    border-color: rgba(123, 163, 136, 0.15);
+}
+.sb-ai.ready .sb-chip-label {
+    color: var(--accent-sage);
+}
+.sb-ai.ready .sb-chip-icon {
+    opacity: 0.6;
+    color: var(--accent-sage);
+}
+.sb-ai.ready:hover {
+    background: rgba(123, 163, 136, 0.14);
+}
+
+/* Search chip */
+.sb-search-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 8px;
+    height: 20px;
+    border-radius: 4px;
+    background: rgba(201, 149, 108, 0.06);
+    font-size: 0.58rem;
+    letter-spacing: 0.05em;
+}
+.sb-search-chip .val {
+    font-weight: 500;
+    color: var(--accent-copper);
+}
+
+/* Stats Modal */
+.stats-modal { max-width: 680px; }
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 18px;
+}
+.stat-card-title {
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
+}
+.stat-card-value {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-style: italic;
+    color: var(--text-primary);
+}
+.stat-card-sub {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+/* Degree histogram */
+.degree-histogram { margin-top: 24px; }
+.histogram-title {
+    font-family: var(--font-display);
+    font-size: 0.95rem; font-weight: 400; font-style: italic;
+    color: var(--text-primary);
+    margin-bottom: 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+.histogram-bar-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 5px; font-family: var(--font-mono); font-size: 0.62rem;
+}
+.histogram-bar-label {
+    width: 52px; text-align: right; color: var(--text-muted);
+    flex-shrink: 0;
+}
+.histogram-bar-wrap {
+    flex: 1; height: 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 3px; overflow: hidden;
+}
+.histogram-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-copper) 0%, var(--accent-copper-light) 100%);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+.histogram-bar-count {
+    width: 36px; color: var(--text-secondary);
+    flex-shrink: 0;
+}
+/* Centrality ranking */
+.centrality-list { margin-top: 24px; }
+.centrality-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    background: rgba(0,0,0,0.15);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    transition: border-color 0.2s, background 0.2s;
+}
+.centrality-item:hover {
+    border-color: rgba(201,149,108,0.25);
+    background: rgba(201,149,108,0.04);
+}
+.centrality-rank {
+    font-family: var(--font-display); font-size: 1.2rem;
+    font-style: italic; color: var(--accent-copper);
+    width: 24px; text-align: center; flex-shrink: 0;
+}
+.centrality-name {
+    font-family: var(--font-body); font-size: 0.82rem;
+    color: var(--text-primary); flex: 1;
+}
+.centrality-cat {
+    font-family: var(--font-mono); font-size: 0.56rem;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em;
+}
+.centrality-degree {
+    font-family: var(--font-mono); font-size: 0.72rem;
+    color: var(--accent-copper); font-weight: 500;
+    padding: 3px 10px; background: rgba(201,149,108,0.1);
+    border-radius: 8px; flex-shrink: 0;
+}
 
 /* Tooltip */
 #tooltip {
@@ -2235,6 +2569,7 @@ body.panel-collapsed .edit-panel {
                         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                     </svg>
                     <input type="text" class="search-input" id="search-input" placeholder="Search nodes...">
+                    <button class="search-mode-toggle" id="search-mode-toggle" title="Names Search — click for Full-Text mode">NM</button>
                     <div class="search-dropdown" id="search-dropdown"></div>
                 </div>
                 <button class="btn btn-primary" id="add-node-btn">
@@ -2285,6 +2620,11 @@ body.panel-collapsed .edit-panel {
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                 </svg>
             </button>
+            <button class="qa-btn" id="stats-btn" title="Graph Statistics">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+            </button>
             <button class="qa-btn" id="fit-btn" title="Fit View (F)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
@@ -2303,10 +2643,33 @@ body.panel-collapsed .edit-panel {
         </div>
 
         <div class="status-bar">
-            <span>Nodes <span class="val" id="node-count">0</span></span>
-            <span>Edges <span class="val" id="edge-count">0</span></span>
-            <span>Selected <span class="val" id="selected-name">None</span></span>
-            <span id="ai-status"><span class="status-indicator" id="status-indicator"></span> AI: <span id="ai-status-text">Not configured</span></span>
+            <div class="status-bar-left">
+                <span>Nodes <span class="val" id="node-count">0</span></span>
+                <span>Edges <span class="val" id="edge-count">0</span></span>
+                <span class="status-bar-metric" id="density-metric" title="Click for full statistics">Density <span class="val" id="sb-density">0.0%</span></span>
+                <span class="status-bar-metric" id="clustering-metric" title="Click for full statistics">Clustering <span class="val" id="sb-clustering">0.00</span></span>
+            </div>
+            <div class="status-bar-right">
+                <span id="sb-search"></span>
+                <span class="sb-chip sb-selection" id="selection-chip">
+                    <svg class="sb-chip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <span class="sb-chip-label">Selected</span>
+                    <span class="sb-chip-value" id="selected-name">None</span>
+                    <button class="sb-deselect-btn" id="deselect-btn" title="Deselect (Esc)" style="display:none;">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </span>
+                <span class="sb-chip sb-ai unconfigured" id="ai-status" title="Click to configure AI settings">
+                    <svg class="sb-chip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    <span class="sb-chip-label" id="ai-status-text">Not configured</span>
+                </span>
+            </div>
         </div>
 
         <div id="tooltip">
@@ -2582,6 +2945,20 @@ body.panel-collapsed .edit-panel {
         </div>
     </div>
 
+    <!-- Stats Modal -->
+    <div class="modal-overlay" id="stats-modal">
+        <div class="modal stats-modal">
+            <div class="modal-header">
+                <div class="modal-title">Graph Statistics</div>
+                <button class="modal-close" id="stats-close">&times;</button>
+            </div>
+            <div class="modal-body" id="stats-modal-body"></div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm" id="stats-done">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Writing Assistant Popover -->
     <div class="writing-assistant-popover" id="writing-assistant-popover">
         <div class="wa-header">
@@ -2785,6 +3162,11 @@ let panStart = { x: 0, y: 0 };
 let mouseWorld = { x: 0, y: 0 };
 let linkMode = false;
 let currentTab = 'form';
+
+/* Search state: mode toggle + highlight set */
+let searchMode = 'names'; // 'names' | 'fulltext'
+let searchHighlightNodes = new Set();
+let searchMatchCount = 0;
 
 const REPULSION = 280, LINK_DISTANCE = 100, ALPHA_DECAY = 0.995;
 let alpha = 1;
@@ -3038,20 +3420,22 @@ Analyze the source node against all other nodes and suggest meaningful relations
 }
 
 function updateAIStatus() {
-    const indicator = document.getElementById('status-indicator');
+    const chip = document.getElementById('ai-status');
     const statusText = document.getElementById('ai-status-text');
     
+    chip.classList.remove('unconfigured', 'loading', 'ready');
+    
     if (!aiConfig.token) {
-        indicator.className = 'status-indicator';
+        chip.classList.add('unconfigured');
         statusText.textContent = 'Not configured';
     } else if (aiConfig.schema && aiConfig.globalContext) {
-        indicator.className = 'status-indicator connected';
+        chip.classList.add('ready');
         statusText.textContent = 'Ready';
     } else if (aiConfig.schema) {
-        indicator.className = 'status-indicator loading';
+        chip.classList.add('loading');
         statusText.textContent = 'Schema loaded, no context';
     } else {
-        indicator.className = 'status-indicator loading';
+        chip.classList.add('loading');
         statusText.textContent = 'Token set, configure schema';
     }
 }
@@ -4247,6 +4631,18 @@ function draw() {
             ctx.arc(s.x, s.y, r + 1.5, 0, Math.PI * 2);
             ctx.stroke();
         }
+        // Search highlight: glowing cyan ring
+        if (searchHighlightNodes.has(n.id)) {
+            ctx.save();
+            ctx.shadowColor = '#4dd4c4';
+            ctx.shadowBlur = 15;
+            ctx.strokeStyle = '#4dd4c4';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, r + 5, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        }
         // Link source: plum dashed ring
         if (isLS) {
             ctx.strokeStyle = hexToRGBA('#9b7eb0', 0.6);
@@ -4526,6 +4922,8 @@ function selectNode(node) {
     
     selectedNode = node;
     document.getElementById('selected-name').textContent = node ? (node.name || node.id) : 'None';
+    const deselectBtn = document.getElementById('deselect-btn');
+    if (deselectBtn) deselectBtn.style.display = node ? 'flex' : 'none';
     
     if (node) {
         nodeSnapshot = takeSnapshot(node._data);
@@ -5386,23 +5784,317 @@ function saveJSON() {
 function updateStats() {
     document.getElementById('node-count').textContent = nodes.length;
     document.getElementById('edge-count').textContent = edges.length;
+    if (typeof updateStatusBar === 'function') updateStatusBar();
 }
 
 /* ═══════ SEARCH ═══════ */
+
+/* Recursively walk a node's data and return the first string value
+   containing the lowercase query q. Used for snippet extraction. */
+function findMatchInData(data, q) {
+    if (!data || typeof data !== 'object') return null;
+    for (const key of Object.keys(data)) {
+        const val = data[key];
+        if (typeof val === 'string') {
+            if (val.toLowerCase().includes(q)) return { key, text: val };
+        } else if (Array.isArray(val)) {
+            for (let i = 0; i < val.length; i++) {
+                const item = val[i];
+                if (typeof item === 'string') {
+                    if (item.toLowerCase().includes(q)) return { key: `${key}[${i}]`, text: item };
+                } else if (item && typeof item === 'object') {
+                    const found = findMatchInData(item, q);
+                    if (found) return { key: `${key}[${i}].${found.key}`, text: found.text };
+                }
+            }
+        } else if (val && typeof val === 'object') {
+            const found = findMatchInData(val, q);
+            if (found) return { key: `${key}.${found.key}`, text: found.text };
+        }
+    }
+    return null;
+}
+
+/* Build a snippet (~70 chars) around the first match, with <mark> highlight. */
+function buildSnippet(text, q, maxLen = 80) {
+    const lower = text.toLowerCase();
+    const idx = lower.indexOf(q);
+    if (idx < 0) return escHTML(text.substring(0, maxLen));
+    let start = Math.max(0, idx - 25);
+    const end = Math.min(text.length, idx + q.length + 25);
+    if (start > 0) start = Math.max(0, start); // keep prefix
+    const prefix = start > 0 ? '…' : '';
+    const suffix = end < text.length ? '…' : '';
+    const before = escHTML(text.substring(start, idx));
+    const match = escHTML(text.substring(idx, idx + q.length));
+    const after = escHTML(text.substring(idx + q.length, end));
+    return `${prefix}${before}<mark>${match}</mark>${after}${suffix}`;
+}
+
 function handleSearch(query) {
     const dropdown = document.getElementById('search-dropdown');
-    if (!query.trim()) { dropdown.classList.remove('open'); return; }
+
+    // Reset highlights on every search
+    searchHighlightNodes = new Set();
+
+    if (!query.trim()) {
+        dropdown.classList.remove('open');
+        searchMatchCount = 0;
+        updateStatusBar();
+        return;
+    }
+
     const q = query.toLowerCase();
-    const results = nodes.filter(n => (n.name && n.name.toLowerCase().includes(q)) || (n.id && n.id.toLowerCase().includes(q)) || (n.category && n.category.toLowerCase().includes(q))).slice(0, 10);
-    if (!results.length) { dropdown.innerHTML = '<div class="search-result"><div class="search-result-name" style="color:var(--text-muted)">No results</div></div>'; }
-    else { dropdown.innerHTML = results.map(n => `<div class="search-result" data-id="${n.id}"><div class="search-result-name">${escHTML(n.name || n.id)}</div><div class="search-result-cat">${escHTML(n.category || 'Unknown')}</div></div>`).join(''); }
+    let results;
+
+    if (searchMode === 'fulltext') {
+        // Full-text: serialize entire node JSON and search every field
+        results = [];
+        for (const n of nodes) {
+            let jsonStr;
+            try { jsonStr = JSON.stringify(n._data).toLowerCase(); } catch (e) { continue; }
+            if (jsonStr.includes(q)) {
+                searchHighlightNodes.add(n.id);
+                results.push(n);
+            }
+        }
+        searchMatchCount = results.length;
+        // Limit dropdown to 10 but keep ALL matches highlighted
+        results = results.slice(0, 10);
+    } else {
+        // Names mode: search name/id/category only
+        results = nodes.filter(n =>
+            (n.name && n.name.toLowerCase().includes(q)) ||
+            (n.id && n.id.toLowerCase().includes(q)) ||
+            (n.category && n.category.toLowerCase().includes(q))
+        ).slice(0, 10);
+        searchMatchCount = results.length;
+    }
+
+    updateStatusBar();
+
+    if (!results.length) {
+        dropdown.innerHTML = '<div class="search-result"><div class="search-result-name" style="color:var(--text-muted)">No results</div></div>';
+    } else {
+        dropdown.innerHTML = results.map(n => {
+            let snippetHtml = '';
+            if (searchMode === 'fulltext') {
+                const match = findMatchInData(n._data, q);
+                if (match) {
+                    snippetHtml = `<div class="search-result-snippet">${buildSnippet(match.text, q)}</div>`;
+                }
+            }
+            return `<div class="search-result" data-id="${n.id}">
+                <div class="search-result-name">${escHTML(n.name || n.id)}</div>
+                <div class="search-result-cat">${escHTML(n.category || 'Unknown')}</div>
+                ${snippetHtml}
+            </div>`;
+        }).join('');
+    }
+
     dropdown.classList.add('open');
     dropdown.querySelectorAll('.search-result').forEach(item => {
         item.addEventListener('click', () => {
             const node = nodeMap[item.dataset.id];
-            if (node) { selectNode(node); fitToNode(node); dropdown.classList.remove('open'); document.getElementById('search-input').value = ''; }
+            if (node) {
+                selectNode(node);
+                fitToNode(node);
+                dropdown.classList.remove('open');
+            }
         });
     });
+}
+
+/* Toggle between 'names' and 'fulltext' search modes */
+function toggleSearchMode() {
+    searchMode = searchMode === 'names' ? 'fulltext' : 'names';
+    const toggleBtn = document.getElementById('search-mode-toggle');
+    if (toggleBtn) {
+        toggleBtn.textContent = searchMode === 'fulltext' ? 'FT' : 'NM';
+        toggleBtn.classList.toggle('active', searchMode === 'fulltext');
+        toggleBtn.title = searchMode === 'fulltext' ? 'Full-Text Search (entire node JSON) — click for Names mode' : 'Names Search — click for Full-Text mode';
+    }
+    // Re-run search if there's a query
+    const input = document.getElementById('search-input');
+    if (input && input.value.trim()) handleSearch(input.value);
+    updateStatusBar();
+}
+
+/* ═══════ RESET SELECTION ═══════ */
+function resetSelection() {
+    selectNode(null);
+    searchHighlightNodes = new Set();
+    searchMatchCount = 0;
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) searchInput.value = '';
+    const dropdown = document.getElementById('search-dropdown');
+    if (dropdown) dropdown.classList.remove('open');
+    updateStatusBar();
+}
+
+/* ═══════ GRAPH STATISTICS ═══════ */
+function computeGraphStats() {
+    const V = nodes.length;
+    const E = edges.length;
+
+    // Network density (directed): E / (V*(V-1)), undirected: 2E / (V*(V-1))
+    const density = V > 1 ? (2 * E) / (V * (V - 1)) : 0;
+
+    // Build adjacency list (undirected for clustering)
+    const adj = {};
+    nodes.forEach(n => { adj[n.id] = new Set(); });
+    edges.forEach(e => {
+        if (adj[e.source] && adj[e.target]) {
+            adj[e.source].add(e.target);
+            adj[e.target].add(e.source);
+        }
+    });
+
+    // Average clustering coefficient (Watts-Strogatz local clustering)
+    let totalClustering = 0;
+    let nodesWithEdges = 0;
+    nodes.forEach(n => {
+        const neighbors = Array.from(adj[n.id] || []);
+        const k = neighbors.length;
+        if (k < 2) return;
+        let links = 0;
+        for (let i = 0; i < neighbors.length; i++) {
+            for (let j = i + 1; j < neighbors.length; j++) {
+                if (adj[neighbors[i]] && adj[neighbors[i]].has(neighbors[j])) links++;
+            }
+        }
+        totalClustering += (2 * links) / (k * (k - 1));
+        nodesWithEdges++;
+    });
+    const avgClustering = nodesWithEdges > 0 ? totalClustering / nodesWithEdges : 0;
+
+    // Degree distribution (histogram)
+    const degreeCounts = {};
+    nodes.forEach(n => {
+        const deg = nodeDegrees[n.id] || (n._data.relationships || []).length || 0;
+        degreeCounts[deg] = (degreeCounts[deg] || 0) + 1;
+    });
+    const maxBucket = Math.max(...Object.keys(degreeCounts).map(Number), 0);
+
+    // Top 5 nodes by degree (centrality)
+    const centrality = nodes.map(n => ({
+        node: n,
+        degree: nodeDegrees[n.id] || (n._data.relationships || []).length || 0
+    })).sort((a, b) => b.degree - a.degree).slice(0, 5);
+
+    return { V, E, density, avgClustering, degreeCounts, maxBucket, centrality };
+}
+
+function renderStatsModal() {
+    const stats = computeGraphStats();
+    const body = document.getElementById('stats-modal-body');
+
+    // Density card
+    const densityPct = (stats.density * 100).toFixed(2);
+
+    // Histogram bars
+    let histogramHtml = '';
+    const buckets = Object.keys(stats.degreeCounts).map(Number).sort((a, b) => a - b);
+    const maxCount = Math.max(...Object.values(stats.degreeCounts), 1);
+    buckets.forEach(deg => {
+        const count = stats.degreeCounts[deg];
+        const pct = (count / maxCount) * 100;
+        histogramHtml += `
+            <div class="histogram-bar-row">
+                <div class="histogram-bar-label">deg ${deg}</div>
+                <div class="histogram-bar-wrap">
+                    <div class="histogram-bar" style="width:${pct}%"></div>
+                </div>
+                <div class="histogram-bar-count">${count}</div>
+            </div>
+        `;
+    });
+
+    // Centrality list
+    let centralityHtml = stats.centrality.map((item, i) => `
+        <div class="centrality-item">
+            <div class="centrality-rank">${i + 1}</div>
+            <div class="centrality-name">${escHTML(item.node.name || item.node.id)}</div>
+            <div class="centrality-cat">${escHTML(item.node.category || 'Unknown')}</div>
+            <div class="centrality-degree">${item.degree}</div>
+        </div>
+    `).join('');
+
+    body.innerHTML = `
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-title">Network Density</div>
+                <div class="stat-card-value">${densityPct}%</div>
+                <div class="stat-card-sub">2|E| / (|V|·(|V|-1)) = 2·${stats.E} / (${stats.V}·${stats.V - 1})</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-title">Avg Clustering Coefficient</div>
+                <div class="stat-card-value">${stats.avgClustering.toFixed(4)}</div>
+                <div class="stat-card-sub">Watts-Strogatz local clustering, averaged</div>
+            </div>
+        </div>
+
+        <div class="degree-histogram">
+            <div class="histogram-title">Degree Distribution</div>
+            ${histogramHtml || '<div style="color:var(--text-muted);font-size:0.78rem;padding:12px 0;">No data</div>'}
+        </div>
+
+        <div class="centrality-list">
+            <div class="histogram-title">Centrality Ranking — Top 5 by Degree</div>
+            ${centralityHtml || '<div style="color:var(--text-muted);font-size:0.78rem;padding:12px 0;">No data</div>'}
+        </div>
+    `;
+
+    openModal('stats-modal');
+}
+
+/* Update the status bar live metrics + selection/search state */
+function updateStatusBar() {
+    const V = nodes.length;
+    const E = edges.length;
+
+    // Live scholarly metrics
+    const density = V > 1 ? (2 * E) / (V * (V - 1)) : 0;
+    const densityEl = document.getElementById('sb-density');
+    if (densityEl) densityEl.textContent = (density * 100).toFixed(1) + '%';
+
+    // Compute approximate clustering for status bar (quick version)
+    const clusteringEl = document.getElementById('sb-clustering');
+    if (clusteringEl) {
+        const adj = {};
+        nodes.forEach(n => { adj[n.id] = []; });
+        edges.forEach(e => {
+            if (adj[e.source]) adj[e.source].push(e.target);
+            if (adj[e.target]) adj[e.target].push(e.source);
+        });
+        let total = 0, count = 0;
+        nodes.forEach(n => {
+            const neighbors = adj[n.id] || [];
+            const k = neighbors.length;
+            if (k < 2) return;
+            const neighborSet = new Set(neighbors);
+            let links = 0;
+            for (let i = 0; i < neighbors.length; i++) {
+                for (let j = i + 1; j < neighbors.length; j++) {
+                    if (adj[neighbors[i]] && adj[neighbors[i]].includes(neighbors[j])) links++;
+                }
+            }
+            total += (2 * links) / (k * (k - 1));
+            count++;
+        });
+        clusteringEl.textContent = count > 0 ? (total / count).toFixed(2) : '0.00';
+    }
+
+    // Search status
+    const searchEl = document.getElementById('sb-search');
+    if (searchEl) {
+        if (searchMatchCount > 0) {
+            const mode = searchMode === 'fulltext' ? 'Full-Text' : 'Names';
+            searchEl.innerHTML = `${mode} <span class="val">${searchMatchCount} match${searchMatchCount !== 1 ? 'es' : ''}</span>`;
+        } else {
+            searchEl.textContent = '';
+        }
+    }
 }
 
 /* ═══════ EVENT HANDLERS ═══════ */
@@ -5477,8 +6169,31 @@ function setupEventHandlers() {
         document.body.classList.toggle('panel-collapsed');
     });
     document.getElementById('apply-btn').addEventListener('click', applyChanges);
-    document.getElementById('cancel-btn').addEventListener('click', () => selectNode(null));
+    document.getElementById('cancel-btn').addEventListener('click', resetSelection);
     document.getElementById('delete-node-btn').addEventListener('click', deleteNode);
+
+    // Search mode toggle
+    document.getElementById('search-mode-toggle').addEventListener('click', toggleSearchMode);
+
+    // Stats button + modal
+    document.getElementById('stats-btn').addEventListener('click', renderStatsModal);
+    document.getElementById('stats-close').addEventListener('click', () => closeModal('stats-modal'));
+    document.getElementById('stats-done').addEventListener('click', () => closeModal('stats-modal'));
+    document.getElementById('stats-modal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeModal('stats-modal');
+    });
+
+    // Status bar metric launchers
+    document.getElementById('density-metric').addEventListener('click', renderStatsModal);
+    document.getElementById('clustering-metric').addEventListener('click', renderStatsModal);
+
+    // Inline deselect button
+    document.getElementById('deselect-btn').addEventListener('click', resetSelection);
+
+    // Click on AI status chip opens Settings modal
+    document.getElementById('ai-status').addEventListener('click', () => {
+        document.getElementById('settings-btn').click();
+    });
 
     setupHelp();
     setupWritingAssistant();
@@ -5592,6 +6307,12 @@ function setupEventHandlers() {
         if (e.key === 'ArrowUp') cam.y += 60;
         if (e.key === 'ArrowDown') cam.y -= 60;
         if (e.key === 'Escape') {
+            // Unified reset: clear selection, search highlights, link mode, close all modals
+            searchHighlightNodes = new Set();
+            searchMatchCount = 0;
+            const searchInputEl = document.getElementById('search-input');
+            if (searchInputEl) searchInputEl.value = '';
+            document.getElementById('search-dropdown').classList.remove('open');
             selectNode(null); linkMode = false; linkSourceNode = null;
             document.getElementById('link-mode-btn').classList.remove('active');
             document.getElementById('link-indicator').classList.remove('visible');
@@ -5600,7 +6321,9 @@ function setupEventHandlers() {
             closeModal('ai-improve-modal');
             closeModal('ai-relations-modal');
             closeModal('help-modal-overlay');
+            closeModal('stats-modal');
             closeWritingAssistant();
+            updateStatusBar();
         }
         // F1 = Help
         if (e.key === 'F1') { e.preventDefault(); openModal('help-modal-overlay'); }
