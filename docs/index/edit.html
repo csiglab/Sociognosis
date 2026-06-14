@@ -39,6 +39,7 @@
     --accent-rose: #c47d8a;
     --accent-amber: #d4a857;
     --accent-steel: #6b8caa;
+    --accent-cyan: #4dd4c4;
     
     /* Borders */
     --border-subtle: rgba(255, 255, 255, 0.05);
@@ -530,7 +531,7 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
 }
 .search-result-snippet mark {
     background: rgba(77, 212, 196, 0.25);
-    color: var(--accent-cyan, #4dd4c4);
+    color: var(--accent-cyan);
     border-radius: 2px;
     padding: 0 2px;
 }
@@ -561,7 +562,7 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
 .search-mode-toggle.active {
     background: rgba(77, 212, 196, 0.15);
     border-color: rgba(77, 212, 196, 0.4);
-    color: #4dd4c4;
+    color: var(--accent-cyan);
 }
 .btn-group .search-mode-toggle {
     right: 6px;
@@ -2823,18 +2824,18 @@ body.panel-collapsed .edit-panel {
                         <div class="stage-rule"></div>
                     </div>
                     <div class="stage-actions">
-                        <button class="btn btn-amber btn-sm" id="ai-relations-btn">
+                        <button class="btn btn-amber btn-sm" id="ai-relations-btn" title="AI: Discover relationships to other nodes">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
                                 <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
                             </svg>
-                            Discover Links
+                            Find Relations
                         </button>
-                        <button class="btn btn-ai btn-sm" id="ai-improve-btn">
+                        <button class="btn btn-ai btn-sm" id="ai-improve-btn" title="AI: Generate or enhance this node's content">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                             </svg>
-                            Improve
+                            Enhance
                         </button>
                     </div>
                 </div>
@@ -2849,11 +2850,11 @@ body.panel-collapsed .edit-panel {
                     <div class="stage-actions">
                         <button class="btn btn-ghost btn-sm" id="cancel-btn">Cancel</button>
                         <div class="action-spacer"></div>
-                        <button class="btn btn-primary btn-sm" id="apply-btn">
+                        <button class="btn btn-primary btn-sm" id="apply-btn" title="Save edits to this node (Ctrl+S)">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                 <polyline points="20 6 9 17 4 12"/>
                             </svg>
-                            Apply Changes
+                            Save Node
                         </button>
                     </div>
                 </div>
