@@ -9,14 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
 :root {
-    /* Refined dark slate base */
-    --bg-deep: #12141a;
-    --bg-void: #181b23;
-    --bg-surface: #1f232d;
-    --bg-card: #252a36;
-    --bg-elevated: #2d3341;
+    /* Oxford Common Room — deep indigo-black canvas */
+    --bg-deep: #0b0e14;
+    --bg-void: #0b0e14;
+    --bg-surface: #11151e;
+    --bg-card: #161b26;
+    --bg-elevated: #1d2330;
     --bg-hover: rgba(255, 255, 255, 0.04);
     --bg-active: rgba(255, 255, 255, 0.07);
+    /* Gilt edge for selection — fine bookbinding */
+    --gilt: #C4B998;
+    /* Warm off-white parchment text (canvas labels) */
+    --parchment: #D6D1C4;
+    /* Faint warm dark grey for edges — graphite on dark paper */
+    --thread: #4a4a4a;
     
     /* Text hierarchy */
     --text-primary: #f4f3f1;
@@ -79,33 +85,22 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     background: var(--bg-void);
 }
 
-/* Multi-layer atmospheric background */
+/* Oxford spec: pure deep indigo-black, subtle radial vignette, no texture/grid */
 .canvas-area::before {
     content: '';
     position: absolute;
     inset: 0;
-    background:
-        /* Subtle dot pattern */
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.015) 0.5px, transparent 0.5px),
-        /* Warm ambient glow from bottom-right */
-        radial-gradient(ellipse at 85% 90%, rgba(201, 149, 108, 0.06) 0%, transparent 50%),
-        /* Cool ambient from top-left */
-        radial-gradient(ellipse at 15% 10%, rgba(107, 140, 170, 0.05) 0%, transparent 45%),
-        /* Center focus */
-        radial-gradient(ellipse at 50% 45%, rgba(123, 163, 136, 0.03) 0%, transparent 55%);
-    background-size: 6px 6px, 100% 100%, 100% 100%, 100% 100%;
+    background: var(--bg-void);
     z-index: 0;
 }
 
-/* Vignette overlay */
+/* Subtle radial vignette — darker edges draw attention inward */
 .canvas-area::after {
     content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background: 
-        radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(18, 20, 26, 0.4) 100%),
-        linear-gradient(180deg, rgba(18, 20, 26, 0.2) 0%, transparent 15%, transparent 85%, rgba(18, 20, 26, 0.3) 100%);
+    background: radial-gradient(ellipse at 50% 50%, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
     z-index: 1;
 }
 
@@ -2008,37 +2003,45 @@ const RELATIONSHIP_TYPES = [
     'exchanges_with', 'communicates_with', 'competes_with', 'cooperates_with', 'not_specified'
 ];
 
-/* Refined category colors - harmonious palette */
-const CATEGORY_COLORS = {
-    'Epistemic Purpose': '#c9956c',
-    'Reality': '#7ba388',
-    'Observation Interface': '#6b8caa',
-    'Observation Encoding': '#5d8a9e',
-    'Epistemic Representation Form (Epistemic Blueprint)': '#9b7eb0',
-    'Concrete Epistemic Artifact': '#c47d8a',
-    'Epistemic Gap': '#c9a05c',
-    'Epistemic Agent': '#7da589',
-    'Epistemic Goal': '#7b9f8a',
-    'Epistemic Process (Activity)': '#8a9f7b',
-    'Epistemic Standard': '#9f947b',
-    'Encoding Substrate': '#7b8f9f',
-    'Epistemic Domain (Target Domain)': '#9f7b8f',
-    'Epistemic Constraint': '#9f7b7b',
-    'Epistemic Infrastructure': '#7b9f9f',
-    'Epistemic Feedback': '#9f9f7b',
-    'Epistemic Act': '#7b7b9f',
-    'Epistemic Principle': '#9f8f7b',
-    'Epistemic Prior (Inductive Bias)': '#8f7b9f',
-    'Epistemic Strategy': '#7b9f8f',
-    'Epistemic Framework': '#9f7b8a',
-    'Epistemic Operator': '#8a7b9f'
-};
+/* ═══════ OXFORD COMMON ROOM — COMMUNITY PALETTE ═══════ */
+/* The Senior Common Room: muted, low-saturation scholarly tones.
+   All colours sit at ~10-25% saturation, 20-35% lightness — velvet buttons on dark wool. */
+const COMMUNITY_COLORS = [
+    '#3D5A5C', // 1: Faded teal – old copper roofs
+    '#704E4A', // 2: Dusty burgundy leather
+    '#4A4B5C', // 3: Deep slate blue (academic gown)
+    '#5C5A3D', // 4: Olive – aged parchment
+    '#4E4A60', // 5: Muted plum
+    '#5C4E3D', // 6: Warm dark oak
+    '#3D4E5C', // 7: Desaturated navy
+    '#4E5C4A', // 8: Moss
+    '#4A4A4E', // 9: Charcoal
+    '#5C574E', // 10: Taupe
+    '#3D5C57', // 11: Petrol
+    '#5C4E54'  // 12: Muted maroon
+];
 
-const FALLBACK_COLOR = '#6b6880';
+/* Map each category deterministically to a community colour (hash → index).
+   Keeps colour stable across reloads and decouples from the fixed category list. */
+const _categoryColorCache = {};
+function categoryColorIndex(category) {
+    if (!category) return 0;
+    if (_categoryColorCache[category] !== undefined) return _categoryColorCache[category];
+    let h = 2166136261;
+    for (let i = 0; i < category.length; i++) {
+        h ^= category.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+    }
+    const idx = Math.abs(h) % COMMUNITY_COLORS.length;
+    _categoryColorCache[category] = idx;
+    return idx;
+}
+
+const FALLBACK_COLOR = COMMUNITY_COLORS[8]; // charcoal
 
 function getCategoryColor(category) {
     if (!category || typeof category !== 'string') return FALLBACK_COLOR;
-    return CATEGORY_COLORS[category] || FALLBACK_COLOR;
+    return COMMUNITY_COLORS[categoryColorIndex(category)];
 }
 
 const SPECIFIC_ENUMS = {
@@ -2086,6 +2089,32 @@ let currentTab = 'form';
 
 const REPULSION = 280, LINK_DISTANCE = 100, ALPHA_DECAY = 0.995;
 let alpha = 1;
+
+/* ═══════ OXFORD LAYERING STATE ═══════ */
+/* Tweened camera — animate over ~600ms with cubic-bezier feel on reset/fit/fly-to */
+let camTarget = { x: 0, y: 0, z: 1 };
+let camTween = null; // { from, to, start, dur }
+
+/* Per-node importance metrics + label tiers (recomputed when graph changes) */
+let maxDegree = 1;
+let nodeDegrees = {};      // id -> degree
+let labelTiers = {};       // id -> 'always' | 'meso' | 'micro'
+const TIER_ALWAYS_FRAC = 0.03; // top 3% hubs
+const TIER_MESO_FRAC = 0.10;   // top 10%
+
+/* Label fade opacity (animated across zoom-band thresholds) */
+let labelOpacity = {};     // id -> current opacity
+
+/* Viewport coverage metric: visible world-width / full graph width.
+   Macro ≈ 1.0, Meso ≈ 0.3–0.6, Micro < 0.2 */
+let viewportCoverage = 1.0;
+
+/* Offscreen canvas for community silhouettes (recomputed on layout change) */
+let silhouetteCanvas = null, silhouetteCtx = null;
+let silhouetteDirty = true;
+
+/* Pre-computed hulls: { colorIndex: [{x,y}, ...] } */
+let communityHulls = {};
 
 /* ═══════ AI CONFIGURATION ═══════ */
 let aiConfig = {
@@ -2602,6 +2631,7 @@ function setupModals() {
 
         extractSuggestions();
         updateStats();
+        markGraphDirty();
         renderForm(selectedNode._data);
         
         closeModal('ai-relations-modal');
@@ -2699,6 +2729,7 @@ function setupModals() {
         
         extractSuggestions();
         updateStats();
+        markGraphDirty();
         renderForm(selectedNode._data);
         
         closeModal('ai-improve-modal');
@@ -3195,7 +3226,142 @@ function initGraph() {
     });
     
     updateStats();
-    fitCamera();
+    computeMetrics();
+    silhouetteDirty = true;
+
+    // Settle the layout before fitting, then snap directly to the fit view
+    // so the initial frame is the macro "fit-all" view of the real graph.
+    warmupLayout(300);
+    fitCamera(true);
+}
+
+/* ═══════ GRAPH METRICS & LABEL TIERS ═══════ */
+function computeMetrics() {
+    nodeDegrees = {};
+    edges.forEach(e => {
+        nodeDegrees[e.source] = (nodeDegrees[e.source] || 0) + 1;
+        nodeDegrees[e.target] = (nodeDegrees[e.target] || 0) + 1;
+    });
+    nodes.forEach(n => {
+        if (nodeDegrees[n.id] === undefined) nodeDegrees[n.id] = (n._data.relationships || []).length;
+    });
+    const degs = nodes.map(n => nodeDegrees[n.id] || 0).sort((a, b) => b - a);
+    maxDegree = degs.length ? Math.max(1, degs[0]) : 1;
+
+    // Assign tiers by percentile rank
+    const n = nodes.length;
+    const alwaysCutoff = n > 100 ? Math.ceil(n * TIER_ALWAYS_FRAC) : (n > 0 ? 1 : 0);
+    const mesoCutoff = Math.ceil(n * TIER_MESO_FRAC);
+    const sorted = [...nodes].sort((a, b) => (nodeDegrees[b.id] || 0) - (nodeDegrees[a.id] || 0));
+    labelTiers = {};
+    sorted.forEach((node, i) => {
+        if (i < alwaysCutoff) labelTiers[node.id] = 'always';
+        else if (i < mesoCutoff) labelTiers[node.id] = 'meso';
+        else labelTiers[node.id] = 'micro';
+    });
+    // Initialize label opacity
+    nodes.forEach(node => {
+        if (labelOpacity[node.id] === undefined) labelOpacity[node.id] = 0;
+    });
+}
+
+/* Degree-based radius mapping: min 3px, max 18px (world units, pre-zoom). */
+function nodeRadius(n) {
+    const deg = nodeDegrees[n.id] || (n._data.relationships || []).length || 0;
+    const t = maxDegree > 0 ? deg / maxDegree : 0;
+    return clamp(3 + t * 15, 3, 18);
+}
+
+/* ═══════ CONVEX HULL (Andrew's monotone chain) ═══════ */
+function convexHull(points) {
+    if (points.length < 3) return points.slice();
+    const pts = points.slice().sort((a, b) => a.x - b.x || a.y - b.y);
+    const cross = (O, A, B) => (A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x);
+    const lower = [];
+    for (const p of pts) {
+        while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) lower.pop();
+        lower.push(p);
+    }
+    const upper = [];
+    for (let i = pts.length - 1; i >= 0; i--) {
+        const p = pts[i];
+        while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) upper.pop();
+        upper.push(p);
+    }
+    lower.pop(); upper.pop();
+    return lower.concat(upper);
+}
+
+/* ═══════ COMMUNITY SILHOUETTES (offscreen, blurred clouds) ═══════ */
+function computeHulls() {
+    const groups = {};
+    nodes.forEach(n => {
+        const ci = categoryColorIndex(n.category);
+        if (!groups[ci]) groups[ci] = [];
+        groups[ci].push({ x: n.x, y: n.y });
+    });
+    communityHulls = {};
+    Object.keys(groups).forEach(ci => {
+        communityHulls[ci] = convexHull(groups[ci]);
+    });
+}
+
+function renderSilhouettes() {
+    if (!silhouetteCanvas) {
+        silhouetteCanvas = document.createElement('canvas');
+        silhouetteCtx = silhouetteCanvas.getContext('2d');
+    }
+    // Compute world bounds to size the offscreen canvas
+    if (!nodes.length) { silhouetteCanvas.width = 1; silhouetteCanvas.height = 1; return; }
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    nodes.forEach(n => { if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x; if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y; });
+    const pad = 120;
+    const bw = Math.max(1, maxX - minX + pad * 2);
+    const bh = Math.max(1, maxY - minY + pad * 2);
+    silhouetteCanvas.width = Math.min(bw, 4000);
+    silhouetteCanvas.height = Math.min(bh, 4000);
+    const sc = silhouetteCtx;
+    sc.clearRect(0, 0, silhouetteCanvas.width, silhouetteCanvas.height);
+
+    const ox = -minX + pad, oy = -minY + pad;
+    sc.filter = 'blur(70px)';
+    Object.keys(communityHulls).forEach(ci => {
+        const hull = communityHulls[ci];
+        if (!hull || hull.length < 2) return;
+        sc.beginPath();
+        sc.moveTo(hull[0].x + ox, hull[0].y + oy);
+        for (let i = 1; i < hull.length; i++) sc.lineTo(hull[i].x + ox, hull[i].y + oy);
+        sc.closePath();
+        sc.fillStyle = hexToRGBA(COMMUNITY_COLORS[ci % COMMUNITY_COLORS.length], 0.08);
+        sc.fill();
+    });
+    sc.filter = 'none';
+}
+
+/* ═══════ CAMERA TWEEN (cubic-bezier ease over ~600ms) ═══════ */
+const CAM_EASE = 0.2; // (0.2, 0, 0.2, 1) approximated as exponential approach
+function tweenCamera(toX, toY, toZ, duration = 600) {
+    camTween = { from: { x: cam.x, y: cam.y, z: cam.z }, to: { x: toX, y: toY, z: toZ }, start: performance.now(), duration };
+}
+function updateCameraTween(now) {
+    if (!camTween) return;
+    const t = clamp((now - camTween.start) / camTween.duration, 0, 1);
+    // Cubic-bezier-ish ease
+    const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    cam.x = camTween.from.x + (camTween.to.x - camTween.from.x) * e;
+    cam.y = camTween.from.y + (camTween.to.y - camTween.from.y) * e;
+    cam.z = camTween.from.z + (camTween.to.z - camTween.from.z) * e;
+    if (t >= 1) camTween = null;
+}
+
+/* ═══════ VIEWPORT COVERAGE (semantic zoom band metric) ═══════ */
+function computeViewportCoverage() {
+    if (!nodes.length) { viewportCoverage = 1; return; }
+    let minX = Infinity, maxX = -Infinity;
+    nodes.forEach(n => { if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x; });
+    const graphW = Math.max(1, maxX - minX);
+    const visW = W / cam.z;
+    viewportCoverage = clamp(visW / graphW, 0, 2);
 }
 
 /* ═══════ SIMULATION ═══════ */
@@ -3240,110 +3406,231 @@ function simulate() {
     });
 }
 
-/* ═══════ DRAWING ═══════ */
+/* ═══════ EDGE VISIBILITY (progressive filtering by zoom band) ═══════ */
+/* Precompute edge weight = combined degree of endpoints; find max for opacity mapping */
+let edgeWeights = null, maxEdgeWeight = 1;
+function computeEdgeWeights() {
+    edgeWeights = new Array(edges.length);
+    let mw = 1;
+    for (let i = 0; i < edges.length; i++) {
+        const e = edges[i];
+        const w = (nodeDegrees[e.source] || 0) + (nodeDegrees[e.target] || 0);
+        edgeWeights[i] = w;
+        if (w > mw) mw = w;
+    }
+    maxEdgeWeight = mw;
+}
+
+function edgeShouldShow(i, band) {
+    const w = edgeWeights[i];
+    if (band === 'macro') return w >= maxEdgeWeight * 0.95;       // top 5%
+    if (band === 'meso') {
+        const e = edges[i];
+        const ts = labelTiers[e.source] !== 'micro' || labelTiers[e.target] !== 'micro';
+        return ts || w >= maxEdgeWeight * 0.9;
+    }
+    return true; // micro: all edges
+}
+
+function zoomBand() {
+    if (viewportCoverage > 0.7) return 'macro';
+    if (viewportCoverage > 0.2) return 'meso';
+    return 'micro';
+}
+
+/* ═══════ LABEL VISIBILITY (tier + band + hover/selected) ═══════ */
+function labelTargetOpacity(n, band) {
+    const tier = labelTiers[n.id] || 'micro';
+    if (n === hoveredNode || n === selectedNode) return 1;
+    if (tier === 'always') return 1;
+    if (tier === 'meso' && (band === 'meso' || band === 'micro')) return 0.85;
+    if (tier === 'micro' && band === 'micro') return 0.7;
+    return 0;
+}
+
+/* ═══════ DRAWING — Oxford layered pipeline ═══════ */
+/* Layers: (1) silhouettes → (2) edges → (3) nodes → (4) labels.
+   Depth by shadow not glow; matte velvet nodes; faint graphite threads. */
 function draw() {
+    const now = performance.now();
+    updateCameraTween(now);
+    computeViewportCoverage();
+    const band = zoomBand();
+
+    // Recompute silhouettes when layout has shifted substantially
+    if (silhouetteDirty) {
+        computeHulls();
+        renderSilhouettes();
+        silhouetteDirty = false;
+    }
+    // Recompute edge weights if structure changed
+    if (edgeWeights === null || edgeWeights.length !== edges.length) computeEdgeWeights();
+
     ctx.clearRect(0, 0, W, H);
-    
-    /* Draw edges with refined styling */
-    edges.forEach(e => {
+
+    /* ── LAYER 1: Community silhouettes (background clouds) ── */
+    // Fade clouds in macro, dim them to near-invisibility in micro
+    const silhouetteAlpha = band === 'macro' ? 1 : band === 'meso' ? 0.5 : 0.15;
+    if (silhouetteCanvas && silhouetteCanvas.width > 1 && silhouetteAlpha > 0) {
+        if (!nodes.length) { /* skip */ } else {
+            let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+            nodes.forEach(n => { if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x; if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y; });
+            const pad = 120;
+            // The silhouette canvas was drawn with offset ox=-minX+pad, oy=-minY+pad
+            // Map world (minX-pad .. maxX+pad) to screen
+            const tlx = (minX - pad) * cam.z + cam.x;
+            const tly = (minY - pad) * cam.z + cam.y;
+            const sw = (silhouetteCanvas.width) * cam.z;
+            const sh = (silhouetteCanvas.height) * cam.z;
+            ctx.globalAlpha = silhouetteAlpha;
+            ctx.drawImage(silhouetteCanvas, tlx, tly, sw, sh);
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /* ── LAYER 2: Edges (midground, drawn before nodes) ── */
+    ctx.lineCap = 'round';
+    for (let i = 0; i < edges.length; i++) {
+        if (!edgeShouldShow(i, band)) continue;
+        const e = edges[i];
         const s = nodeMap[e.source], t = nodeMap[e.target];
-        if (!s || !t) return;
+        if (!s || !t) continue;
         const ss = worldToScreen(s.x, s.y), ts = worldToScreen(t.x, t.y);
-        const isH = hoveredNode && (hoveredNode.id === e.source || hoveredNode.id === e.target);
-        const isSel = selectedNode && (selectedNode.id === e.source || selectedNode.id === e.target);
-        const isLS = linkSourceNode && (linkSourceNode.id === e.source || linkSourceNode.id === e.target);
-        
-        ctx.beginPath(); 
-        ctx.moveTo(ss.x, ss.y); 
+        const w = edgeWeights[i];
+        const baseOpacity = clamp((w / maxEdgeWeight) * 0.3, 0.1, 0.3);
+
+        const incident = (hoveredNode && (hoveredNode.id === e.source || hoveredNode.id === e.target)) ||
+                         (selectedNode && (selectedNode.id === e.source || selectedNode.id === e.target));
+
+        let strokeStyle, lineWidth;
+        if (incident) {
+            // Highlight: tint with hovered/selected community colour, opacity 0.6
+            const ref = hoveredNode || selectedNode;
+            const tint = getCategoryColor(ref.category);
+            strokeStyle = hexToRGBA(tint, 0.6);
+            lineWidth = clamp(1.0 * cam.z, 0.6, 1.6);
+        } else if (hoveredNode) {
+            // Dim others to 0.05 when hovering
+            strokeStyle = hexToRGBA('#4a4a4a', 0.05);
+            lineWidth = clamp(0.5 * cam.z, 0.3, 1.0);
+        } else {
+            strokeStyle = hexToRGBA('#4a4a4a', baseOpacity);
+            lineWidth = clamp(0.75 * cam.z, 0.4, 1.2);
+        }
+        ctx.beginPath();
+        ctx.moveTo(ss.x, ss.y);
         ctx.lineTo(ts.x, ts.y);
-        ctx.strokeStyle = hexToRGBA('#7a7a8a', isH || isSel || isLS ? 0.3 : 0.12);
-        ctx.lineWidth = isH || isSel ? 1.3 : 0.6; 
+        ctx.strokeStyle = strokeStyle;
+        ctx.lineWidth = lineWidth;
         ctx.stroke();
-    });
-    
-    /* Draw potential link line */
+    }
+
+    /* Potential link line (link mode) */
     if (linkMode && linkSourceNode && hoveredNode && linkSourceNode !== hoveredNode) {
         const ss = worldToScreen(linkSourceNode.x, linkSourceNode.y), ts = worldToScreen(hoveredNode.x, hoveredNode.y);
         ctx.beginPath(); ctx.moveTo(ss.x, ss.y); ctx.lineTo(ts.x, ts.y);
-        ctx.strokeStyle = hexToRGBA('#9b7eb0', 0.45); ctx.lineWidth = 1.6;
+        ctx.strokeStyle = hexToRGBA('#9b7eb0', 0.5); ctx.lineWidth = 1.6;
         ctx.setLineDash([6, 4]); ctx.stroke(); ctx.setLineDash([]);
     }
-    
-    /* Draw nodes with refined lighting */
-    nodes.forEach(n => {
+
+    /* ── LAYER 3: Nodes (foreground, matte velvet) ── */
+    // First pass: drop shadows for all nodes (lifts them from canvas)
+    ctx.save();
+    for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
         const s = worldToScreen(n.x, n.y);
-        const baseR = 7;
-        const r = Math.max(4, (baseR + (n._data.relationships || []).length * 0.6) * cam.z);
-        const isH = hoveredNode === n, isSel = selectedNode === n, isLS = linkSourceNode === n;
-        const color = getCategoryColor(n.category);
-        
-        /* Outer glow for selected/hovered nodes */
-        if (isH || isSel || isLS) {
-            const gc = isLS ? '#9b7eb0' : isSel ? '#c9956c' : '#a8a5b0';
-            const glowGrd = ctx.createRadialGradient(s.x, s.y, r * 0.5, s.x, s.y, r + 20);
-            glowGrd.addColorStop(0, hexToRGBA(gc, 0.15)); 
-            glowGrd.addColorStop(1, hexToRGBA(gc, 0));
-            ctx.fillStyle = glowGrd; 
-            ctx.beginPath(); 
-            ctx.arc(s.x, s.y, r + 20, 0, Math.PI * 2); 
-            ctx.fill();
-        }
-        
-        /* Main node gradient with lighting */
-        const nodeGrd = ctx.createRadialGradient(s.x - r * 0.35, s.y - r * 0.35, 0, s.x, s.y, r);
-        nodeGrd.addColorStop(0, hexToRGBA(lightenColor(color, 25), 1)); 
-        nodeGrd.addColorStop(0.6, hexToRGBA(color, 1)); 
-        nodeGrd.addColorStop(1, hexToRGBA(darkenColor(color, 18), 1));
-        
-        ctx.fillStyle = nodeGrd; 
-        ctx.beginPath(); 
-        ctx.arc(s.x, s.y, r, 0, Math.PI * 2); 
-        ctx.fill();
-        
-        /* Specular highlight */
-        ctx.fillStyle = hexToRGBA('#ffffff', 0.15);
-        ctx.beginPath(); 
-        ctx.arc(s.x - r * 0.3, s.y - r * 0.3, r * 0.32, 0, Math.PI * 2); 
-        ctx.fill();
-        
-        /* Subtle outline */
-        ctx.strokeStyle = hexToRGBA(darkenColor(color, 25), 0.35);
-        ctx.lineWidth = 0.5;
+        const isH = hoveredNode === n, isSel = selectedNode === n;
+        const baseR = nodeRadius(n);
+        const r = Math.max(2, baseR * cam.z);
+        // Cull offscreen
+        if (s.x + r + 20 < 0 || s.x - r - 20 > W || s.y + r + 20 < 0 || s.y - r - 20 > H) continue;
+        const shadowBlur = isH ? 12 : 6;
+        const shadowOffset = isH ? 4 : 2;
+        ctx.shadowColor = `rgba(0,0,0,${isH ? 0.7 : 0.5})`;
+        ctx.shadowBlur = shadowBlur * (cam.z > 1 ? 1 : cam.z);
+        ctx.shadowOffsetY = shadowOffset;
+        ctx.fillStyle = getCategoryColor(n.category);
         ctx.beginPath();
         ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
-        ctx.stroke();
-        
-        /* Selection ring */
-        if (isSel) { 
-            ctx.strokeStyle = hexToRGBA('#c9956c', 0.5); 
-            ctx.lineWidth = 1.6; 
-            ctx.beginPath(); 
-            ctx.arc(s.x, s.y, r + 4, 0, Math.PI * 2); 
-            ctx.stroke(); 
+        ctx.fill();
+    }
+    ctx.restore();
+
+    // Second pass: fills + strokes (no shadow)
+    for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        const s = worldToScreen(n.x, n.y);
+        const isH = hoveredNode === n, isSel = selectedNode === n, isLS = linkSourceNode === n;
+        const baseR = nodeRadius(n);
+        const r = Math.max(2, (baseR + (isH ? 1 : 0)) * cam.z);
+        if (s.x + r + 20 < 0 || s.x - r - 20 > W || s.y + r + 20 < 0 || s.y - r - 20 > H) continue;
+        const color = getCategoryColor(n.category);
+
+        // Matte solid fill — velvet buttons
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Hover stroke: faint warm pencil line
+        if (isH && !isSel) {
+            ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+            ctx.stroke();
         }
-        if (isLS) { 
-            ctx.strokeStyle = hexToRGBA('#9b7eb0', 0.5); 
-            ctx.lineWidth = 1.6; 
-            ctx.setLineDash([4, 4]); 
-            ctx.beginPath(); 
-            ctx.arc(s.x, s.y, r + 6, 0, Math.PI * 2); 
-            ctx.stroke(); 
-            ctx.setLineDash([]); 
+        // Selected stroke: thin gilt edge — fine bookbinding
+        if (isSel) {
+            ctx.strokeStyle = '#C4B998';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, r + 1.5, 0, Math.PI * 2);
+            ctx.stroke();
         }
-        
-        /* Label */
-        if (cam.z > 0.45) {
-            const fontSize = Math.max(9, Math.min(12, r * 1.2));
-            ctx.font = `400 ${fontSize}px Cormorant Garamond, serif`; 
-            ctx.textAlign = 'center'; 
-            ctx.textBaseline = 'top';
-            ctx.fillStyle = hexToRGBA('#d4d2dc', isH ? 0.95 : 0.72);
-            let label = n.name || n.id || 'Unknown';
-            if (label.length > 20) label = label.substring(0, 17) + '…';
-            ctx.fillText(label, s.x, s.y + r + 7);
+        // Link source: plum dashed ring
+        if (isLS) {
+            ctx.strokeStyle = hexToRGBA('#9b7eb0', 0.6);
+            ctx.lineWidth = 1.6;
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.arc(s.x, s.y, r + 4, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
         }
-    });
-    
+    }
+
+    /* ── LAYER 4: Labels (parchment text with protective dark mask) ── */
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        const target = labelTargetOpacity(n, band);
+        const cur = labelOpacity[n.id] || 0;
+        // Tween opacity over ~200ms (approx 12 frames)
+        const next = cur + (target - cur) * 0.15;
+        labelOpacity[n.id] = next;
+        if (next < 0.02) continue;
+        const s = worldToScreen(n.x, n.y);
+        const baseR = nodeRadius(n);
+        const r = Math.max(2, baseR * cam.z);
+        const tier = labelTiers[n.id] || 'micro';
+        const weight = tier === 'always' ? 500 : 400;
+        const fontSize = clamp(tier === 'always' ? r * 1.3 : r * 1.1, 9, 13);
+        ctx.font = `${weight} ${fontSize}px Inter, system-ui, sans-serif`;
+        let label = n.name || n.id || 'Unknown';
+        const maxChars = band === 'macro' ? 14 : 22;
+        if (label.length > maxChars) label = label.substring(0, maxChars - 1) + '…';
+
+        // Protective dark mask shadow (not a glow)
+        ctx.save();
+        ctx.shadowColor = '#0b0e14';
+        ctx.shadowBlur = 4;
+        ctx.fillStyle = hexToRGBA('#D6D1C4', Math.min(1, next));
+        ctx.fillText(label, s.x + r + 6, s.y);
+        ctx.restore();
+    }
+
     drawMinimap();
 }
 
@@ -3378,27 +3665,52 @@ function drawMinimap() {
     mmCtx.strokeRect(vx1 * s + ox, vy1 * s + oy, (vx2 - vx1) * s, (vy2 - vy1) * s);
 }
 
-/* ═══════ HIT TESTING ═══════ */
+/* ═══════ HIT TESTING (degree-based radius) ═══════ */
 function hitTest(sx, sy) {
     const wp = screenToWorld(sx, sy);
-    let best = null
-     let bestD = Infinity;
+    let best = null;
+    let bestD = Infinity;
     nodes.forEach(n => {
         const dx = n.x - wp.x, dy = n.y - wp.y, d2 = dx * dx + dy * dy;
-        const r = 7 + (n._data.relationships || []).length * 0.6;
-        if (d2 < r * r * 4 && d2 < bestD) { bestD = d2; best = n; }
+        const r = nodeRadius(n);
+        // Generous hit area: 1.5× radius (a little larger for easy targeting)
+        const hr = r * 1.5;
+        if (d2 < hr * hr && d2 < bestD) { bestD = d2; best = n; }
     });
     return best;
 }
 
 /* ═══════ CAMERA ═══════ */
-function fitCamera() {
-    if (!nodes.length) return;
+/* Compute the target (z, x, y) that fits the whole graph, then tween to it.
+   Double-click background and `0`/`f` call this for an animated reset. */
+function computeFitTarget() {
+    if (!nodes.length) return { x: 0, y: 0, z: 1 };
     let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
     nodes.forEach(n => { if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x; if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y; });
     const pad = 80, gw = Math.max(1, maxX - minX + pad * 2), gh = Math.max(1, maxY - minY + pad * 2);
     const z = Math.min(W / gw, H / gh, 1.5);
-    cam.z = z; cam.x = W / 2 - (minX + maxX) / 2 * z; cam.y = H / 2 - (minY + maxY) / 2 * z;
+    return { z, x: W / 2 - (minX + maxX) / 2 * z, y: H / 2 - (minY + maxY) / 2 * z };
+}
+
+function fitCamera(snap = false) {
+    const t = computeFitTarget();
+    if (snap) {
+        // Instant set (no tween) — used for the initial fit view so the
+        // camera starts perfectly framed on the settled graph.
+        cam.x = t.x; cam.y = t.y; cam.z = t.z;
+        camTween = null;
+    } else {
+        tweenCamera(t.x, t.y, t.z, 600);
+    }
+}
+
+/* Warm up the force-directed layout synchronously so nodes settle into their
+   final arrangement. Called once after load before fitting the initial view,
+   so the fit matches the graph's real shape rather than the random spread. */
+function warmupLayout(iterations = 300) {
+    alpha = 1;
+    for (let i = 0; i < iterations; i++) simulate();
+    alpha = 1; // let the live loop cool it down again naturally
 }
 
 /* ═══════ TOOLTIP ═══════ */
@@ -3716,6 +4028,7 @@ function addRelationship() {
     selectedNode._data.relationships.push(rel);
     edges.push({ source: selectedNode.id, target: target, family: family || 'not_specified', type: type, description: '' });
     updateStats();
+    markGraphDirty();
     renderForm(selectedNode._data);
 }
 
@@ -3726,6 +4039,7 @@ function removeRelationship(idx) {
     const edgeIdx = edges.findIndex(e => e.source === selectedNode.id && e.target === rel.targetNodeId && e.type === rel.relationshipType);
     if (edgeIdx >= 0) edges.splice(edgeIdx, 1);
     updateStats();
+    markGraphDirty();
     renderForm(selectedNode._data);
 }
 
@@ -3742,7 +4056,20 @@ function removeReference(idx) {
     renderForm(selectedNode._data);
 }
 
-function fitToNode(node) { cam.x = W / 2 - node.x * cam.z; cam.y = H / 2 - node.y * cam.z; }
+/* Fly to a node, easing it to the centre over ~600ms. Used by search + selection. */
+function fitToNode(node) {
+    if (!node) return;
+    const tx = W / 2 - node.x * cam.z;
+    const ty = H / 2 - node.y * cam.z;
+    tweenCamera(tx, ty, cam.z, 600);
+}
+
+/* Mark graph metrics + silhouettes dirty — called on any structural change */
+function markGraphDirty() {
+    computeMetrics();
+    edgeWeights = null;
+    silhouetteDirty = true;
+}
 
 /* ═══════ SAVE & ADD NODE ═══════ */
 function applyChanges() {
@@ -3807,6 +4134,7 @@ function addNewNode() {
     const node = { id: id, name: 'New Node', category: 'Reality', x: (Math.random() - 0.5) * 200, y: (Math.random() - 0.5) * 200, vx: 0, vy: 0, _data: newNodeData };
     nodes.push(node); nodeMap[id] = node;
     selectNode(node); fitToNode(node); alpha = 1; updateStats();
+    markGraphDirty();
 }
 
 function deleteNode() {
@@ -3819,6 +4147,7 @@ function deleteNode() {
     if (nodeIdx >= 0) nodes.splice(nodeIdx, 1);
     delete nodeMap[selectedNode.id];
     selectNode(null); updateStats();
+    markGraphDirty();
 }
 
 function saveJSON() {
@@ -3863,7 +4192,7 @@ function setupEventHandlers() {
                 linkSourceNode._data.relationships = linkSourceNode._data.relationships || [];
                 linkSourceNode._data.relationships.push(rel);
                 edges.push({ source: linkSourceNode.id, target: node.id, family: 'not_specified', type: 'not_specified', description: '' });
-                updateStats(); if (selectedNode === linkSourceNode) renderForm(linkSourceNode._data);
+                updateStats(); markGraphDirty(); if (selectedNode === linkSourceNode) renderForm(linkSourceNode._data);
             }
             linkSourceNode = node;
             document.getElementById('link-source-name').textContent = node.name || node.id;
@@ -3945,6 +4274,24 @@ function setupEventHandlers() {
             document.getElementById('link-indicator').classList.toggle('visible', linkMode);
             canvas.classList.toggle('linking', linkMode);
         }
+        // Keyboard navigation (spec §6): +/- zoom, arrows pan, 0 reset, Esc deselect
+        if (e.key === '+' || e.key === '=') {
+            const cx = W / 2, cy = H / 2;
+            const wp = screenToWorld(cx, cy);
+            const nz = clamp(cam.z * 1.2, 0.1, 5);
+            cam.x = cx - wp.x * nz; cam.y = cy - wp.y * nz; cam.z = nz;
+        }
+        if (e.key === '-' || e.key === '_') {
+            const cx = W / 2, cy = H / 2;
+            const wp = screenToWorld(cx, cy);
+            const nz = clamp(cam.z * 0.83, 0.1, 5);
+            cam.x = cx - wp.x * nz; cam.y = cy - wp.y * nz; cam.z = nz;
+        }
+        if (e.key === '0') fitCamera();
+        if (e.key === 'ArrowLeft') cam.x += 60;
+        if (e.key === 'ArrowRight') cam.x -= 60;
+        if (e.key === 'ArrowUp') cam.y += 60;
+        if (e.key === 'ArrowDown') cam.y -= 60;
         if (e.key === 'Escape') {
             selectNode(null); linkMode = false; linkSourceNode = null;
             document.getElementById('link-mode-btn').classList.remove('active');
@@ -3961,7 +4308,13 @@ function setupEventHandlers() {
 }
 
 /* ═══════ MAIN LOOP ═══════ */
-function animate() { simulate(); draw(); requestAnimationFrame(animate); }
+function animate() {
+    simulate();
+    // Refresh silhouettes periodically while layout is settling
+    if (alpha > 0.05 && Math.random() < 0.05) silhouetteDirty = true;
+    draw();
+    requestAnimationFrame(animate);
+}
 
 /* ═══════ INIT ═══════ */
 async function init() {
