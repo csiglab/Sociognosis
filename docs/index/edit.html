@@ -27,8 +27,9 @@
     /* Text hierarchy */
     --text-primary: #f4f3f1;
     --text-secondary: #a8a5b0;
-    --text-muted: #6b6880;
-    --text-ghost: #4a4860;
+    /* WCAG AA: raised for ≥4.5:1 contrast on dark surfaces (was #6b6880 / #4a4860) */
+    --text-muted: #9290aa;
+    --text-ghost: #82809a;
     
     /* Refined accent system */
     --accent-copper: #c9956c;
@@ -2672,97 +2673,307 @@ body.panel-collapsed .edit-panel {
     line-height: 1.55; padding: 11px 14px; border: 1px solid transparent;
     white-space: pre-wrap; word-break: break-word; z-index: 5;
 }
+
+/* ═════════════════════════════════════════════════════════════════════════ */
+/* ═══════ BEAUTIFICATION v2 — Refined editorial polish (cascade-final) ═══════ */
+/* Small, surgical CSS refinements that deepen the Oxford Common Room theme.   */
+/* Placed last so equal-specificity rules win by source order.                 */
+/* ═════════════════════════════════════════════════════════════════════════ */
+
+/* 1. Unified placeholder styling — parchment ghost text with an italic lean.
+      Replaces scattered ad-hoc placeholder rules with one consistent voice. */
+::placeholder,
+.form-input::placeholder,
+.form-textarea::placeholder,
+.settings-input::placeholder,
+.settings-textarea::placeholder,
+.search-input::placeholder,
+.ss-input::placeholder,
+.help-search::placeholder,
+.json-textarea::placeholder,
+.wa-textarea::placeholder,
+.array-add-input input::placeholder,
+.context-textarea::placeholder {
+    color: var(--text-ghost);
+    font-style: italic;
+    opacity: 0.85;
+}
+
+/* 2. Velvet button top-highlight — a tactile matte sheen matching the nodes.
+      Scoped away from .btn-ghost so ghost buttons keep their shadow-free look. */
+.btn:not(.btn-ghost) {
+    box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.045);
+}
+.btn:not(.btn-ghost):hover {
+    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* 3. Recessed inputs — engraved on dark parchment.
+      Idle state gets a subtle inset; focus keeps the inset beneath the ring. */
+.form-input,
+.form-textarea,
+.settings-input,
+.json-textarea,
+.help-search {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.22);
+}
+.form-input:focus,
+.form-textarea:focus,
+.settings-input:focus,
+.help-search:focus {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.22), 0 0 0 2px rgba(201, 149, 108, 0.14);
+}
+
+/* 4. App-title gilt underline — a fine bookbinding cue beneath the italic title. */
+.app-title {
+    background: linear-gradient(90deg, var(--accent-copper), transparent) bottom left / 70% 1px no-repeat;
+    padding-bottom: 5px;
+}
+
+/* 5. Refined empty-state ornament — an editorial Cormorant emblem, copper-tinted. */
+.empty-state-icon {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-style: italic;
+    color: var(--accent-copper);
+    opacity: 0.28;
+    margin-bottom: 18px;
+}
+
+/* 6. Tooltip copper gleam — light catching the gilt edge of a page. */
+#tooltip {
+    box-shadow: var(--shadow-lg), -12px 0 32px -16px rgba(201, 149, 108, 0.45);
+}
+
+/* 7. Card hover-lift micro-interaction — tactile feedback (matches .btn lift). */
+.stat-card,
+.context-block {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.2s ease;
+}
+.stat-card:hover,
+.context-block:hover {
+    transform: translateY(-1px);
+    border-color: var(--border-medium);
+    box-shadow: var(--shadow-sm);
+}
+.centrality-item {
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.centrality-item:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* 8. Embossed badges — a faint letterpress inset for scholarly typesetting. */
+.badge {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* 9. Editorial scrollbar — slim copper-tinted rail for reading panes. */
+.panel-body::-webkit-scrollbar,
+.modal-body::-webkit-scrollbar { width: 6px; }
+.panel-body::-webkit-scrollbar-thumb,
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(201, 149, 108, 0.16);
+    border-radius: 3px;
+}
+.panel-body::-webkit-scrollbar-thumb:hover,
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(201, 149, 108, 0.4);
+}
+
+/* 10. Section-title copper gradient divider — fades like an editorial chapter rule. */
+.form-section-title,
+.settings-title,
+.histogram-title,
+.help-shortcut-group-title {
+    border-bottom: none;
+    background-image: linear-gradient(90deg, var(--border-medium), transparent);
+    background-repeat: no-repeat;
+    background-position: bottom left;
+    background-size: 100% 1px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════ */
+/* ═══════ ACCESSIBILITY & WCAG LEGIBILITY (cascade-final overrides) ═══════ */
+/* Higher-contrast tokens + a legibility floor for tiny mono labels.          */
+/* Placed last so equal-specificity rules win by source order.                */
+/* ═════════════════════════════════════════════════════════════════════════ */
+
+/* 1. Skip link — visible only when focused (WCAG 2.4.1 Bypass Blocks) */
+.skip-link {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    z-index: 1000;
+    transform: translateY(-200%);
+    background: var(--accent-copper);
+    color: var(--bg-deep);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    transition: transform 0.18s ease;
+}
+.skip-link:focus { transform: translateY(0); }
+
+/* 2. Visually-hidden — screen-reader-only utility */
+.visually-hidden {
+    position: absolute !important;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* 3. Global focus fallback — guarantee a visible keyboard focus indicator
+      for any focusable element lacking a component-specific rule (WCAG 2.4.7). */
+a:focus-visible,
+button:focus-visible,
+[role="tab"]:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible,
+summary:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--accent-copper);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* 4. Legibility floor — raise sub-0.6rem mono labels to ≥0.64rem (~10px).
+      Combined with the muted/ghost token bump, every small label now meets
+      WCAG AA contrast. */
+.app-subtitle { font-size: 0.66rem; letter-spacing: 0.16em; }
+.tt-category { font-size: 0.66rem; }
+.stat-card-title { font-size: 0.66rem; }
+.stat-card-sub { font-size: 0.66rem; }
+.search-result-cat { font-size: 0.64rem; }
+.search-mode-toggle { font-size: 0.62rem; }
+.centrality-cat { font-size: 0.64rem; }
+.sb-chip-label { font-size: 0.64rem; }
+.sb-chip-value { font-size: 0.64rem; }
+.status-bar { font-size: 0.66rem; }
+.help-kbd { font-size: 0.7rem; min-width: 24px; }
+.json-validity { font-size: 0.66rem; }
+.dirty-badge { font-size: 0.58rem; }
+.apply-badge { font-size: 0.54rem; }
+
+/* 5. Comfortable line-height for reading panes & form text */
+.form-textarea,
+.context-textarea,
+.wa-textarea,
+.tt-desc,
+.empty-state-text { line-height: 1.6; }
+
+/* 6. Respect forced-colors / Windows High-Contrast mode (WCAG 1.4.12) */
+@media (forced-colors: active) {
+    .btn, .qa-btn, .modal, .edit-panel, .status-bar, .btn-group,
+    .form-input, .form-textarea, .settings-input, .search-input {
+        border: 1px solid CanvasText;
+    }
+    .btn-primary { forced-color-adjust: none; color: HighlightText; background: Highlight; }
+    .btn:focus-visible, .qa-btn:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+}
+
+/* 7. Disabled controls must still convey state clearly to AT */
+.btn:disabled { opacity: 0.45; }
     </style>
 </head>
 <body>
-    <div class="canvas-area">
-        <div class="header-bar">
+    <a class="skip-link" href="#edit-panel">Skip to editor panel</a>
+    <main class="canvas-area" aria-label="Epistemic network graph canvas">
+        <header class="header-bar">
             <div>
-                <div class="app-title">Sociognosis Editor</div>
-                <div class="app-subtitle">Epistemic Network Visualization</div>
+                <h1 class="app-title">Sociognosis Editor</h1>
+                <p class="app-subtitle">Epistemic Network Visualization</p>
             </div>
             <div class="spacer"></div>
             
             <div class="btn-group">
                 <div class="search-container">
-                    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg class="search-icon" aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                     </svg>
-                    <input type="text" class="search-input" id="search-input" placeholder="Search nodes...">
-                    <button class="search-mode-toggle" id="search-mode-toggle" title="Names Search — click for Full-Text mode">NM</button>
+                    <label class="visually-hidden" for="search-input">Search nodes by name or full text</label>
+                    <input type="text" class="search-input" id="search-input" placeholder="Search nodes..." aria-label="Search nodes">
+                    <button class="search-mode-toggle" id="search-mode-toggle" type="button" aria-label="Toggle search mode (Names or Full-Text)" aria-pressed="false" title="Names Search — click for Full-Text mode">NM</button>
                     <div class="search-dropdown" id="search-dropdown"></div>
                 </div>
-                <button class="btn btn-primary" id="add-node-btn">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <button class="btn btn-primary" id="add-node-btn" type="button">
+                    <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
                     Add Node
                 </button>
                 <div class="btn-divider"></div>
-                <button class="btn btn-ghost" id="save-btn">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button class="btn btn-ghost" id="save-btn" type="button">
+                    <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
                         <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
                     </svg>
                     Save
                 </button>
                 <div class="btn-divider"></div>
-                <button class="btn btn-icon btn-ghost" id="help-btn" title="Help (F1)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button class="btn btn-icon btn-ghost" id="help-btn" type="button" aria-label="Help and keyboard shortcuts (F1)" title="Help (F1)">
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"/>
                         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
                         <line x1="12" y1="17" x2="12.01" y2="17"/>
                     </svg>
                 </button>
-                <button class="btn btn-icon btn-ghost" id="settings-btn" title="Settings (G)">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button class="btn btn-icon btn-ghost" id="settings-btn" type="button" aria-label="Settings (G)" title="Settings (G)">
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                     </svg>
                 </button>
-                <button class="btn btn-icon btn-ghost" id="toggle-panel-btn" title="Toggle Panel">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button class="btn btn-icon btn-ghost" id="toggle-panel-btn" type="button" aria-label="Toggle editor panel" aria-pressed="false" title="Toggle Panel">
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="15" y1="3" x2="15" y2="21"/>
                     </svg>
                 </button>
             </div>
-        </div>
+        </header>
 
-        <canvas id="graph-canvas"></canvas>
+        <canvas id="graph-canvas" role="img" aria-label="Interactive network graph: drag nodes, scroll to zoom, double-click to fit. Node details are announced in the status bar and tooltip." tabindex="0"></canvas>
 
         <div class="link-mode-indicator" id="link-indicator">
             Click a target node to create link from: <strong id="link-source-name"></strong>
         </div>
 
         <div class="quick-actions">
-            <button class="qa-btn" id="writing-assistant-btn" title="Writing Assistant (Ctrl+J)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="qa-btn" id="writing-assistant-btn" type="button" aria-label="Open Writing Assistant (Ctrl+J)" title="Writing Assistant (Ctrl+J)">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                 </svg>
             </button>
-            <button class="qa-btn" id="stats-btn" title="Graph Statistics">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="qa-btn" id="stats-btn" type="button" aria-label="Graph statistics" title="Graph Statistics">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
                 </svg>
             </button>
-            <button class="qa-btn" id="fit-btn" title="Fit View (F)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="qa-btn" id="fit-btn" type="button" aria-label="Fit view to all nodes (F)" title="Fit View (F)">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
                 </svg>
             </button>
-            <button class="qa-btn" id="link-mode-btn" title="Link Mode (L)">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="qa-btn" id="link-mode-btn" type="button" aria-label="Toggle link mode (L)" aria-pressed="false" title="Link Mode (L)">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
                     <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
                 </svg>
             </button>
         </div>
 
-        <div class="minimap-wrap">
-            <canvas id="minimap-canvas"></canvas>
+        <div class="minimap-wrap" role="img" aria-label="Minimap overview of the network">
+            <canvas id="minimap-canvas" aria-hidden="true"></canvas>
         </div>
 
-        <div class="status-bar">
+        <div class="status-bar" role="status" aria-live="polite" aria-label="Graph status: node and edge counts, current selection">
             <div class="status-bar-counts">
                 <span>Nodes <span class="val" id="node-count">0</span></span>
                 <span>Edges <span class="val" id="edge-count">0</span></span>
@@ -2791,14 +3002,14 @@ body.panel-collapsed .edit-panel {
             </div>
         </div>
 
-        <div id="tooltip">
+        <div id="tooltip" role="tooltip" aria-live="polite">
             <div class="tt-category" id="tt-cat"></div>
             <div class="tt-name" id="tt-name"></div>
             <div class="tt-desc" id="tt-desc"></div>
         </div>
-    </div>
+    </main>
 
-    <aside class="edit-panel" id="edit-panel">
+    <aside class="edit-panel" id="edit-panel" aria-label="Node editor panel" aria-live="polite">
         <div class="panel-resize-handle" id="panel-resize-handle" title="Drag to resize"></div>
         <div class="panel-header">
             <div class="panel-title" id="panel-title">Select a Node</div>
@@ -2808,9 +3019,9 @@ body.panel-collapsed .edit-panel {
             </div>
         </div>
 
-        <div class="panel-tabs">
-            <button class="panel-tab active" data-tab="form">Form</button>
-            <button class="panel-tab" data-tab="json">JSON</button>
+        <div class="panel-tabs" role="tablist" aria-label="Editor view">
+            <button class="panel-tab active" data-tab="form" role="tab" aria-selected="true" aria-controls="panel-body" id="tab-form">Form</button>
+            <button class="panel-tab" data-tab="json" role="tab" aria-selected="false" aria-controls="panel-body" id="tab-json">JSON</button>
         </div>
 
         <div class="panel-body" id="panel-body"></div>
@@ -6038,6 +6249,7 @@ function toggleSearchMode() {
     if (toggleBtn) {
         toggleBtn.textContent = searchMode === 'fulltext' ? 'FT' : 'NM';
         toggleBtn.classList.toggle('active', searchMode === 'fulltext');
+        toggleBtn.setAttribute('aria-pressed', String(searchMode === 'fulltext'));
         toggleBtn.title = searchMode === 'fulltext' ? 'Full-Text Search (entire node JSON) — click for Names mode' : 'Names Search — click for Full-Text mode';
     }
     // Re-run search if there's a query
@@ -6246,7 +6458,9 @@ function setupEventHandlers() {
     document.getElementById('fit-btn').addEventListener('click', fitCamera);
     document.getElementById('link-mode-btn').addEventListener('click', () => {
         linkMode = !linkMode; linkSourceNode = linkMode ? selectedNode : null;
-        document.getElementById('link-mode-btn').classList.toggle('active', linkMode);
+        const linkBtn = document.getElementById('link-mode-btn');
+        linkBtn.classList.toggle('active', linkMode);
+        linkBtn.setAttribute('aria-pressed', String(linkMode));
         document.getElementById('link-indicator').classList.toggle('visible', linkMode);
         canvas.classList.toggle('linking', linkMode);
         if (linkSourceNode) document.getElementById('link-source-name').textContent = linkSourceNode.name || linkSourceNode.id;
@@ -6258,6 +6472,8 @@ function setupEventHandlers() {
         // The editor panel may only be open while a node is selected.
         if (document.body.classList.contains('panel-collapsed') && !selectedNode) return;
         document.body.classList.toggle('panel-collapsed');
+        const collapsed = document.body.classList.contains('panel-collapsed');
+        document.getElementById('toggle-panel-btn').setAttribute('aria-pressed', String(!collapsed));
     });
     document.getElementById('apply-btn').addEventListener('click', applyChanges);
     document.getElementById('cancel-btn').addEventListener('click', resetSelection);
@@ -6308,8 +6524,12 @@ function setupEventHandlers() {
                     }
                 }
             }
-            document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel-tab').forEach(t => {
+                t.classList.remove('active');
+                t.setAttribute('aria-selected', 'false');
+            });
             tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
             currentTab = tab.dataset.tab;
             if (selectedNode) renderForm(selectedNode._data);
         });
@@ -6371,7 +6591,9 @@ function setupEventHandlers() {
         if (e.key === 'f') fitCamera();
         if (e.key === 'l') {
             linkMode = !linkMode; linkSourceNode = linkMode ? selectedNode : null;
-            document.getElementById('link-mode-btn').classList.toggle('active', linkMode);
+            const linkBtnKey = document.getElementById('link-mode-btn');
+            linkBtnKey.classList.toggle('active', linkMode);
+            linkBtnKey.setAttribute('aria-pressed', String(linkMode));
             document.getElementById('link-indicator').classList.toggle('visible', linkMode);
             canvas.classList.toggle('linking', linkMode);
         }
@@ -6401,7 +6623,9 @@ function setupEventHandlers() {
             if (searchInputEl) searchInputEl.value = '';
             document.getElementById('search-dropdown').classList.remove('open');
             selectNode(null); linkMode = false; linkSourceNode = null;
-            document.getElementById('link-mode-btn').classList.remove('active');
+            const linkBtnEl = document.getElementById('link-mode-btn');
+            linkBtnEl.classList.remove('active');
+            linkBtnEl.setAttribute('aria-pressed', 'false');
             document.getElementById('link-indicator').classList.remove('visible');
             canvas.classList.remove('linking');
             closeModal('settings-modal');
