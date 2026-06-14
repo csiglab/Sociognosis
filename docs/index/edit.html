@@ -350,6 +350,22 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     pointer-events: none;
 }
 
+/* Unified toolbar: search blends into the .btn-group */
+.btn-group .search-container { width: 240px; }
+.btn-group .search-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 8px 12px 8px 34px;
+    font-size: 0.72rem;
+}
+.btn-group .search-icon { left: 12px; }
+.btn-group .search-input:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 3px rgba(201, 149, 108, 0.12);
+}
+
 /* Search Dropdown */
 .search-dropdown {
     position: absolute;
@@ -618,24 +634,18 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
 .settings-section:last-child { margin-bottom: 0; }
 
 .settings-title {
-    font-family: var(--font-mono);
-    font-size: 0.64rem;
-    font-weight: 500;
-    color: var(--accent-copper);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-bottom: 16px;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-primary);
+    letter-spacing: 0.005em;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-subtle);
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 10px;
-}
-
-.settings-title::before {
-    content: '';
-    width: 3px;
-    height: 14px;
-    background: linear-gradient(180deg, var(--accent-copper) 0%, transparent 100%);
-    border-radius: 2px;
 }
 
 .settings-row {
@@ -1029,6 +1039,29 @@ body.panel-collapsed .edit-panel {
     letter-spacing: 0.14em;
 }
 
+/* ═══════ COMPLETENESS LINE — slim divider that doubles as fill indicator ═══════ */
+.panel-completeness-bar {
+    height: 2px;
+    margin: 6px 0 8px;
+    background: var(--border-subtle);
+    border-radius: 1px;
+    overflow: hidden;
+    display: none;
+}
+
+.panel-completeness-bar.visible { display: block; }
+
+.panel-completeness-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 1px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+}
+
+.panel-completeness-fill.low  { background: var(--accent-rose); }
+.panel-completeness-fill.mid  { background: var(--accent-amber); }
+.panel-completeness-fill.high { background: var(--accent-sage); }
+
 .panel-tabs {
     display: flex;
     border-bottom: 1px solid var(--border-subtle);
@@ -1087,38 +1120,31 @@ body.panel-collapsed .edit-panel {
 .form-section:last-child { border-bottom: none; margin-bottom: 0; }
 
 .form-section-title {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: 500;
-    color: var(--accent-copper);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    margin-bottom: 14px;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--text-primary);
+    letter-spacing: 0.005em;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-subtle);
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 10px;
 }
 
-.form-section-title::before {
-    content: '';
-    width: 3px;
-    height: 12px;
-    background: linear-gradient(180deg, var(--accent-copper) 0%, transparent 100%);
-    border-radius: 2px;
-}
-
 .form-row {
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .form-label {
     display: block;
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 8px;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
 }
 
 .form-input, .form-textarea {
@@ -1128,15 +1154,15 @@ body.panel-collapsed .edit-panel {
     border-radius: var(--radius-sm);
     color: var(--text-primary);
     font-family: var(--font-body);
-    font-size: 0.8rem;
-    padding: 12px 14px;
+    font-size: 0.82rem;
+    padding: 11px 14px;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-input:focus, .form-textarea:focus {
     border-color: var(--accent-copper);
-    box-shadow: 0 0 0 3px rgba(201, 149, 108, 0.1);
+    box-shadow: 0 0 0 2px rgba(201, 149, 108, 0.14);
 }
 
 .form-textarea {
@@ -1488,50 +1514,533 @@ body.panel-collapsed .edit-panel {
     font-family: var(--font-mono);
 }
 
-/* Panel Actions */
+/* Inline-editable list entries */
+.list-item-inline {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+}
+
+.list-item-inline:hover { border-color: rgba(255,255,255,0.1); }
+
+.list-item-inline.expanded { border-color: var(--border-medium); background: rgba(0,0,0,0.25); }
+
+.list-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.list-item-summary {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.list-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.list-item-toggle {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px 4px;
+    font-size: 0.7rem;
+    transition: color 0.2s;
+}
+
+.list-item-toggle:hover { color: var(--text-secondary); }
+
+.list-item-body {
+    display: none;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.list-item-inline.expanded .list-item-body { display: block; }
+
+.list-item-body .form-row { margin-bottom: 10px; }
+.list-item-body .form-row:last-child { margin-bottom: 0; }
+
+.badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.54rem;
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+}
+
+.badge-purple {
+    background: rgba(155, 126, 176, 0.12);
+    border: 1px solid rgba(155, 126, 176, 0.2);
+    color: var(--accent-plum);
+}
+
+.badge-amber {
+    background: rgba(212, 168, 87, 0.12);
+    border: 1px solid rgba(212, 168, 87, 0.2);
+    color: var(--accent-amber);
+}
+
+.badge-steel {
+    background: rgba(107, 140, 170, 0.12);
+    border: 1px solid rgba(107, 140, 170, 0.2);
+    color: var(--accent-steel);
+}
+
+.badge-muted {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+}
+
+.list-item-title {
+    font-size: 0.78rem;
+    color: var(--text-primary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.list-item-subtitle {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Validation errors */
+.validation-summary {
+    background: rgba(196, 125, 138, 0.08);
+    border: 1px solid rgba(196, 125, 138, 0.25);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    display: none;
+}
+
+.validation-summary.visible { display: block; }
+
+.validation-summary-title {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--accent-rose);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.validation-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.validation-item {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    padding: 4px 0;
+    padding-left: 18px;
+    position: relative;
+}
+
+.validation-item::before {
+    content: '!';
+    position: absolute;
+    left: 0;
+    top: 4px;
+    color: var(--accent-rose);
+    font-weight: 700;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+}
+
+.field-error {
+    border-color: rgba(196, 125, 138, 0.4) !important;
+    box-shadow: 0 0 0 2px rgba(196, 125, 138, 0.1) !important;
+}
+
+.field-error-msg {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--accent-rose);
+    margin-top: 4px;
+}
+
+/* Apply button warning state */
+.btn-primary.warn-invalid {
+    background: linear-gradient(135deg, var(--accent-rose) 0%, #a66570 100%);
+    animation: pulse-warn 2s infinite;
+}
+
+@keyframes pulse-warn {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+}
+
+.apply-badge {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.apply-badge.error-count {
+    background: rgba(196, 125, 138, 0.2);
+    color: var(--accent-rose);
+}
+
+/* ═══════ PANEL ACTIONS — Premium Workflow Footer ═══════ */
 .panel-actions {
     padding: 16px 18px;
     border-top: 1px solid var(--border-subtle);
-    background: rgba(0,0,0,0.15);
+    background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.3) 100%);
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.panel-actions .btn-group {
-    background: transparent;
-    border: none;
-    padding: 0;
-}
-
-.panel-actions .btn-group .btn {
-    background: rgba(31, 35, 45, 0.85);
-    border: 1px solid var(--border-medium);
-}
-
-.panel-actions .btn-group .btn:hover {
-    background: var(--bg-hover);
-}
-
-.action-row {
+/* Workflow Bar — cohesive inset container for Generate → Commit */
+.workflow-bar {
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 14px;
     display: flex;
-    width: 100%;
-    gap: 10px;
+    flex-direction: column;
+    gap: 14px;
+    backdrop-filter: blur(8px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+/* Workflow Stage — chapter-marker editorial feel */
+.workflow-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.stage-header {
+    display: flex;
     align-items: center;
+    gap: 10px;
+}
+
+.stage-label {
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    white-space: nowrap;
+}
+
+/* Thin gradient rule — editorial chapter divider */
+.stage-rule {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-medium) 0%, transparent 100%);
+    border-radius: 1px;
+}
+
+/* Packed button cluster */
+.stage-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Equal-width AI action buttons (packed) */
+.stage-actions .btn-amber,
+.stage-actions .btn-ai {
+    flex: 1;
+    justify-content: center;
+}
+
+/* Apply = visual anchor; right-aligned, fixed width */
+.stage-actions .btn-primary {
+    flex: 0 0 auto;
+    min-width: 132px;
+    justify-content: center;
+}
+
+.stage-actions .btn-ghost {
+    flex: 0 0 auto;
 }
 
 .action-spacer {
     flex: 1;
 }
 
-.danger-zone {
-    border-top: 1px solid rgba(196, 125, 138, 0.12);
-    padding-top: 14px;
-    margin-top: 6px;
-    width: 100%;
+/* Dirty badge — premium status chip with pill shape */
+.dirty-badge {
+    display: none;
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    background: rgba(212, 168, 87, 0.12);
+    border: 1px solid rgba(212, 168, 87, 0.28);
+    border-radius: 10px;
+    color: var(--accent-amber);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+/* Danger Footer — de-emphasized, separated by faint rose top-border */
+.danger-footer {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(196, 125, 138, 0.1);
+}
+
+.danger-footer .stage-header {
+    flex-shrink: 0;
+}
+
+.danger-footer .stage-rule {
+    background: linear-gradient(90deg, rgba(196, 125, 138, 0.12) 0%, transparent 100%);
+}
+
+/* Danger label — ghosted rose, reserved tone */
+.danger-label {
+    color: var(--accent-rose);
+    opacity: 0.5;
+}
+
+/* Delete button — ghosted by default, reveals on hover */
+.danger-footer .btn-danger {
+    margin-left: auto;
+    opacity: 0.6;
+    transition: opacity 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.danger-footer .btn-danger:hover {
+    opacity: 1;
+}
+
+/* Inline-editable list entries */
+.list-item-card {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+}
+
+.list-item-card:hover { border-color: rgba(255,255,255,0.1); }
+
+.list-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 8px;
+}
+
+.list-item-badge {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+}
+
+.list-item-badge.rel-type {
+    background: rgba(155, 126, 176, 0.12);
+    border: 1px solid rgba(155, 126, 176, 0.2);
+    color: var(--accent-plum);
+}
+
+.list-item-badge.year {
+    color: var(--accent-copper);
+}
+
+.list-item-title {
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.list-item-field {
+    margin-top: 8px;
+}
+
+.list-item-field label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+}
+
+.list-item-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.74rem;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.list-item-input:focus {
+    border-color: var(--accent-copper);
+    box-shadow: 0 0 0 2px rgba(201, 149, 108, 0.1);
+}
+
+/* Validation states */
+.form-row.has-error .form-input,
+.form-row.has-error .form-textarea {
+    border-color: var(--accent-rose);
+    box-shadow: 0 0 0 2px rgba(196, 125, 138, 0.1);
+}
+
+.field-error {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--accent-rose);
+    margin-top: 4px;
+}
+
+.validation-summary {
+    background: rgba(196, 125, 138, 0.08);
+    border: 1px solid rgba(196, 125, 138, 0.2);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 0.72rem;
+    color: var(--accent-rose);
+}
+
+.validation-summary strong {
+    display: block;
+    margin-bottom: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Resizable panel */
+.panel-resize-handle {
+    position: absolute;
+    left: -3px;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    cursor: col-resize;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.panel-resize-handle::before {
+    content: '';
+    width: 1px;
+    height: 100%;
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.panel-resize-handle:hover::before,
+.panel-resize-handle.dragging::before {
+    background: var(--accent-copper);
+    width: 2px;
+}
+
+/* Collapsible sections — hide everything after the title when collapsed */
+.form-section.collapsed > *:not(.form-section-title) { display: none; }
+.form-section.collapsed .form-section-title { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.form-section.collapsed .form-section-title::after { content: '▾'; margin-left: auto; font-size: 0.7rem; color: var(--text-muted); transform: rotate(-90deg); transition: transform 0.2s; }
+.form-section-title::after { content: '▾'; margin-left: auto; font-size: 0.7rem; color: var(--text-muted); transition: transform 0.2s; }
+.form-section.collapsed .form-section-title::after { transform: rotate(-90deg); }
+
+.form-section-title {
+    cursor: pointer;
+    user-select: none;
+}
+
+/* JSON validity indicator */
+.json-validity {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+}
+
+.json-validity.valid { color: var(--accent-sage); }
+.json-validity.invalid { color: var(--accent-rose); }
+
+.json-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Grouped select optgroups */
+.ss-optgroup-label {
+    font-family: var(--font-mono);
+    font-size: 0.54rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 8px 14px 4px;
+    background: rgba(0,0,0,0.15);
+}
+
+/* Count badge */
+.count-badge {
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    padding: 1px 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    color: var(--text-muted);
 }
 
 /* Empty State */
@@ -1596,6 +2105,119 @@ body.panel-collapsed .edit-panel {
 @media (prefers-reduced-motion: reduce) {
     * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+
+/* ═══════ HELP MODAL ═══════ */
+.help-modal { max-width: 640px; }
+.help-search {
+    width: 100%;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    outline: none;
+}
+.help-search:focus { border-color: var(--accent-copper); box-shadow: 0 0 0 2px rgba(201,149,108,0.14); }
+.help-shortcut-group { margin-bottom: 24px; }
+.help-shortcut-group:last-child { margin-bottom: 0; }
+.help-shortcut-group-title {
+    font-family: var(--font-display);
+    font-size: 0.95rem; font-weight: 400; font-style: italic;
+    color: var(--text-primary);
+    margin-bottom: 12px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+.help-shortcut-list { list-style: none; padding: 0; margin: 0; }
+.help-shortcut-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.8rem; color: var(--text-secondary);
+}
+.help-shortcut-item:last-child { border-bottom: none; }
+.help-shortcut-keys { display: flex; gap: 4px; align-items: center; }
+.help-kbd {
+    font-family: var(--font-mono); font-size: 0.68rem;
+    padding: 2px 8px; border-radius: 4px;
+    background: rgba(255,255,255,0.06); color: var(--text-secondary);
+    border: 1px solid var(--border-medium); min-width: 22px; text-align: center;
+}
+.help-tip {
+    background: rgba(201,149,108,0.06); border: 1px solid rgba(201,149,108,0.15);
+    border-radius: var(--radius-sm); padding: 14px;
+    font-size: 0.76rem; color: var(--text-secondary); line-height: 1.6; margin-top: 16px;
+}
+
+/* ═══════ WRITING ASSISTANT ═══════ */
+.writing-assistant-popover {
+    position: fixed; z-index: 90;
+    background: rgba(31,35,45,0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 380px; max-width: 90vw; display: none;
+}
+.writing-assistant-popover.open { display: flex; flex-direction: column; }
+.wa-header {
+    padding: 14px 18px; border-bottom: 1px solid var(--border-subtle);
+    display: flex; align-items: center; justify-content: space-between;
+}
+.wa-title { font-family: var(--font-display); font-size: 1rem; font-style: italic; color: var(--text-primary); }
+.wa-mode-select {
+    background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm); color: var(--text-primary);
+    font-family: var(--font-body); font-size: 0.7rem; padding: 5px 10px; outline: none;
+}
+.wa-body { padding: 16px 18px; }
+.wa-field { margin-bottom: 14px; }
+.wa-field:last-child { margin-bottom: 0; }
+.wa-label {
+    display: block; font-family: var(--font-body); font-size: 0.68rem; font-weight: 500;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px;
+}
+.wa-textarea {
+    width: 100%; background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm); color: var(--text-primary);
+    font-family: var(--font-body); font-size: 0.82rem; padding: 10px 12px;
+    min-height: 80px; resize: vertical; outline: none; transition: border-color 0.2s;
+}
+.wa-textarea:focus { border-color: var(--accent-copper); box-shadow: 0 0 0 2px rgba(201,149,108,0.1); }
+.wa-suggestion {
+    margin-top: 8px; padding: 10px 12px; border-radius: var(--radius-sm);
+    font-size: 0.82rem; color: var(--text-secondary); display: none;
+    background: rgba(123,163,136,0.06); border: 1px solid rgba(123,163,136,0.15);
+}
+.wa-suggestion.show { display: block; }
+.wa-suggestion-title { font-family: var(--font-mono); font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-sage); margin-bottom: 6px; }
+.wa-suggestion-text { line-height: 1.6; }
+.wa-footer {
+    padding: 12px 18px; border-top: 1px solid var(--border-subtle);
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+}
+.wa-accept-btn, .wa-reject-btn {
+    background: none; border: 1px solid var(--border-medium); border-radius: var(--radius-sm);
+    color: var(--text-secondary); padding: 7px 14px; font-size: 0.72rem; cursor: pointer;
+    transition: all 0.2s;
+}
+.wa-accept-btn:hover { background: rgba(123,163,136,0.15); border-color: var(--accent-sage); color: var(--accent-sage); }
+.wa-reject-btn:hover { background: rgba(196,125,138,0.12); border-color: var(--accent-rose); color: var(--accent-rose); }
+.wa-spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid rgba(123,163,136,0.2); border-top-color: var(--accent-sage); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.wa-tip {
+    font-family: var(--font-mono); font-size: 0.56rem; color: var(--text-muted);
+    padding: 8px 12px; background: rgba(0,0,0,0.15); border-top: 1px solid var(--border-subtle);
+    text-align: center;
+}
+
+/* Ghost text overlay for inline autocomplete */
+.wa-ghost {
+    position: absolute; color: var(--text-muted); opacity: 0.35;
+    pointer-events: none; font-family: var(--font-body); font-size: 0.82rem;
+    line-height: 1.55; padding: 11px 14px; border: 1px solid transparent;
+    white-space: pre-wrap; word-break: break-word; z-index: 5;
+}
     </style>
 </head>
 <body>
@@ -1605,31 +2227,23 @@ body.panel-collapsed .edit-panel {
                 <div class="app-title">Sociognosis Editor</div>
                 <div class="app-subtitle">Epistemic Network Visualization</div>
             </div>
-            <div class="search-container">
-                <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-                <input type="text" class="search-input" id="search-input" placeholder="Search nodes...">
-                <div class="search-dropdown" id="search-dropdown"></div>
-            </div>
             <div class="spacer"></div>
             
             <div class="btn-group">
+                <div class="search-container">
+                    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" class="search-input" id="search-input" placeholder="Search nodes...">
+                    <div class="search-dropdown" id="search-dropdown"></div>
+                </div>
                 <button class="btn btn-primary" id="add-node-btn">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                     </svg>
                     Add Node
                 </button>
-                <button class="btn btn-ai" id="ai-create-btn">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                    AI Create
-                </button>
-            </div>
-            
-            <div class="btn-group">
+                <div class="btn-divider"></div>
                 <button class="btn btn-ghost" id="save-btn">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
@@ -1638,7 +2252,14 @@ body.panel-collapsed .edit-panel {
                     Save
                 </button>
                 <div class="btn-divider"></div>
-                <button class="btn btn-icon btn-ghost" id="settings-btn" title="Settings">
+                <button class="btn btn-icon btn-ghost" id="help-btn" title="Help (F1)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </button>
+                <button class="btn btn-icon btn-ghost" id="settings-btn" title="Settings (G)">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                     </svg>
@@ -1658,6 +2279,12 @@ body.panel-collapsed .edit-panel {
         </div>
 
         <div class="quick-actions">
+            <button class="qa-btn" id="writing-assistant-btn" title="Writing Assistant (Ctrl+J)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+            </button>
             <button class="qa-btn" id="fit-btn" title="Fit View (F)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
@@ -1690,9 +2317,13 @@ body.panel-collapsed .edit-panel {
     </div>
 
     <aside class="edit-panel" id="edit-panel">
+        <div class="panel-resize-handle" id="panel-resize-handle" title="Drag to resize"></div>
         <div class="panel-header">
             <div class="panel-title" id="panel-title">Select a Node</div>
             <div class="panel-subtitle" id="panel-subtitle">Click a node to edit</div>
+            <div class="panel-completeness-bar" id="panel-completeness-bar">
+                <div class="panel-completeness-fill" id="panel-completeness-fill"></div>
+            </div>
         </div>
 
         <div class="panel-tabs">
@@ -1703,36 +2334,58 @@ body.panel-collapsed .edit-panel {
         <div class="panel-body" id="panel-body"></div>
 
         <div class="panel-actions" id="panel-actions" style="display:none">
-            <div class="action-row">
-                <button class="btn btn-amber btn-sm" id="ai-relations-btn">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-                    </svg>
-                    Discover Relations
-                </button>
-                <button class="btn btn-ai btn-sm" id="ai-improve-btn">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                    Improve
-                </button>
+            <div class="workflow-bar">
+                <!-- Stage 1: Generate -->
+                <div class="workflow-stage">
+                    <div class="stage-header">
+                        <span class="stage-label">Generate</span>
+                        <div class="stage-rule"></div>
+                    </div>
+                    <div class="stage-actions">
+                        <button class="btn btn-amber btn-sm" id="ai-relations-btn">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                            </svg>
+                            Discover Links
+                        </button>
+                        <button class="btn btn-ai btn-sm" id="ai-improve-btn">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            Improve
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stage 2: Commit -->
+                <div class="workflow-stage">
+                    <div class="stage-header">
+                        <span class="stage-label">Commit</span>
+                        <span class="dirty-badge" id="dirty-badge">Modified</span>
+                        <div class="stage-rule"></div>
+                    </div>
+                    <div class="stage-actions">
+                        <button class="btn btn-ghost btn-sm" id="cancel-btn">Cancel</button>
+                        <div class="action-spacer"></div>
+                        <button class="btn btn-primary btn-sm" id="apply-btn">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Apply Changes
+                        </button>
+                    </div>
+                </div>
             </div>
-            
-            <div class="action-row">
-                <button class="btn btn-primary btn-sm" id="apply-btn">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                    Apply
-                </button>
-                <div class="action-spacer"></div>
-                <button class="btn btn-ghost btn-sm" id="cancel-btn">Cancel</button>
-            </div>
-            
-            <div class="danger-zone">
+
+            <!-- Danger Zone -->
+            <div class="danger-footer">
+                <div class="stage-header">
+                    <span class="stage-label danger-label">Danger Zone</span>
+                    <div class="stage-rule danger-rule"></div>
+                </div>
                 <button class="btn btn-danger btn-sm" id="delete-node-btn">
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                     </svg>
                     Delete Node
@@ -1800,46 +2453,6 @@ body.panel-collapsed .edit-panel {
             <div class="modal-footer">
                 <button class="btn btn-ghost btn-sm" id="settings-cancel">Cancel</button>
                 <button class="btn btn-primary btn-sm" id="settings-save">Save Settings</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- AI Create Modal -->
-    <div class="modal-overlay" id="ai-create-modal">
-        <div class="modal" style="max-width:800px;">
-            <div class="modal-header">
-                <div class="modal-title">AI Create Node</div>
-                <button class="modal-close" id="ai-create-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="ai-context-area">
-                    <div class="context-block">
-                        <div class="context-label">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                            Specific Context for This Node
-                        </div>
-                        <textarea class="context-textarea" id="ai-specific-context" placeholder="Describe the new node you want to create. Include its purpose, category, key properties, relationships to existing nodes, and any specific requirements..."></textarea>
-                    </div>
-                </div>
-
-                <div class="ai-preview">
-                    <div class="preview-header">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                        Generated JSON Preview
-                    </div>
-                    <div class="preview-content">
-                        <div id="ai-preview-content" class="preview-empty">Click "Generate" to create a node with AI</div>
-                    </div>
-                </div>
-                <div id="ai-create-error" class="json-error" style="display:none;margin-top:14px;"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-ghost btn-sm" id="ai-create-cancel">Cancel</button>
-                <button class="btn btn-ai btn-sm" id="ai-generate-btn">
-                    <span class="loading-spinner" id="ai-generate-spinner" style="display:none;"></span>
-                    Generate
-                </button>
-                <button class="btn btn-success btn-sm" id="ai-accept-btn" disabled>Add Node</button>
             </div>
         </div>
     </div>
@@ -1932,6 +2545,71 @@ body.panel-collapsed .edit-panel {
         </div>
     </div>
 
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="help-modal-overlay">
+        <div class="modal help-modal">
+            <div class="modal-header">
+                <div class="modal-title">Help & Shortcuts</div>
+                <button class="modal-close" id="help-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="help-search" id="help-search" placeholder="Search shortcuts...">
+                <div class="help-shortcut-group">
+                    <div class="help-shortcut-group-title">Navigation</div>
+                    <ul class="help-shortcut-list" id="help-nav-list"></ul>
+                </div>
+                <div class="help-shortcut-group">
+                    <div class="help-shortcut-group-title">Editing</div>
+                    <ul class="help-shortcut-list" id="help-edit-list"></ul>
+                </div>
+                <div class="help-shortcut-group">
+                    <div class="help-shortcut-group-title">AI & Writing</div>
+                    <ul class="help-shortcut-list" id="help-ai-list"></ul>
+                </div>
+                <div class="help-shortcut-group">
+                    <div class="help-shortcut-group-title">Panels & Modals</div>
+                    <ul class="help-shortcut-list" id="help-panel-list"></ul>
+                </div>
+                <div class="help-tip">
+                    <strong>Tip:</strong> Press <span class="help-kbd">F1</span> anytime to open this help. The Writing Assistant
+                    (<span class="help-kbd">Ctrl</span>+<span class="help-kbd">J</span>) provides grammar correction and
+                    autocomplete while editing node descriptions. A small model runs in-browser when available.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm" id="help-done">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Writing Assistant Popover -->
+    <div class="writing-assistant-popover" id="writing-assistant-popover">
+        <div class="wa-header">
+            <div class="wa-title">Writing Assistant</div>
+            <select class="wa-mode-select" id="wa-mode">
+                <option value="grammar">Grammar & Style</option>
+                <option value="autocomplete">Autocomplete</option>
+                <option value="summarize">Summarize</option>
+            </select>
+        </div>
+        <div class="wa-body">
+            <div class="wa-field">
+                <label class="wa-label">Selected Text</label>
+                <textarea class="wa-textarea" id="wa-text" placeholder="Select text in the editor, or type here..."></textarea>
+            </div>
+            <div class="wa-suggestion" id="wa-suggestion">
+                <div class="wa-suggestion-title">Suggestion</div>
+                <div class="wa-suggestion-text" id="wa-suggestion-text"></div>
+            </div>
+        </div>
+        <div class="wa-footer">
+            <button class="wa-reject-btn" id="wa-reject">Dismiss</button>
+            <span id="wa-spinner-wrap" style="display:none;"><span class="wa-spinner"></span></span>
+            <button class="wa-accept-btn" id="wa-accept">Accept</button>
+        </div>
+        <div class="wa-tip">Tab to accept • Esc to dismiss • Runs locally when available</div>
+    </div>
+
     <script>
 /* ═══════ UTILITIES ═══════ */
 function hexToRGBA(hex, alpha) {
@@ -2002,6 +2680,27 @@ const RELATIONSHIP_TYPES = [
     'deploys', 'denotes', 'signifies', 'interprets', 'translates', 'interacts_with',
     'exchanges_with', 'communicates_with', 'competes_with', 'cooperates_with', 'not_specified'
 ];
+
+/* Tier 3.I: Relationship types grouped by family for the select dropdown */
+const RELATIONSHIP_TYPE_GROUPS = {
+    'Compositional': ['part_of', 'has_part', 'component_of', 'contains', 'member_of', 'aggregates', 'composes'],
+    'Ontological': ['instance_of', 'type_of', 'subtype_of', 'generalizes', 'specializes', 'realizes', 'manifests', 'emerges_from', 'supervenes_on', 'grounded_in'],
+    'Causal': ['causes', 'contributes_to', 'inhibits', 'amplifies', 'regulates', 'triggers', 'generates', 'produces', 'maintains', 'destabilizes'],
+    'Dependency': ['depends_on', 'requires', 'enables', 'supported_by', 'derived_from', 'conditioned_by'],
+    'Representational': ['represents', 'models', 'describes', 'encodes', 'abstracts', 'approximates', 'simulates', 'maps_to', 'refers_to'],
+    'Observational': ['observes', 'measures', 'samples', 'detects', 'senses', 'captures', 'quantifies'],
+    'Epistemic': ['validates', 'falsifies', 'confirms', 'corroborates', 'critiques', 'explains', 'predicts', 'estimates', 'characterizes'],
+    'Inferential': ['infers', 'deduces', 'induces', 'abduces', 'derives', 'computes', 'calculates'],
+    'Agential': ['pursues', 'selects', 'uses', 'intervenes_on', 'controls', 'monitors', 'coordinates', 'governs'],
+    'Normative': ['constrains', 'evaluates', 'complies_with', 'violates', 'justifies', 'legitimizes'],
+    'Constraint': ['limits', 'bounds', 'restricts', 'shapes', 'determines_feasibility_of'],
+    'Temporal': ['precedes', 'succeeds', 'evolves_from', 'transforms_into', 'persists_as', 'co_occurs_with'],
+    'Classification': ['classifies', 'categorizes', 'groups', 'partitions'],
+    'Implementation': ['implements', 'executes', 'instantiates', 'deploys'],
+    'Semantic': ['denotes', 'signifies', 'interprets', 'translates'],
+    'Interaction': ['interacts_with', 'exchanges_with', 'communicates_with', 'competes_with', 'cooperates_with'],
+    'Other': ['not_specified']
+};
 
 /* ═══════ OXFORD COMMON ROOM — COMMUNITY PALETTE ═══════ */
 /* The Senior Common Room: muted, low-saturation scholarly tones.
@@ -2428,105 +3127,6 @@ function setupModals() {
         closeModal('settings-modal');
     });
     
-    document.getElementById('ai-create-btn').addEventListener('click', () => {
-        generatedNodeData = null;
-        document.getElementById('ai-specific-context').value = '';
-        document.getElementById('ai-preview-content').innerHTML = '<div class="preview-empty">Click "Generate" to create a node with AI</div>';
-        document.getElementById('ai-accept-btn').disabled = true;
-        document.getElementById('ai-create-error').style.display = 'none';
-        openModal('ai-create-modal');
-    });
-    
-    document.getElementById('ai-create-close').addEventListener('click', () => closeModal('ai-create-modal'));
-    document.getElementById('ai-create-cancel').addEventListener('click', () => closeModal('ai-create-modal'));
-    
-    document.getElementById('ai-generate-btn').addEventListener('click', async () => {
-        const btn = document.getElementById('ai-generate-btn');
-        const spinner = document.getElementById('ai-generate-spinner');
-        const previewEl = document.getElementById('ai-preview-content');
-        const errorEl = document.getElementById('ai-create-error');
-        const acceptBtn = document.getElementById('ai-accept-btn');
-        const context = document.getElementById('ai-specific-context').value;
-        
-        if (!context.trim()) {
-            errorEl.textContent = 'Please provide specific context for the node.';
-            errorEl.style.display = 'block';
-            return;
-        }
-        
-        if (!aiConfig.token) {
-            errorEl.textContent = 'API token not configured. Please configure in Settings.';
-            errorEl.style.display = 'block';
-            return;
-        }
-        
-        btn.disabled = true;
-        spinner.style.display = 'inline-block';
-        errorEl.style.display = 'none';
-        previewEl.innerHTML = '<div class="preview-empty"><span class="loading-spinner"></span> Generating...</div>';
-        
-        try {
-            generatedNodeData = await aiCreateNode(context);
-            previewEl.innerHTML = `<pre class="preview-json">${escHTML(JSON.stringify(generatedNodeData, null, 2))}</pre>`;
-            acceptBtn.disabled = false;
-        } catch (e) {
-            errorEl.textContent = 'Error: ' + e.message;
-            errorEl.style.display = 'block';
-            previewEl.innerHTML = '<div class="preview-empty">Generation failed</div>';
-            acceptBtn.disabled = true;
-        } finally {
-            btn.disabled = false;
-            spinner.style.display = 'none';
-        }
-    });
-    
-    document.getElementById('ai-accept-btn').addEventListener('click', () => {
-        if (!generatedNodeData) return;
-        
-        let id = generatedNodeData.id || 'ai.node.' + Date.now();
-        if (nodeMap[id]) {
-            id = id + '.' + Date.now();
-        }
-        generatedNodeData.id = id;
-        
-        data.push(generatedNodeData);
-        
-        const node = {
-            id: id,
-            name: generatedNodeData.name || id,
-            category: generatedNodeData.category || 'Reality',
-            x: (Math.random() - 0.5) * 200,
-            y: (Math.random() - 0.5) * 200,
-            vx: 0, vy: 0,
-            _data: generatedNodeData
-        };
-        
-        nodes.push(node);
-        nodeMap[id] = node;
-        
-        if (generatedNodeData.relationships) {
-            generatedNodeData.relationships.forEach(rel => {
-                if (nodeMap[rel.targetNodeId]) {
-                    edges.push({
-                        source: id,
-                        target: rel.targetNodeId,
-                        family: rel.relationshipFamily || 'not_specified',
-                        type: rel.relationshipType || 'not_specified',
-                        description: rel.description || ''
-                    });
-                }
-            });
-        }
-        
-        extractSuggestions();
-        updateStats();
-        selectNode(node);
-        fitToNode(node);
-        alpha = 1;
-        
-        closeModal('ai-create-modal');
-    });
-    
     document.getElementById('ai-relations-btn').addEventListener('click', () => {
         if (!selectedNode) return;
         
@@ -2640,11 +3240,35 @@ function setupModals() {
     document.getElementById('ai-improve-btn').addEventListener('click', () => {
         if (!selectedNode) return;
         
+        // Detect whether this is a new/empty node (Create mode) or an
+        // existing populated node (Improve mode). The merged flow means
+        // Add Node → type description → Improve generates the full node.
+        const isCreateMode = isNewOrEmptyNode(selectedNode);
+        
         improvedNodeData = null;
-        document.getElementById('ai-improve-instructions').value = '';
-        document.getElementById('diff-original').textContent = JSON.stringify(selectedNode._data, null, 2);
-        document.getElementById('diff-modified').innerHTML = '<div style="color:var(--text-muted);font-style:italic;">Click "Generate Improvements" to see changes</div>';
-        document.getElementById('diff-stats').style.display = 'none';
+        const instructionsEl = document.getElementById('ai-improve-instructions');
+        const titleEl = document.querySelector('#ai-improve-modal .modal-title');
+        const contextLabel = document.querySelector('#ai-improve-modal .context-label');
+        
+        if (isCreateMode) {
+            titleEl.textContent = 'AI Generate Node';
+            contextLabel.lastChild.textContent = ' What does this node represent?';
+            instructionsEl.placeholder = 'Describe what this node represents: its purpose, category, key properties, relationships to existing nodes, and any specific requirements...';
+            // Hide the diff panels for creation (no original to compare)
+            document.querySelector('.diff-container').style.display = 'none';
+            document.getElementById('diff-stats').style.display = 'none';
+            document.getElementById('diff-modified').innerHTML = '<div style="color:var(--text-muted);font-style:italic;">Click "Generate" to create the node with AI</div>';
+        } else {
+            titleEl.textContent = 'AI Improve Node';
+            contextLabel.lastChild.textContent = ' Improvement Instructions';
+            instructionsEl.placeholder = 'Describe what improvements you want for this node. E.g., \'Add more detailed description\', \'Suggest relevant relationships\', \'Improve the categorization\', \'Add missing metadata\'...';
+            document.querySelector('.diff-container').style.display = '';
+            document.getElementById('diff-original').textContent = JSON.stringify(selectedNode._data, null, 2);
+            document.getElementById('diff-modified').innerHTML = '<div style="color:var(--text-muted);font-style:italic;">Click "Generate Improvements" to see changes</div>';
+            document.getElementById('diff-stats').style.display = 'none';
+        }
+        
+        instructionsEl.value = '';
         document.getElementById('ai-apply-improve-btn').disabled = true;
         document.getElementById('ai-improve-error').style.display = 'none';
         openModal('ai-improve-modal');
@@ -2685,14 +3309,20 @@ function setupModals() {
         document.getElementById('diff-modified').innerHTML = '<div style="color:var(--text-muted);"><span class="loading-spinner"></span> Generating improvements...</div>';
         
         try {
-            improvedNodeData = await aiImproveNode(selectedNode._data, instructions);
-            
-            const diff = computeDiff(selectedNode._data, improvedNodeData);
-            document.getElementById('diff-original').innerHTML = diff.origHtml;
-            document.getElementById('diff-modified').innerHTML = diff.modHtml;
-            document.getElementById('diff-additions').textContent = diff.additions;
-            document.getElementById('diff-deletions').textContent = diff.deletions;
-            statsEl.style.display = 'flex';
+            // Branch: new/empty nodes → create, populated nodes → improve
+            if (isNewOrEmptyNode(selectedNode)) {
+                improvedNodeData = await aiCreateNode(instructions);
+                document.getElementById('diff-modified').innerHTML = `<pre class="preview-json">${escHTML(JSON.stringify(improvedNodeData, null, 2))}</pre>`;
+                statsEl.style.display = 'none';
+            } else {
+                improvedNodeData = await aiImproveNode(selectedNode._data, instructions);
+                const diff = computeDiff(selectedNode._data, improvedNodeData);
+                document.getElementById('diff-original').innerHTML = diff.origHtml;
+                document.getElementById('diff-modified').innerHTML = diff.modHtml;
+                document.getElementById('diff-additions').textContent = diff.additions;
+                document.getElementById('diff-deletions').textContent = diff.deletions;
+                statsEl.style.display = 'flex';
+            }
             applyBtn.disabled = false;
         } catch (e) {
             errorEl.textContent = 'Error: ' + e.message;
@@ -2840,10 +3470,12 @@ function extractSuggestions() {
 /* ═══════ SEARCHABLE SELECT COMPONENT ═══════ */
 const ssRegistry = {};
 
-function createSearchableSelect(id, placeholder, options, selectedValue, onSelect, showId) {
+function createSearchableSelect(id, placeholder, options, selectedValue, onSelect, showId, groups) {
     ssRegistry[id] = {
         options: options || [],
         filtered: options || [],
+        filteredGroups: null,
+        groups: groups || null,
         selected: selectedValue || '',
         highlighted: -1,
         open: false,
@@ -2889,6 +3521,33 @@ function initSearchableSelect(id) {
         const filtered = ss.filtered || [];
         if (!filtered.length) {
             optionsContainer.innerHTML = '<div class="ss-empty">No matches found</div>';
+            return;
+        }
+
+        // Tier 3.I: Render grouped options when groups are available
+        if (ss.groups) {
+            let html = '';
+            let globalIdx = 0;
+            const visibleCount = Math.min(filtered.length, 100);
+            for (const [groupName, values] of Object.entries(ss.groups)) {
+                const groupOpts = filtered.filter(o => values.includes(o.value));
+                if (groupOpts.length === 0) continue;
+                if (globalIdx >= visibleCount) break;
+                html += `<div class="ss-optgroup-label">${escHTML(groupName)}</div>`;
+                for (const opt of groupOpts) {
+                    if (globalIdx >= visibleCount) break;
+                    html += `<div class="ss-option ${ss.selected === opt.value ? 'selected' : ''} ${ss.highlighted === globalIdx ? 'highlighted' : ''}" data-value="${escHTML(opt.value)}" data-idx="${globalIdx}">
+                        <div class="ss-option-name">${escHTML(opt.label)}</div>
+                    </div>`;
+                    globalIdx++;
+                }
+            }
+            optionsContainer.innerHTML = html;
+            optionsContainer.querySelectorAll('.ss-option').forEach(el => {
+                el.addEventListener('click', () => {
+                    selectOption(id, el.dataset.value, el.querySelector('.ss-option-name').textContent);
+                });
+            });
             return;
         }
         
@@ -3727,22 +4386,330 @@ function showTooltip(node, sx, sy) {
 
 function hideTooltip() { document.getElementById('tooltip').style.display = 'none'; }
 
+/* ═══════ DIRTY-STATE TRACKING ═══════ */
+let nodeSnapshot = null; // JSON snapshot for dirty comparison
+let isDirty = false;
+
+function takeSnapshot(nodeData) {
+    try {
+        return JSON.stringify(nodeData);
+    } catch (e) {
+        return '';
+    }
+}
+
+function checkDirty() {
+    if (!selectedNode || !nodeSnapshot) { isDirty = false; }
+    else { isDirty = takeSnapshot(selectedNode._data) !== nodeSnapshot; }
+    
+    const badge = document.getElementById('dirty-badge');
+    if (badge) badge.style.display = isDirty ? 'inline-block' : 'none';
+    return isDirty;
+}
+
+function confirmDiscard(action) {
+    if (!isDirty) return true;
+    return confirm(`You have unsaved changes. ${action}? Click OK to discard changes.`);
+}
+
+/* Attach dirty listeners to form inputs after renderForm */
+function attachDirtyListeners() {
+    const panelBody = document.getElementById('panel-body');
+    if (!panelBody) return;
+    panelBody.addEventListener('input', () => {
+        // Debounce dirty check slightly
+        requestAnimationFrame(() => { checkDirty(); updateCompletenessIndicator(); });
+    }, { passive: true });
+    panelBody.addEventListener('change', () => { checkDirty(); updateCompletenessIndicator(); }, { passive: true });
+}
+
+/* ═══════ COMPLETENESS INDICATOR ═══════ */
+/* Collect the current form values into a node-data-shaped object so the
+   completeness meter reflects live edits, not just the saved snapshot. */
+function collectCurrentFormData() {
+    if (!selectedNode) return null;
+    const d = {};
+    d.id = (document.getElementById('edit-id')?.value || '').trim();
+    d.name = (document.getElementById('edit-name')?.value || '').trim();
+    d.category = getSSValue('edit-category') || '';
+    d.description = (document.getElementById('edit-description')?.value || '').trim();
+    d.longDescription = (document.getElementById('edit-longdesc')?.value || '').trim();
+    d.functionalRoles = (typeof getArrayValues === 'function') ? getArrayValues('functionalRoles') : [];
+    d.historicalContext = {
+        summary: (document.getElementById('edit-hist-summary')?.value || '').trim(),
+        chronology: (selectedNode._data.historicalContext?.chronology || [])
+    };
+    d.specific = (typeof collectSpecificValues === 'function') ? collectSpecificValues() : {};
+    d.relationships = selectedNode._data.relationships || [];
+    if (!selectedNode._data.metadata) selectedNode._data.metadata = {};
+    d.metadata = {
+        tags: (typeof getArrayValues === 'function') ? getArrayValues('tags') : [],
+        sourceReference: (document.getElementById('edit-source')?.value || '').trim()
+    };
+    d.references = selectedNode._data.references || [];
+    return d;
+}
+
+/* Count filled vs total trackable fields. Returns { filled, total, ratio }.
+   Only fields rendered in the form are counted so the meter matches what
+   the user actually sees. */
+function computeNodeCompleteness(d) {
+    if (!d) return { filled: 0, total: 1, ratio: 0 };
+    const fields = [];
+    const push = (label, val) => fields.push({ filled: isFilled(val) });
+
+    function isFilled(v) {
+        if (v === null || v === undefined) return false;
+        if (typeof v === 'string') return v.trim().length > 0;
+        if (Array.isArray(v)) return v.length > 0;
+        if (typeof v === 'object') return Object.keys(v).length > 0;
+        return Boolean(v);
+    }
+
+    // Core fields always present in the form
+    push('id', d.id);
+    push('name', d.name);
+    push('category', d.category);
+    push('description', d.description);
+    push('longDescription', d.longDescription);
+    push('functionalRoles', d.functionalRoles);
+    push('historicalContext.summary', d.historicalContext?.summary);
+    push('relationships', d.relationships);
+    push('metadata.tags', d.metadata?.tags);
+    push('metadata.sourceReference', d.metadata?.sourceReference);
+    push('references', d.references);
+
+    // Category-specific fields (from schema if loaded)
+    const def = (typeof getCategoryDef === 'function') ? getCategoryDef(d.category) : null;
+    if (def && def.properties) {
+        Object.keys(def.properties).forEach(key => {
+            push(`specific.${key}`, d.specific ? d.specific[key] : undefined);
+        });
+    } else if (d.specific) {
+        // No schema — count whatever specific keys exist
+        Object.keys(d.specific).forEach(key => push(`specific.${key}`, d.specific[key]));
+    }
+
+    const filled = fields.filter(f => f.filled).length;
+    const total = fields.length || 1;
+    return { filled, total, ratio: filled / total };
+}
+
+/* Refresh the slim bar under the panel title. */
+function updateCompletenessIndicator() {
+    const bar = document.getElementById('panel-completeness-bar');
+    const fill = document.getElementById('panel-completeness-fill');
+    if (!bar || !fill) return;
+
+    if (!selectedNode) { bar.classList.remove('visible'); return; }
+    bar.classList.add('visible');
+
+    const live = (currentTab === 'form') ? collectCurrentFormData() : selectedNode._data;
+    const { filled, total, ratio } = computeNodeCompleteness(live);
+    const pct = Math.round(ratio * 100);
+
+    fill.style.width = pct + '%';
+    fill.classList.remove('low', 'mid', 'high');
+    if (pct < 34) fill.classList.add('low');
+    else if (pct < 67) fill.classList.add('mid');
+    else fill.classList.add('high');
+
+    bar.title = `Completeness: ${filled}/${total} fields filled (${pct}%)`;
+}
+
 /* ═══════ SELECTION & EDITING ═══════ */
 function selectNode(node) {
+    // Guard against switching away with unsaved changes
+    if (selectedNode && node !== selectedNode && isDirty) {
+        if (!confirmDiscard('Switch to another node')) return;
+    }
+    
     selectedNode = node;
     document.getElementById('selected-name').textContent = node ? (node.name || node.id) : 'None';
     
     if (node) {
+        nodeSnapshot = takeSnapshot(node._data);
+        isDirty = false;
+        document.getElementById('dirty-badge').style.display = 'none';
         document.getElementById('panel-title').textContent = node.name || node.id;
         document.getElementById('panel-subtitle').textContent = node.category || 'Unknown';
         document.getElementById('panel-actions').style.display = 'flex';
+        document.body.classList.remove('panel-collapsed');
         renderForm(node._data);
+        attachDirtyListeners();
+        updateCompletenessIndicator();
     } else {
         document.getElementById('panel-title').textContent = 'Select a Node';
         document.getElementById('panel-subtitle').textContent = 'Click a node to edit';
         document.getElementById('panel-actions').style.display = 'none';
+        document.body.classList.add('panel-collapsed');
         document.getElementById('panel-body').innerHTML = '<div class="empty-state"><div class="empty-state-icon">&#9675;</div><div class="empty-state-text">Click a node in the graph to edit its properties.</div></div>';
     }
+}
+
+/* ═══════ SCHEMA-DRIVEN DYNAMIC SPECIFIC FIELDS ═══════ */
+/* Parse schema.allOf → category → $def map; render correct field types.
+   Replaces hardcoded SPECIFIC_ENUMS with live schema introspection. */
+
+let dynamicSpecificFields = []; // [{ key, type: 'select'|'array'|'input'|'textarea'|'number', required }]
+
+function getCategoryDef(category) {
+    if (!aiConfig.schema || !category) return null;
+    const allOf = aiConfig.schema.allOf || [];
+    for (const branch of allOf) {
+        if (branch.if?.properties?.category?.const === category) {
+            const ref = branch.then?.properties?.specific?.$ref;
+            if (ref) {
+                const defName = ref.replace('#/$defs/', '');
+                return aiConfig.schema.$defs?.[defName] || null;
+            }
+        }
+    }
+    return null;
+}
+
+function renderSpecificFromSchema(category, specific) {
+    dynamicSpecificFields = [];
+    const def = getCategoryDef(category);
+    if (!def) {
+        return '<div class="form-row"><div class="form-hint" style="color:var(--text-muted);font-size:0.78rem;padding:8px 0;">No category-specific schema loaded. Load schema in Settings to see dynamic fields.</div></div>';
+    }
+    
+    const props = def.properties || {};
+    const required = def.required || [];
+    const keys = Object.keys(props);
+    
+    if (keys.length === 0) {
+        return '<div class="form-row"><div class="form-hint" style="color:var(--text-muted);font-size:0.78rem;padding:8px 0;">No specific fields defined for this category.</div></div>';
+    }
+    
+    let html = '';
+    keys.forEach(key => {
+        const propSchema = props[key];
+        const isRequired = required.includes(key);
+        const value = specific ? specific[key] : undefined;
+        html += renderSchemaField(key, propSchema, value, isRequired);
+    });
+    return html;
+}
+
+function renderSchemaField(key, schema, value, isRequired) {
+    const label = friendlyLabel(key);
+    const fieldId = `specific-${key}`;
+    const requiredMark = isRequired ? ' <span class="field-required" style="color:var(--accent-rose);">*</span>' : '';
+    const descriptionHtml = schema.description ? `<div class="field-description" style="font-size:0.66rem;color:var(--text-muted);margin-top:4px;line-height:1.4;">${escHTML(schema.description)}</div>` : '';
+    
+    if (schema.enum) {
+        const options = schema.enum.map(v => ({ value: v, label: friendlyLabel(v) }));
+        dynamicSpecificFields.push({ key, type: 'select', fieldId, required: isRequired });
+        return `
+            <div class="form-row">
+                <label class="form-label">${label}${requiredMark}</label>
+                ${createSearchableSelect(fieldId, 'Select...', options, value || '', null, false)}
+                ${descriptionHtml}
+            </div>
+        `;
+    }
+    
+    if (schema.type === 'array') {
+        dynamicSpecificFields.push({ key, type: 'array', fieldId, required: isRequired });
+        return `
+            <div class="form-row">
+                <label class="form-label">${label}${requiredMark}</label>
+                ${createArrayInput(`specific-array-${key}`, value || [], [])}
+                ${descriptionHtml}
+            </div>
+        `;
+    }
+    
+    if (schema.type === 'number' || schema.type === 'integer') {
+        const step = schema.type === 'integer' ? '1' : 'any';
+        dynamicSpecificFields.push({ key, type: 'number', fieldId, required: isRequired });
+        return `
+            <div class="form-row">
+                <label class="form-label">${label}${requiredMark}</label>
+                <input type="number" class="form-input" id="${fieldId}" value="${escHTML(String(value ?? ''))}" step="${step}">
+                ${descriptionHtml}
+            </div>
+        `;
+    }
+    
+    // string — use textarea for descriptions / long text
+    if (schema.description && schema.description.length > 50) {
+        dynamicSpecificFields.push({ key, type: 'textarea', fieldId, required: isRequired });
+        return `
+            <div class="form-row">
+                <label class="form-label">${label}${requiredMark}</label>
+                <textarea class="form-textarea" id="${fieldId}" placeholder="${escHTML(label)}...">${escHTML(value || '')}</textarea>
+                ${descriptionHtml}
+            </div>
+        `;
+    }
+    
+    dynamicSpecificFields.push({ key, type: 'text', fieldId, required: isRequired });
+    return `
+        <div class="form-row">
+            <label class="form-label">${label}${requiredMark}</label>
+            <input type="text" class="form-input" id="${fieldId}" value="${escHTML(value || '')}">
+            ${descriptionHtml}
+        </div>
+    `;
+}
+
+function collectSpecificValues() {
+    const specific = {};
+    dynamicSpecificFields.forEach(f => {
+        if (f.type === 'select') {
+            specific[f.key] = getSSValue(f.fieldId) || undefined;
+        } else if (f.type === 'array') {
+            specific[f.key] = getArrayValues(`specific-array-${f.key}`);
+        } else if (f.type === 'number') {
+            const el = document.getElementById(f.fieldId);
+            if (el && el.value) specific[f.key] = parseFloat(el.value);
+        } else {
+            const el = document.getElementById(f.fieldId);
+            if (el) specific[f.key] = el.value;
+        }
+    });
+    // Clean undefined values
+    Object.keys(specific).forEach(k => { if (specific[k] === undefined || specific[k] === '') delete specific[k]; });
+    return specific;
+}
+
+function initSpecificFields() {
+    dynamicSpecificFields.forEach(f => {
+        if (f.type === 'select') {
+            initSearchableSelect(f.fieldId);
+        } else if (f.type === 'array') {
+            initArrayInput(`specific-array-${f.key}`, []);
+        }
+    });
+}
+
+/* ═══════ SCHEMA-DRIVEN VALIDATION ═══════ */
+function validateNode(nodeData) {
+    const errors = [];
+    
+    // Top-level required fields
+    const topRequired = aiConfig.schema?.required || ['id', 'name', 'category', 'description', 'functionalRoles', 'historicalContext', 'specific', 'relationships', 'metadata', 'references'];
+    topRequired.forEach(field => {
+        if (!nodeData[field] || (Array.isArray(nodeData[field]) && nodeData[field].length === 0)) {
+            errors.push({ field, message: `${friendlyLabel(field)} is required` });
+        }
+    });
+    
+    // Category-specific required fields
+    const def = getCategoryDef(nodeData.category);
+    if (def) {
+        const required = def.required || [];
+        required.forEach(key => {
+            if (!nodeData.specific || !nodeData.specific[key]) {
+                errors.push({ field: `specific.${key}`, message: `${friendlyLabel(key)} is required for ${nodeData.category}` });
+            }
+        });
+    }
+    
+    return errors;
 }
 
 function renderForm(nodeData) {
@@ -3831,21 +4798,10 @@ function renderForm(nodeData) {
             </div>
         </div>
         
-        <div class="form-section">
-            <div class="form-section-title">Specific Properties</div>
-            <div class="form-row-triple">
-                <div class="form-row">
-                    <label class="form-label">Ontic Layer</label>
-                    ${createSearchableSelect('edit-ontic-layer', 'Select...', (SPECIFIC_ENUMS.onticLayer || []).map(v => ({value: v, label: v})), specific.onticLayer || '', null, false)}
-                </div>
-                <div class="form-row">
-                    <label class="form-label">Ontic Category</label>
-                    ${createSearchableSelect('edit-ontic-cat', 'Select...', (SPECIFIC_ENUMS.onticCategory || []).map(v => ({value: v, label: friendlyLabel(v)})), specific.onticCategory || '', null, false)}
-                </div>
-                <div class="form-row">
-                    <label class="form-label">Domain</label>
-                    ${createSearchableSelect('edit-domain', 'Select...', (SPECIFIC_ENUMS.domain || []).map(v => ({value: v, label: friendlyLabel(v)})), specific.domain || '', null, false)}
-                </div>
+        <div class="form-section" id="specific-properties-section">
+            <div class="form-section-title">Specific Properties <span id="specific-category-hint" style="font-size:0.62rem;font-style:italic;color:var(--text-muted);font-family:var(--font-body);font-weight:400;letter-spacing:0;text-transform:none;"></span></div>
+            <div id="specific-fields-container">
+                ${renderSpecificFromSchema(nodeData.category, specific)}
             </div>
         </div>
         
@@ -3858,7 +4814,7 @@ function renderForm(nodeData) {
                 <div class="add-rel-row">
                     <div>
                         <label class="form-label">Relationship Type</label>
-                        ${createSearchableSelect('new-rel-type', 'Search type...', typeOptions, '', null, false)}
+                        ${createSearchableSelect('new-rel-type', 'Search type...', typeOptions, '', null, false, RELATIONSHIP_TYPE_GROUPS)}
                     </div>
                     <div>
                         <label class="form-label">Family</label>
@@ -3904,15 +4860,53 @@ function renderForm(nodeData) {
     document.getElementById('panel-body').innerHTML = html;
     
     initSearchableSelect('edit-category');
-    initSearchableSelect('edit-ontic-layer');
-    initSearchableSelect('edit-ontic-cat');
-    initSearchableSelect('edit-domain');
+    initSpecificFields();
     initSearchableSelect('new-rel-type');
     initSearchableSelect('new-rel-family');
     initSearchableSelect('new-rel-target');
     
     initArrayInput('functionalRoles', suggestions.functionalRoles);
     initArrayInput('tags', suggestions.tags);
+    
+    // Update specific category hint
+    const hintEl = document.getElementById('specific-category-hint');
+    if (hintEl) {
+        const def = getCategoryDef(nodeData.category);
+        if (def) {
+            const required = def.required || [];
+            hintEl.textContent = `(${nodeData.category} — ${Object.keys(def.properties || {}).length} fields${required.length ? `, ${required.length} required` : ''})`;
+        } else {
+            hintEl.textContent = `(no schema for ${nodeData.category})`;
+        }
+    }
+    
+    // Re-render specific fields when category changes
+    const categoryInput = document.getElementById('edit-category-input');
+    if (categoryInput) {
+        const originalOnSelect = ssRegistry['edit-category']?.onSelect;
+        ssRegistry['edit-category'].onSelect = (value) => {
+            if (value && value !== nodeData.category) {
+                // Re-render just the specific fields section
+                const container = document.getElementById('specific-fields-container');
+                if (container) {
+                    container.innerHTML = renderSpecificFromSchema(value, {});
+                    initSpecificFields();
+                    // Update hint
+                    const hintEl2 = document.getElementById('specific-category-hint');
+                    if (hintEl2) {
+                        const def2 = getCategoryDef(value);
+                        if (def2) {
+                            const req2 = def2.required || [];
+                            hintEl2.textContent = `(${value} — ${Object.keys(def2.properties || {}).length} fields${req2.length ? `, ${req2.length} required` : ''})`;
+                        } else {
+                            hintEl2.textContent = `(no schema for ${value})`;
+                        }
+                    }
+                }
+            }
+            if (originalOnSelect) originalOnSelect(value);
+        };
+    }
     
     document.querySelectorAll('.rel-remove-btn').forEach(btn => {
         btn.addEventListener('click', () => removeRelationship(parseInt(btn.dataset.idx)));
@@ -3929,6 +4923,9 @@ function renderForm(nodeData) {
     document.getElementById('add-rel-btn')?.addEventListener('click', addRelationship);
     document.getElementById('add-ref-btn')?.addEventListener('click', addReference);
     document.getElementById('add-chron-btn')?.addEventListener('click', addChronologyEntry);
+
+    // Refresh the completeness meter so it reflects the just-rendered fields.
+    updateCompletenessIndicator();
 }
 
 function renderChronologyEntry(entry, idx) {
@@ -3982,38 +4979,191 @@ function removeChronologyEntry(idx) {
 
 function renderRelationshipItem(rel, idx) {
     const targetNode = nodeMap[rel.targetNodeId];
+    const targetLabel = targetNode ? (targetNode.name || targetNode.id) : rel.targetNodeId;
     return `
-        <div class="relationship-item">
-            <div class="rel-header">
-                <span class="rel-type">${friendlyLabel(rel.relationshipType || 'not_specified')}</span>
-                <span class="rel-target">${targetNode ? (targetNode.name || targetNode.id) : rel.targetNodeId}</span>
-                <button class="rel-remove-btn" data-idx="${idx}">&times;</button>
+        <div class="list-item-inline" data-type="relationship" data-idx="${idx}">
+            <div class="list-item-header" onclick="this.parentElement.classList.toggle('expanded')">
+                <div class="list-item-summary">
+                    <span class="badge badge-purple">${friendlyLabel(rel.relationshipType || 'not_specified')}</span>
+                    <span class="list-item-title">${escHTML(targetLabel)}</span>
+                    ${rel.description ? `<span class="list-item-subtitle">${escHTML(rel.description.substring(0, 50))}${rel.description.length > 50 ? '…' : ''}</span>` : ''}
+                </div>
+                <div class="list-item-actions">
+                    <button class="list-item-toggle" onclick="event.stopPropagation();this.closest('.list-item-inline').classList.toggle('expanded')">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <button class="rel-remove-btn" data-idx="${idx}">&times;</button>
+                </div>
             </div>
-            <div class="rel-desc">${escHTML(rel.description || '')}</div>
+            <div class="list-item-body">
+                <div class="form-row">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea rel-desc-edit" data-idx="${idx}" placeholder="Relationship description..." style="min-height:60px;">${escHTML(rel.description || '')}</textarea>
+                </div>
+            </div>
         </div>
     `;
 }
 
 function renderReferenceItem(ref, idx) {
     return `
-        <div class="relationship-item">
-            <div class="rel-header">
-                <span class="rel-target">${escHTML(ref.title || 'Untitled')}</span>
-                <button class="rel-remove-btn ref-remove-btn" data-idx="${idx}">&times;</button>
+        <div class="list-item-inline" data-type="reference" data-idx="${idx}">
+            <div class="list-item-header" onclick="this.parentElement.classList.toggle('expanded')">
+                <div class="list-item-summary">
+                    <span class="badge badge-steel">Ref</span>
+                    <span class="list-item-title">${escHTML(ref.title || 'Untitled')}</span>
+                    ${ref.description ? `<span class="list-item-subtitle">${escHTML(ref.description.substring(0, 50))}${ref.description.length > 50 ? '…' : ''}</span>` : ''}
+                </div>
+                <div class="list-item-actions">
+                    <button class="list-item-toggle" onclick="event.stopPropagation();this.closest('.list-item-inline').classList.toggle('expanded')">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <button class="rel-remove-btn ref-remove-btn" data-idx="${idx}">&times;</button>
+                </div>
             </div>
-            ${ref.link ? `<div class="rel-desc"><a href="${escHTML(ref.link)}" target="_blank" style="color:var(--accent-steel)">${escHTML(ref.link)}</a></div>` : ''}
-            <div class="rel-desc">${escHTML(ref.description || '')}</div>
+            <div class="list-item-body">
+                <div class="form-row">
+                    <label class="form-label">Title</label>
+                    <input type="text" class="form-input ref-title-edit" data-idx="${idx}" value="${escHTML(ref.title || '')}">
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Link</label>
+                    <input type="text" class="form-input ref-link-edit" data-idx="${idx}" value="${escHTML(ref.link || '')}" placeholder="https://...">
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea ref-desc-edit" data-idx="${idx}" placeholder="Reference description..." style="min-height:60px;">${escHTML(ref.description || '')}</textarea>
+                </div>
+            </div>
         </div>
     `;
+}
+
+function renderAuditTrailEntry(entry, idx) {
+    return `
+        <div class="list-item-inline" data-type="audit" data-idx="${idx}">
+            <div class="list-item-header" onclick="this.parentElement.classList.toggle('expanded')">
+                <div class="list-item-summary">
+                    <span class="badge badge-amber">${entry.reviewDate || 'No date'}</span>
+                    <span class="list-item-subtitle">${escHTML((entry.reviewNote || '').substring(0, 60))}${(entry.reviewNote || '').length > 60 ? '…' : ''}</span>
+                </div>
+                <div class="list-item-actions">
+                    <button class="list-item-toggle" onclick="event.stopPropagation();this.closest('.list-item-inline').classList.toggle('expanded')">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <button class="audit-remove-btn" data-idx="${idx}" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:16px;padding:0 5px;">&times;</button>
+                </div>
+            </div>
+            <div class="list-item-body">
+                <div class="form-row">
+                    <label class="form-label">Review Date</label>
+                    <input type="date" class="form-input audit-date-edit" data-idx="${idx}" value="${escHTML(entry.reviewDate || '')}">
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Review Note</label>
+                    <textarea class="form-textarea audit-note-edit" data-idx="${idx}" placeholder="Review notes..." style="min-height:60px;">${escHTML(entry.reviewNote || '')}</textarea>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/* Collect inline edits from expanded list items before Apply */
+function collectInlineEdits() {
+    if (!selectedNode) return;
+    
+    // Relationships
+    document.querySelectorAll('.rel-desc-edit').forEach(el => {
+        const idx = parseInt(el.dataset.idx);
+        if (selectedNode._data.relationships && selectedNode._data.relationships[idx]) {
+            selectedNode._data.relationships[idx].description = el.value;
+        }
+    });
+    
+    // References
+    document.querySelectorAll('.ref-title-edit').forEach(el => {
+        const idx = parseInt(el.dataset.idx);
+        if (selectedNode._data.references && selectedNode._data.references[idx]) {
+            selectedNode._data.references[idx].title = el.value;
+        }
+    });
+    document.querySelectorAll('.ref-link-edit').forEach(el => {
+        const idx = parseInt(el.dataset.idx);
+        if (selectedNode._data.references && selectedNode._data.references[idx]) {
+            if (el.value) selectedNode._data.references[idx].link = el.value;
+            else delete selectedNode._data.references[idx].link;
+        }
+    });
+    document.querySelectorAll('.ref-desc-edit').forEach(el => {
+        const idx = parseInt(el.dataset.idx);
+        if (selectedNode._data.references && selectedNode._data.references[idx]) {
+            selectedNode._data.references[idx].description = el.value;
+        }
+    });
+    
+    // Audit trail
+    document.querySelectorAll('.audit-date-edit').forEach(el => {
+        const idx = parseInt(el.dataset.idx);
+        if (selectedNode._data.metadata?.auditTrail?.[idx]) {
+            selectedNode._data.metadata.auditTrail[idx].reviewDate = el.value;
+        }
+    });
+    document.querySelectorAll('.audit-note-edit').forEach(el => {
+        const idx = parseInt(el.dataset.idx);
+        if (selectedNode._data.metadata?.auditTrail?.[idx]) {
+            selectedNode._data.metadata.auditTrail[idx].reviewNote = el.value;
+        }
+    });
 }
 
 function renderJsonEditor(nodeData) {
     document.getElementById('panel-body').innerHTML = `
         <div class="json-editor">
+            <div class="json-toolbar">
+                <div class="json-validity" id="json-validity">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                    Valid JSON
+                </div>
+                <button class="btn btn-ghost btn-sm" id="json-format-btn">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+                    Format JSON
+                </button>
+            </div>
             <textarea class="json-textarea" id="json-textarea">${escHTML(JSON.stringify(nodeData, null, 2))}</textarea>
             <div id="json-error" class="json-error" style="display:none"></div>
         </div>
     `;
+    
+    // Tier 3.J: Live validity indicator + Format button
+    const textarea = document.getElementById('json-textarea');
+    const validityEl = document.getElementById('json-validity');
+    const formatBtn = document.getElementById('json-format-btn');
+    
+    function checkValidity() {
+        try {
+            JSON.parse(textarea.value);
+            validityEl.className = 'json-validity valid';
+            validityEl.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Valid JSON';
+            document.getElementById('json-error').style.display = 'none';
+        } catch (e) {
+            validityEl.className = 'json-validity invalid';
+            validityEl.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Invalid JSON';
+        }
+    }
+    
+    textarea.addEventListener('input', checkValidity);
+    
+    formatBtn.addEventListener('click', () => {
+        try {
+            const parsed = JSON.parse(textarea.value);
+            textarea.value = JSON.stringify(parsed, null, 2);
+            checkValidity();
+        } catch (e) {
+            const errEl = document.getElementById('json-error');
+            errEl.textContent = 'Cannot format: ' + e.message;
+            errEl.style.display = 'block';
+        }
+    });
 }
 
 function addRelationship() {
@@ -4056,6 +5206,19 @@ function removeReference(idx) {
     renderForm(selectedNode._data);
 }
 
+/* Detect whether a node is new/empty (Create mode) vs populated (Improve mode).
+   A node is "empty" if it has no description, no longDescription, no relationships,
+   and default name — i.e., the user just clicked "Add Node" and hasn't filled it in. */
+function isNewOrEmptyNode(node) {
+    if (!node || !node._data) return false;
+    const d = node._data;
+    return (!d.description || !d.description.trim()) &&
+           (!d.longDescription || !d.longDescription.trim()) &&
+           (!d.relationships || d.relationships.length === 0) &&
+           (!d.functionalRoles || d.functionalRoles.length === 0) &&
+           (d.name === 'New Node' || !d.name);
+}
+
 /* Fly to a node, easing it to the centre over ~600ms. Used by search + selection. */
 function fitToNode(node) {
     if (!node) return;
@@ -4074,6 +5237,9 @@ function markGraphDirty() {
 /* ═══════ SAVE & ADD NODE ═══════ */
 function applyChanges() {
     if (!selectedNode) return;
+    
+    // Collect inline edits from expanded list items first
+    collectInlineEdits();
     
     if (currentTab === 'json') {
         try {
@@ -4098,10 +5264,7 @@ function applyChanges() {
         selectedNode._data.historicalContext = selectedNode._data.historicalContext || { summary: '', chronology: [] };
         selectedNode._data.historicalContext.summary = document.getElementById('edit-hist-summary').value;
         
-        selectedNode._data.specific = selectedNode._data.specific || {};
-        selectedNode._data.specific.onticLayer = getSSValue('edit-ontic-layer');
-        selectedNode._data.specific.onticCategory = getSSValue('edit-ontic-cat');
-        selectedNode._data.specific.domain = getSSValue('edit-domain');
+        selectedNode._data.specific = collectSpecificValues();
         
         if (!selectedNode._data.metadata) selectedNode._data.metadata = {};
         selectedNode._data.metadata.tags = getArrayValues('tags');
@@ -4113,11 +5276,73 @@ function applyChanges() {
         selectedNode.category = selectedNode._data.category;
     }
     
+    // Schema validation
+    const errors = validateNode(selectedNode._data);
+    showValidationSummary(errors);
+    
     const idx = data.findIndex(d => d.id === selectedNode._data.id);
     if (idx >= 0) data[idx] = selectedNode._data;
     document.getElementById('panel-title').textContent = selectedNode.name || selectedNode.id;
     document.getElementById('panel-subtitle').textContent = selectedNode.category || 'Unknown';
     updateStats();
+}
+
+/* Render validation summary and highlight invalid fields */
+function showValidationSummary(errors) {
+    // Remove existing summary + field highlights
+    const existing = document.querySelector('.validation-summary');
+    if (existing) existing.remove();
+    document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+    
+    // Update Apply button state
+    const applyBtn = document.getElementById('apply-btn');
+    applyBtn.classList.toggle('warn-invalid', errors.length > 0);
+    
+    // Remove existing badge
+    const existingBadge = applyBtn.querySelector('.apply-badge');
+    if (existingBadge) existingBadge.remove();
+    
+    if (errors.length === 0) return;
+    
+    // Add error count badge to Apply button
+    const badge = document.createElement('span');
+    badge.className = 'apply-badge error-count';
+    badge.textContent = errors.length;
+    applyBtn.appendChild(badge);
+    
+    // Build summary
+    const summary = document.createElement('div');
+    summary.className = 'validation-summary visible';
+    summary.innerHTML = `
+        <div class="validation-summary-title">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            ${errors.length} validation ${errors.length === 1 ? 'error' : 'errors'}
+        </div>
+        <ul class="validation-list">
+            ${errors.map(e => `<li class="validation-item">${escHTML(e.message)}</li>`).join('')}
+        </ul>
+    `;
+    
+    // Insert at top of panel body
+    const panelBody = document.getElementById('panel-body');
+    panelBody.insertBefore(summary, panelBody.firstChild);
+    
+    // Highlight specific fields
+    errors.forEach(err => {
+        if (err.field === 'specific' || err.field.startsWith('specific.')) {
+            const key = err.field.replace('specific.', '');
+            const field = dynamicSpecificFields.find(f => f.key === key);
+            if (field) {
+                const el = document.getElementById(field.fieldId);
+                if (el) el.classList.add('field-error');
+            }
+        } else {
+            const el = document.getElementById(`edit-${err.field.toLowerCase().replace(/\s+/g, '-')}`);
+            if (el) el.classList.add('field-error');
+        }
+    });
 }
 
 function addNewNode() {
@@ -4246,10 +5471,17 @@ function setupEventHandlers() {
     
     document.getElementById('add-node-btn').addEventListener('click', addNewNode);
     document.getElementById('save-btn').addEventListener('click', saveJSON);
-    document.getElementById('toggle-panel-btn').addEventListener('click', () => document.body.classList.toggle('panel-collapsed'));
+    document.getElementById('toggle-panel-btn').addEventListener('click', () => {
+        // The editor panel may only be open while a node is selected.
+        if (document.body.classList.contains('panel-collapsed') && !selectedNode) return;
+        document.body.classList.toggle('panel-collapsed');
+    });
     document.getElementById('apply-btn').addEventListener('click', applyChanges);
     document.getElementById('cancel-btn').addEventListener('click', () => selectNode(null));
     document.getElementById('delete-node-btn').addEventListener('click', deleteNode);
+
+    setupHelp();
+    setupWritingAssistant();
     
     const searchInput = document.getElementById('search-input');
     searchInput.addEventListener('input', e => handleSearch(e.target.value));
@@ -4258,14 +5490,81 @@ function setupEventHandlers() {
     
     document.querySelectorAll('.panel-tab').forEach(tab => {
         tab.addEventListener('click', () => {
+            if (selectedNode) {
+                // Tier 2.F: Carry edits forward on tab switch
+                if (currentTab === 'json' && tab.dataset.tab === 'form') {
+                    try {
+                        const textarea = document.getElementById('json-textarea');
+                        if (textarea && textarea.value.trim()) {
+                            const parsed = JSON.parse(textarea.value);
+                            Object.assign(selectedNode._data, parsed);
+                        }
+                    } catch (e) {
+                        const errEl = document.getElementById('json-error');
+                        if (errEl) { errEl.textContent = 'Cannot switch: ' + e.message; errEl.style.display = 'block'; }
+                        return; // Block switch on parse error
+                    }
+                }
+            }
             document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             currentTab = tab.dataset.tab;
             if (selectedNode) renderForm(selectedNode._data);
         });
     });
+    
+    // Tier 2.G: Resizable panel — drag handle with persisted width
+    const resizeHandle = document.getElementById('panel-resize-handle');
+    let isResizing = false;
+    const savedWidth = localStorage.getItem('panel-width');
+    if (savedWidth) document.body.style.gridTemplateColumns = `1fr ${savedWidth}px`;
+    
+    resizeHandle.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        resizeHandle.classList.add('dragging');
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+    });
+    document.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        const w = window.innerWidth - e.clientX;
+        const clamped = Math.max(320, Math.min(700, w));
+        document.body.style.gridTemplateColumns = `1fr ${clamped}px`;
+    });
+    document.addEventListener('mouseup', () => {
+        if (!isResizing) return;
+        isResizing = false;
+        resizeHandle.classList.remove('dragging');
+        document.body.style.userSelect = '';
+        const match = document.body.style.gridTemplateColumns.match(/(\d+)px\s*$/);
+        if (match) localStorage.setItem('panel-width', match[1]);
+        resizeCanvas();
+    });
+    
+    // Tier 2.H: Collapsible form sections — click title to toggle, persisted
+    document.getElementById('panel-body').addEventListener('click', (e) => {
+        const title = e.target.closest('.form-section-title');
+        if (!title) return;
+        const section = title.closest('.form-section');
+        if (!section) return;
+        const titleText = title.childNodes[0]?.textContent?.trim() || title.textContent.trim();
+        const key = `section-${titleText}`;
+        section.classList.toggle('collapsed');
+        localStorage.setItem(key, section.classList.contains('collapsed') ? '1' : '0');
+    });
 
     document.addEventListener('keydown', e => {
+        // Tier 3.K: Cmd/Ctrl+S = Apply, / = focus search
+        if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+            e.preventDefault();
+            if (selectedNode) applyChanges();
+            return;
+        }
+        if (e.key === '/' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+            e.preventDefault();
+            document.getElementById('search-input').focus();
+            return;
+        }
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
         if (e.key === 'f') fitCamera();
         if (e.key === 'l') {
@@ -4298,12 +5597,32 @@ function setupEventHandlers() {
             document.getElementById('link-indicator').classList.remove('visible');
             canvas.classList.remove('linking');
             closeModal('settings-modal');
-            closeModal('ai-create-modal');
             closeModal('ai-improve-modal');
             closeModal('ai-relations-modal');
+            closeModal('help-modal-overlay');
+            closeWritingAssistant();
+        }
+        // F1 = Help
+        if (e.key === 'F1') { e.preventDefault(); openModal('help-modal-overlay'); }
+        // G = Settings
+        if (e.key === 'g' || e.key === 'G') document.getElementById('settings-btn').click();
+    });
+    // Ctrl+J = Writing Assistant (registered separately so it works in inputs)
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'j' || e.key === 'J')) {
+            e.preventDefault();
+            toggleWritingAssistant();
         }
     });
 
+    // Observe layout changes that don't fire window resize — e.g. the
+    // editor panel toggling open/closed, which changes the canvas width.
+    // Without this the canvas buffer gets CSS-stretched and nodes/labels
+    // distort when the panel opens or closes.
+    if (typeof ResizeObserver !== 'undefined') {
+        const ro = new ResizeObserver(() => resizeCanvas());
+        ro.observe(canvas.parentElement);
+    }
     window.addEventListener('resize', resizeCanvas);
 }
 
@@ -4332,6 +5651,309 @@ async function init() {
         console.warn('Could not load global context on startup:', e);
     }
 }
+/* ═══════ KEYBOARD SHORTCUTS REGISTRY ═══════ */
+const KEYBINDINGS = {
+    nav: [
+        { keys: ['F'], desc: 'Fit view to all nodes' },
+        { keys: ['0'], desc: 'Reset / fit view' },
+        { keys: ['+','/','='], desc: 'Zoom in' },
+        { keys: ['-'], desc: 'Zoom out' },
+        { keys: ['↑','↓','←','→'], desc: 'Pan camera' },
+        { keys: ['/'], desc: 'Focus search box' },
+    ],
+    edit: [
+        { keys: ['N'], desc: 'Add new node (via Add Node button)' },
+        { keys: ['L'], desc: 'Toggle link mode' },
+        { keys: ['Del'], desc: 'Delete selected node' },
+        { keys: ['Ctrl','S'], desc: 'Apply changes to selected node' },
+        { keys: ['Ctrl','J'], desc: 'Toggle Writing Assistant' },
+    ],
+    ai: [
+        { keys: ['F1'], desc: 'Open this help panel' },
+        { keys: ['G'], desc: 'Open Settings' },
+    ],
+    panel: [
+        { keys: ['Esc'], desc: 'Deselect node / close modals' },
+        { keys: ['Tab'], desc: 'Accept writing suggestion' },
+    ]
+};
+
+function kbd(keys) {
+    return keys.map(k => `<span class="help-kbd">${escHTML(k)}</span>`).join('<span style="color:var(--text-ghost);font-size:0.6rem;">+</span>');
+}
+
+function setupHelp() {
+    const navList = document.getElementById('help-nav-list');
+    const editList = document.getElementById('help-edit-list');
+    const aiList = document.getElementById('help-ai-list');
+    const panelList = document.getElementById('help-panel-list');
+
+    function renderItem(item) {
+        return `<li class="help-shortcut-item"><span>${escHTML(item.desc)}</span><span class="help-shortcut-keys">${kbd(item.keys)}</span></li>`;
+    }
+
+    function renderGroup(list, group) {
+        list.innerHTML = group.map(renderItem).join('');
+    }
+
+    renderGroup(navList, KEYBINDINGS.nav);
+    renderGroup(editList, KEYBINDINGS.edit);
+    renderGroup(aiList, KEYBINDINGS.ai);
+    renderGroup(panelList, KEYBINDINGS.panel);
+
+    document.getElementById('help-btn').addEventListener('click', () => openModal('help-modal-overlay'));
+    document.getElementById('help-close').addEventListener('click', () => closeModal('help-modal-overlay'));
+    document.getElementById('help-done').addEventListener('click', () => closeModal('help-modal-overlay'));
+
+    // Search filter
+    const search = document.getElementById('help-search');
+    search.addEventListener('input', () => {
+        const q = search.value.toLowerCase().trim();
+        const allItems = document.querySelectorAll('.help-shortcut-item');
+        allItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            item.style.display = (!q || text.includes(q)) ? '' : 'none';
+        });
+        // Hide empty groups
+        document.querySelectorAll('.help-shortcut-group').forEach(g => {
+            const visible = g.querySelectorAll('.help-shortcut-item:not([style*="none"])');
+            g.style.display = visible.length ? '' : 'none';
+        });
+    });
+}
+
+/* ═══════ WRITING ASSISTANT ═══════ */
+let waModel = null;          // Transformers.js pipeline (lazy-loaded)
+let waModelLoading = false;
+let waActiveTextarea = null;  // The form textarea currently being assisted
+let waSuggestionText = '';    // Current suggestion string
+
+/* Lazy-load a small in-browser text-generation model via Transformers.js.
+   Falls back gracefully to the DeepSeek API if unavailable. */
+async function ensureWAModel() {
+    if (waModel || waModelLoading) return waModel;
+    if (typeof window.transformers === 'undefined') {
+        // Dynamically import from CDN (small, ~120KB gzipped runtime + model weights on first use)
+        try {
+            window.transformers = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0');
+        } catch (e) {
+            console.warn('Transformers.js unavailable, will use API fallback', e);
+            return null;
+        }
+    }
+    waModelLoading = true;
+    try {
+        const { pipeline } = window.transformers;
+        // Using a small text2text-generation model (~80MB) for grammar correction
+        waModel = await pipeline('text2text-generation', 'Xenova/flan-t5-base', {
+            dtype: 'q8',
+            device: 'wasm',
+        });
+    } catch (e) {
+        console.warn('Failed to load writing model', e);
+        waModel = null;
+    } finally {
+        waModelLoading = false;
+    }
+    return waModel;
+}
+
+async function waGenerateLocal(text, mode) {
+    const model = await ensureWAModel();
+    if (!model) return null;
+    let prompt;
+    if (mode === 'grammar') prompt = `Correct grammar and style: "${text}"`;
+    else if (mode === 'summarize') prompt = `Summarize: "${text}"`;
+    else prompt = `Complete this: "${text}"`;
+    try {
+        const out = await model(prompt, { max_new_tokens: 120 });
+        return Array.isArray(out) ? out[0].generated_text : out.generated_text;
+    } catch (e) {
+        console.warn('Local WA inference failed', e);
+        return null;
+    }
+}
+
+async function waGenerateAPI(text, mode) {
+    if (!aiConfig.token) return null;
+    const task = mode === 'grammar' ? 'Correct grammar and improve style of the following text. Return ONLY the corrected text.' :
+                 mode === 'summarize' ? 'Summarize the following text concisely.' :
+                 'Continue / complete the following text naturally. Return only the completion.';
+    const messages = [
+        { role: 'system', content: 'You are a concise writing assistant for an ontology editor. Return only the improved text, no explanations.' },
+        { role: 'user', content: `${task}\n\n${text}` }
+    ];
+    return await callDeepSeekAPI(messages);
+}
+
+function openWritingAssistant() {
+    const popover = document.getElementById('writing-assistant-popover');
+    // Position near the quick-actions button (bottom-right)
+    const btn = document.getElementById('writing-assistant-btn');
+    const rect = btn.getBoundingClientRect();
+    popover.style.right = '24px';
+    popover.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+    popover.style.left = 'auto';
+    popover.style.top = 'auto';
+    popover.classList.add('open');
+
+    // Capture selected text from a focused textarea, if any
+    const active = document.activeElement;
+    if (active && active.tagName === 'TEXTAREA' && active.value) {
+        const sel = active.value.substring(active.selectionStart, active.selectionEnd);
+        document.getElementById('wa-text').value = sel || active.value;
+        waActiveTextarea = active;
+    }
+}
+
+function closeWritingAssistant() {
+    document.getElementById('writing-assistant-popover').classList.remove('open');
+    hideGhostText();
+    waSuggestionText = '';
+}
+
+function toggleWritingAssistant() {
+    const popover = document.getElementById('writing-assistant-popover');
+    if (popover.classList.contains('open')) closeWritingAssistant();
+    else openWritingAssistant();
+}
+
+function showGhostText(textarea, suggestion) {
+    hideGhostText();
+    if (!suggestion || !textarea) return;
+    const ghost = document.createElement('div');
+    ghost.className = 'wa-ghost';
+    // Copy layout-affecting styles
+    const cs = window.getComputedStyle(textarea);
+    ghost.style.fontFamily = cs.fontFamily;
+    ghost.style.fontSize = cs.fontSize;
+    ghost.style.lineHeight = cs.lineHeight;
+    ghost.style.padding = cs.padding;
+    ghost.style.width = cs.width;
+    ghost.style.height = cs.height;
+    const rect = textarea.getBoundingClientRect();
+    ghost.style.position = 'fixed';
+    ghost.style.left = rect.left + 'px';
+    ghost.style.top = rect.top + 'px';
+    ghost.style.width = rect.width + 'px';
+    ghost.style.height = rect.height + 'px';
+    // Show only the suffix after current input
+    const cur = textarea.value;
+    const suffix = suggestion.startsWith(cur) ? suggestion.substring(cur.length) : '';
+    ghost.textContent = cur + suffix;
+    ghost.dataset.waGhost = '1';
+    document.body.appendChild(ghost);
+}
+
+function hideGhostText() {
+    document.querySelectorAll('[data-wa-ghost]').forEach(el => el.remove());
+}
+
+function setupWritingAssistant() {
+    document.getElementById('writing-assistant-btn').addEventListener('click', toggleWritingAssistant);
+    document.getElementById('wa-reject').addEventListener('click', () => {
+        document.getElementById('wa-suggestion').classList.remove('show');
+        hideGhostText();
+        waSuggestionText = '';
+    });
+    document.getElementById('wa-accept').addEventListener('click', acceptSuggestion);
+
+    // Generate on textarea input (debounced autocomplete)
+    let waTimer = null;
+    document.getElementById('wa-text').addEventListener('input', () => {
+        clearTimeout(waTimer);
+        const text = document.getElementById('wa-text').value;
+        if (!text.trim()) return;
+        const mode = document.getElementById('wa-mode').value;
+        waTimer = setTimeout(() => runWA(text, mode), 600);
+    });
+    document.getElementById('wa-mode').addEventListener('change', () => {
+        const text = document.getElementById('wa-text').value;
+        if (text.trim()) runWA(text, document.getElementById('wa-mode').value);
+    });
+
+    // Inline ghost-text autocomplete on the active form textarea
+    document.addEventListener('input', (e) => {
+        if (e.target.matches('.form-textarea') && document.getElementById('writing-assistant-popover').classList.contains('open')) {
+            const mode = document.getElementById('wa-mode').value;
+            if (mode !== 'autocomplete') return;
+            clearTimeout(waTimer);
+            waActiveTextarea = e.target;
+            waTimer = setTimeout(() => runWAInline(e.target.value), 700);
+        }
+    });
+    // Tab to accept ghost completion inside textareas
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab' && waActiveTextarea && waSuggestionText && document.getElementById('writing-assistant-popover').classList.contains('open')) {
+            e.preventDefault();
+            acceptSuggestion();
+        }
+    });
+}
+
+async function runWA(text, mode) {
+    const spinner = document.getElementById('wa-spinner-wrap');
+    const sugBox = document.getElementById('wa-suggestion');
+    const sugText = document.getElementById('wa-suggestion-text');
+    spinner.style.display = 'inline-block';
+    sugBox.classList.remove('show');
+    try {
+        let result = await waGenerateLocal(text, mode);
+        if (!result) result = await waGenerateAPI(text, mode);
+        if (result) {
+            waSuggestionText = result;
+            sugText.textContent = result;
+            sugBox.classList.add('show');
+        }
+    } catch (e) {
+        sugText.textContent = 'Error: ' + e.message;
+        sugBox.classList.add('show');
+    } finally {
+        spinner.style.display = 'none';
+    }
+}
+
+async function runWAInline(text) {
+    if (!text.trim() || text.trim().length < 20) { hideGhostText(); return; }
+    let result = await waGenerateLocal(text, 'autocomplete');
+    if (!result) {
+        // Skip API for inline (too slow); just hide
+        hideGhostText();
+        return;
+    }
+    const full = text.trimEnd() + ' ' + (result.startsWith(text) ? result.substring(text.length) : result);
+    waSuggestionText = full;
+    showGhostText(waActiveTextarea, full);
+}
+
+function acceptSuggestion() {
+    if (!waSuggestionText) return;
+    const mode = document.getElementById('wa-mode').value;
+    if (waActiveTextarea && mode === 'autocomplete') {
+        // Replace textarea content with suggestion
+        const ta = waActiveTextarea;
+        ta.value = waSuggestionText;
+        ta.dispatchEvent(new Event('input', { bubbles: true }));
+        hideGhostText();
+    } else {
+        // Replace selected text or append in the active textarea
+        if (waActiveTextarea) {
+            const ta = waActiveTextarea;
+            const start = ta.selectionStart, end = ta.selectionEnd;
+            if (start !== end) {
+                ta.value = ta.value.substring(0, start) + waSuggestionText + ta.value.substring(end);
+            } else {
+                ta.value = waSuggestionText;
+            }
+            ta.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        // Also update the popover textarea
+        document.getElementById('wa-text').value = waSuggestionText;
+    }
+    document.getElementById('wa-suggestion').classList.remove('show');
+    waSuggestionText = '';
+}
+
 init();
     </script>
 </body>
