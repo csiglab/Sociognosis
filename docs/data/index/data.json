@@ -1007,23 +1007,20 @@
       }
     ]
   },
-
 {
   "id": "market_land",
   "name": "Land Market",
-  "category": "Market",
+  "category": "Reality",
   "inheritanceLevel": 0,
-  "description": "A market system through which rights over land are allocated, exchanged, leased, valued, and transferred among economic actors.",
-  "longDescription": "The land market is an institutional and economic mechanism governing the exchange of land-related rights. It encompasses transactions involving ownership, leasing, development rights, mineral rights, and other legally recognized claims over land. Because land is immobile, heterogeneous, and location-specific, the land market is typically composed of numerous specialized submarkets differentiated by geography, land use, legal regime, and economic function.",
+  "description": "An institutional mechanism through which rights over land are allocated, exchanged, valued, and transferred among economic actors, comprising a key segment of social-economic reality.",
+  "longDescription": "The land market is a synontic, institutional-economic system governing the exchange of land‑related rights. It encompasses transactions involving ownership, leasing, development rights, mineral rights, and other legally recognized claims over immobile, heterogeneous, location‑specific land. As a real‑world structure, it serves both as the target domain for economic observation and as the source of data for models of spatial allocation, pricing, and resource coordination.",
   "functionalRoles": [
-    "Allocation of land resources",
-    "Price discovery for land rights",
-    "Transfer of ownership",
-    "Transfer of usage rights",
-    "Capital formation",
-    "Investment channel",
-    "Resource coordination",
-    "Spatial allocation of economic activity"
+    "Target domain for economic modeling",
+    "Object of observation and measurement",
+    "Source of empirical data (prices, transaction volumes)",
+    "Constraint space for land‑use policy analysis",
+    "Epistemic anchor for spatial equilibrium models",
+    "Causal substrate for urban and regional dynamics"
   ],
   "domainScope": [
     "Agriculture",
@@ -1037,7 +1034,7 @@
     "Environmental Management"
   ],
   "historicalContext": {
-    "summary": "Land markets emerged alongside formal property rights systems and evolved into complex institutional mechanisms for allocating access to land and land-based economic opportunities.",
+    "summary": "Land markets emerged alongside formal property rights systems and evolved into complex institutional mechanisms for allocating access to land and land‑based economic opportunities.",
     "chronology": [
       {
         "year": -3000,
@@ -1061,7 +1058,51 @@
       }
     ]
   },
-  "specific": {},
+  "specific": {
+    "onticLayer": "synontic",
+    "onticCategory": "system",
+    "onticSubtype": "market_mechanism",
+    "domain": "economic",
+    "realityDescription": "The global system of legal, institutional, and transactional structures through which land rights are allocated and exchanged, including formal property registries, zoning regulations, taxation, brokerage, and financing.",
+    "constitutiveProperties": [
+      "Formal property rights (ownership, lease, easement)",
+      "Legal enforcement mechanisms",
+      "Spatial immobility of land parcels",
+      "Heterogeneity and location‑specificity",
+      "Existence of transaction costs",
+      "Regulatory framework (zoning, land use, taxation)"
+    ],
+    "stateVariables": [
+      "Land prices (per parcel, per zone)",
+      "Transaction volume and frequency",
+      "Vacancy rates",
+      "Lease terms (duration, rent)",
+      "Development density",
+      "Capitalization rates"
+    ],
+    "emergentProperties": [
+      "Spatial segregation of uses",
+      "Bid‑rent gradients",
+      "Market cycles (booms, busts)",
+      "Agglomeration economies",
+      "Urban sprawl patterns",
+      "Price dispersion across submarkets"
+    ],
+    "latentStructures": [
+      "Information networks among buyers and sellers",
+      "Informal norms governing negotiations",
+      "Speculative expectations and herding behavior",
+      "Political influence on land policy",
+      "Network effects in brokerage and listing"
+    ],
+    "boundaryConditions": [
+      "Geographic jurisdiction of property law",
+      "Legal definitions of land rights (fee simple, leasehold, etc.)",
+      "Availability of credit and financing",
+      "Demographic and economic growth constraints",
+      "Environmental regulations (wetlands, endangered species)"
+    ]
+  },
   "relationships": [
     {
       "targetNodeId": "reality.market",
@@ -1138,7 +1179,9 @@
       "real-estate",
       "property-rights",
       "resource-allocation",
-      "economic-geography"
+      "economic-geography",
+      "synontic",
+      "institution"
     ],
     "confidenceScore": 0.98,
     "sourceReference": "Urban Economics, Real Estate Economics, Economic Geography, Institutional Economics",
@@ -1147,6 +1190,10 @@
       {
         "reviewDate": "2026-06-08",
         "reviewNote": "Initial abstract land market node."
+      },
+      {
+        "reviewDate": "2026-06-09",
+        "reviewNote": "Re‑categorized to Reality (synontic) to comply with Sociognosis schema; populated specific fields."
       }
     ],
     "inheritanceLevel": 0
@@ -1165,8 +1212,8 @@
       "description": "Role of property rights and governance structures in land allocation."
     }
   ]
-},
-
+}
+,
   {
   "id": "market_agricultural_land",
   "name": "Agricultural Land Market",

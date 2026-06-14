@@ -2605,6 +2605,69 @@ body.panel-collapsed .edit-panel {
     font-size: 0.76rem; color: var(--text-secondary); line-height: 1.6; margin-top: 16px;
 }
 
+/* ═══════ AI IMPROVE — Relationships exclusion banner + Docs modal ═══════ */
+.ai-rel-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+    background: rgba(155, 126, 176, 0.06);
+    border: 1px solid rgba(155, 126, 176, 0.18);
+    border-radius: var(--radius-sm);
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+}
+.ai-rel-note svg { color: var(--accent-plum); flex-shrink: 0; margin-top: 1px; }
+.ai-rel-note code {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    background: rgba(255,255,255,0.05);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--accent-plum);
+}
+.ai-rel-note-link {
+    background: none;
+    border: none;
+    color: var(--accent-plum);
+    cursor: pointer;
+    font-size: 0.74rem;
+    padding: 0;
+    margin-left: 4px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+.ai-rel-note-link:hover { color: var(--accent-copper-light); }
+
+/* Docs modal body */
+.docs-body { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.65; }
+.docs-body p { margin-bottom: 14px; }
+.docs-body code {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    background: rgba(255,255,255,0.05);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--accent-plum);
+}
+.docs-body ol { padding-left: 20px; margin-bottom: 16px; }
+.docs-body ol li { margin-bottom: 10px; }
+.docs-body strong { color: var(--text-primary); }
+.docs-body em { color: var(--text-secondary); }
+.docs-tip {
+    background: rgba(212, 168, 87, 0.06);
+    border: 1px solid rgba(212, 168, 87, 0.18);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-top: 16px;
+}
+.docs-tip strong { color: var(--accent-amber); }
+
 /* ═══════ WRITING ASSISTANT ═══════ */
 .writing-assistant-popover {
     position: fixed; z-index: 90;
@@ -3190,6 +3253,10 @@ select:focus-visible {
                 <button class="modal-close" id="ai-improve-close">&times;</button>
             </div>
             <div class="modal-body">
+                <div class="ai-rel-note">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span><strong>Relationships excluded.</strong> The <code>relationships</code> field is not sent to the model, not shown in the diff, and not modified when you apply changes.<button class="ai-rel-note-link" id="ai-improve-docs-btn" type="button">Read docs →</button></span>
+                </div>
                 <div class="context-block" style="margin-bottom:22px;">
                     <div class="context-label">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -3234,6 +3301,32 @@ select:focus-visible {
                     Generate
                 </button>
                 <button class="btn btn-success btn-sm" id="ai-apply-improve-btn" disabled>Apply Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Improve Docs Modal -->
+    <div class="modal-overlay" id="ai-improve-docs-modal">
+        <div class="modal" style="max-width:560px;">
+            <div class="modal-header">
+                <div class="modal-title">AI Improve — Relationships Policy</div>
+                <button class="modal-close" id="ai-improve-docs-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="docs-body">
+                    <p>The <strong>AI Improve</strong> workflow intentionally excludes the <code>relationships</code> field from every stage of the process:</p>
+                    <ol>
+                        <li><strong>Not sent to the model.</strong> Before calling DeepSeek, the node's <code>relationships</code> array is stripped (<code>stripRelationships()</code>), so the model never sees your existing links and cannot alter them.</li>
+                        <li><strong>Not shown in the diff.</strong> Both the <em>Original</em> and <em>Improved</em> panels display the relationship-free payload, keeping the comparison focused on content fields only.</li>
+                        <li><strong>Not updated on apply.</strong> When you click <em>Apply Changes</em>, your existing <code>relationships</code> are preserved and re-attached after the improved data is written back to the node.</li>
+                    </ol>
+                    <div class="docs-tip">
+                        <strong>Managing relationships?</strong> Use the <em>AI Discover Relations</em> feature (the amber <em>Find Relations</em> button) to discover and curate links to other nodes in the graph.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-sm" id="ai-improve-docs-done">Got it</button>
             </div>
         </div>
     </div>
@@ -4001,6 +4094,14 @@ function setupModals() {
     
     document.getElementById('ai-improve-close').addEventListener('click', () => closeModal('ai-improve-modal'));
     document.getElementById('ai-improve-cancel').addEventListener('click', () => closeModal('ai-improve-modal'));
+
+    // AI Improve Docs modal — explains the relationships-exclusion policy
+    document.getElementById('ai-improve-docs-btn').addEventListener('click', () => openModal('ai-improve-docs-modal'));
+    document.getElementById('ai-improve-docs-close').addEventListener('click', () => closeModal('ai-improve-docs-modal'));
+    document.getElementById('ai-improve-docs-done').addEventListener('click', () => closeModal('ai-improve-docs-modal'));
+    document.getElementById('ai-improve-docs-modal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeModal('ai-improve-docs-modal');
+    });
     
     document.getElementById('ai-improve-generate-btn').addEventListener('click', async () => {
         const btn = document.getElementById('ai-improve-generate-btn');
@@ -4072,7 +4173,7 @@ function setupModals() {
         selectedNode._data.relationships = preservedRelationships;
         selectedNode.name = improvedNodeData.name || selectedNode.id;
         selectedNode.category = improvedNodeData.category || 'Reality';
-        
+
         // Do NOT rebuild edges from improvedNodeData.relationships — the
         // model never receives them, so any relationships it returns are
         // noise. Keep the existing edges untouched.
@@ -6636,6 +6737,7 @@ function setupEventHandlers() {
             canvas.classList.remove('linking');
             closeModal('settings-modal');
             closeModal('ai-improve-modal');
+            closeModal('ai-improve-docs-modal');
             closeModal('ai-relations-modal');
             closeModal('help-modal-overlay');
             closeModal('stats-modal');
