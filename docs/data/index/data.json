@@ -17509,5 +17509,132 @@
         "description": "Academic literature on the mechanisms underlying price discovery and order flow."
       }
     ]
+  },
+  {
+    "id": "new.node.1781483781544",
+    "name": "Share (Company Share)",
+    "category": "Reality",
+    "description": "A unit of ownership in a company, representing a claim on part of its assets and earnings.",
+    "longDescription": "Shares, also known as stocks or equity, are issued by corporations to raise capital. Shareholders have certain rights, including voting rights and dividends. Shares can be traded on stock exchanges and are a fundamental financial instrument in modern economies.",
+    "functionalRoles": [
+      "ownership_unit",
+      "financial_asset",
+      "investment_vehicle"
+    ],
+    "historicalContext": {
+      "summary": "Shares originated as a way to pool capital for large ventures, with the first joint-stock companies in the 16th century. The concept evolved through the establishment of formal stock exchanges and the development of modern corporate law.",
+      "chronology": [
+        {
+          "year": 1602,
+          "event": "Dutch East India Company issues the first publicly traded shares.",
+          "context": "Birth of joint-stock company and secondary market trading."
+        },
+        {
+          "year": 1792,
+          "event": "Buttonwood Agreement establishes the New York Stock Exchange (NYSE).",
+          "context": "Formalization of a securities market in the United States."
+        },
+        {
+          "year": 1933,
+          "event": "U.S. Securities Act of 1933 mandates disclosure and registration of shares.",
+          "context": "Regulatory framework to protect investors."
+        },
+        {
+          "year": 1971,
+          "event": "NASDAQ founded as the first electronic stock exchange.",
+          "context": "Transition to electronic trading and increased liquidity."
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "synontic",
+      "onticCategory": "entity",
+      "onticSubtype": "other",
+      "domain": "economic",
+      "realityDescription": "Shares represent ownership in a company, granting proportional claims on assets, earnings, and governance rights.",
+      "constitutiveProperties": [
+        "representative of company equity",
+        "divisible unit of ownership",
+        "transferable between holders"
+      ],
+      "stateVariables": [
+        "market price",
+        "dividend yield",
+        "voting power per share",
+        "outstanding share count"
+      ],
+      "emergentProperties": [
+        "market capitalization",
+        "liquidity of the share"
+      ],
+      "latentStructures": [],
+      "boundaryConditions": [
+        "subject to corporate law and securities regulation",
+        "dependent on company solvency",
+        "affected by market conditions and investor sentiment"
+      ]
+    },
+    "relationships": [
+      {
+        "targetNodeId": "3",
+        "relationshipType": "represents",
+        "relationshipFamily": "representational",
+        "description": "A share represents ownership in a corporation, including claims on its assets and earnings."
+      },
+      {
+        "targetNodeId": "new.node.1781481305477",
+        "relationshipType": "member_of",
+        "relationshipFamily": "mereological",
+        "description": "Shares are a primary type of financial instrument traded on stock markets, thus are members of the set of assets exchanged there."
+      },
+      {
+        "targetNodeId": "9",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Shares are issued, traded, and held through financial institutions, which facilitate capital formation and investment."
+      },
+      {
+        "targetNodeId": "161",
+        "relationshipType": "component_of",
+        "relationshipFamily": "mereological",
+        "description": "Shares of individual companies are components of market indices, which track the performance of a selected group of shares."
+      },
+      {
+        "targetNodeId": "264",
+        "relationshipType": "constrained_by",
+        "relationshipFamily": "constraint",
+        "description": "Shares and their trading are subject to regulation by securities commissions, which enforce disclosure and fair trading rules."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "share",
+        "stock",
+        "equity",
+        "company",
+        "ownership",
+        "financial instrument",
+        "security"
+      ],
+      "inheritanceLevel": 0,
+      "confidenceScore": 0.9,
+      "sourceReference": "general finance and economic knowledge",
+      "createdAt": "2026-06-15T00:36:21.544Z",
+      "auditTrail": []
+    },
+    "references": [
+      {
+        "title": "Share (finance) - Wikipedia",
+        "link": "https://en.wikipedia.org/wiki/Share_(finance)",
+        "description": "Comprehensive encyclopedic article on shares, including history, types, and valuation."
+      },
+      {
+        "title": "Investopedia: What is a Share?",
+        "link": "https://www.investopedia.com/terms/s/shares.asp",
+        "description": "Introductory explanation of shares and their role in corporate finance."
+      }
+    ],
+    "relationshipFamily": "ontological",
+    "relationshipType": "type_of"
   }
 ]
