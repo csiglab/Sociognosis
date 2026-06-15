@@ -129,7 +129,8 @@
     .nav-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--fg); }
     .nav-brand img { height: 28px; width: auto; }
     .nav-brand h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; letter-spacing: 0.02em; }
-    .nav-link { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.05em; color: var(--muted); text-transform: uppercase; }
+    .nav-link { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.05em; color: var(--muted); text-transform: uppercase; transition: color 150ms ease-out; }
+    a.nav-link:hover { color: var(--fg); }
 
     /* Top Controls */
     .top-controls {
@@ -340,6 +341,37 @@
       font-size: 0.75rem;
       color: var(--muted);
     }
+
+    .operating-page-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      transition: all 200ms ease-out;
+    }
+
+    .operating-page-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px var(--card-shadow);
+      border-color: var(--accent);
+    }
+
+    .operating-page-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      border-radius: 1px 0 0 1px;
+      opacity: 0;
+      transition: opacity 200ms ease-out;
+    }
+
+    .operating-page-card:hover::before {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -347,12 +379,14 @@
   <!-- Navigation Bar -->
   <nav class="nav-bar">
     <div class="nav-content">
-      <a href="#" class="nav-brand">
+      <a href="index.html" class="nav-brand">
         <img src="img/logo.png" alt="Logo" onerror="this.style.display='none'">
         <h1>Sociognosis</h1>
       </a>
       <div class="flex items-center gap-6">
-        <span class="nav-link hidden sm:block">Laboratorium Arbitristrea</span>
+        <span class="nav-link hidden sm:block" style="color: var(--fg);">Introduction</span>
+        <a href="methodology.html" class="nav-link hidden sm:block">Methodology</a>
+        <a href="docs.html" class="nav-link hidden sm:block">Docs</a>
       </div>
     </div>
   </nav>
@@ -422,6 +456,62 @@
       </div>
     </section>
 
+    <!-- Operating Pages Section -->
+    <section class="pb-8 px-6">
+      <div class="max-w-4xl mx-auto">
+        <div class="animate-entrance delay-4">
+          <h2 class="font-mono text-xs tracking-[0.15em] text-muted uppercase mb-3 text-center">
+            Operating Pages
+          </h2>
+          <p class="text-center text-sm text-muted mb-8 italic font-display">
+            Interactive tools for exploring and editing the epistemic space.
+          </p>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="index/index.html" class="operating-page-card group relative block no-underline">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-tag-bg flex items-center justify-center text-accent flex-shrink-0">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13L21 7.5m0 0L16.5 12M21 7.5H7.5"/>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-display text-xl font-medium text-fg mb-1">Space Explorer</h3>
+                  <p class="text-sm text-muted leading-relaxed">
+                    Interactive force-directed graph of the epistemic space. Navigate nodes, filter by category, and inspect relationships.
+                  </p>
+                </div>
+                <svg class="w-5 h-5 text-muted group-hover:text-accent transition-colors mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                </svg>
+              </div>
+            </a>
+            
+            <a href="index/edit.html" class="operating-page-card group relative block no-underline">
+              <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-tag-bg flex items-center justify-center text-accent flex-shrink-0">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-display text-xl font-medium text-fg mb-1">Node Editor</h3>
+                  <p class="text-sm text-muted leading-relaxed">
+                    Schema-validated interface for creating and editing epistemic nodes. Add new artifacts, actors, and relationships.
+                  </p>
+                </div>
+                <svg class="w-5 h-5 text-muted group-hover:text-accent transition-colors mt-1 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                </svg>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+      </div>
+    </section>
+
     <!-- Sub-Projects Section -->
     <section class="pb-8 px-6">
       <div class="max-w-4xl mx-auto">
@@ -431,7 +521,7 @@
           </h2>
           
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="sub-project-card relative">
+            <a href="docs.html" class="sub-project-card relative block no-underline">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 rounded-lg bg-tag-bg flex items-center justify-center text-accent">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -443,9 +533,9 @@
               <p class="text-sm text-muted leading-relaxed">
                 Analysis of economic products and their relationships within the global production network.
               </p>
-            </div>
+            </a>
             
-            <div class="sub-project-card relative">
+            <a href="docs.html" class="sub-project-card relative block no-underline">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 rounded-lg bg-tag-bg flex items-center justify-center text-accent">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -457,9 +547,9 @@
               <p class="text-sm text-muted leading-relaxed">
                 Mapping organizational structures and corporate entities within economic systems.
               </p>
-            </div>
+            </a>
             
-            <div class="sub-project-card relative">
+            <a href="docs.html" class="sub-project-card relative block no-underline">
               <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 rounded-lg bg-tag-bg flex items-center justify-center text-accent">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -471,7 +561,7 @@
               <p class="text-sm text-muted leading-relaxed">
                 Exploration of literary works as social artifacts and their role in shaping cultural reality.
               </p>
-            </div>
+            </a>
           </div>
         </div>
 
@@ -597,9 +687,10 @@
         <div class="md:col-span-3 text-center md:text-left">
           <p class="footer-label">Navigation</p>
           <nav class="flex flex-col items-center md:items-start gap-2" aria-label="Footer navigation">
-            <a href="#" class="footer-link">Home</a>
-            <a href="#" class="footer-link">Methodology</a>
-            <a href="#" class="footer-link">Contact</a>
+            <a href="index.html" class="footer-link">Introduction</a>
+            <a href="methodology.html" class="footer-link">Methodology</a>
+            <a href="docs.html" class="footer-link">Documentation</a>
+            <a href="index/index.html" class="footer-link">Space Explorer</a>
           </nav>
         </div>
 
@@ -609,7 +700,7 @@
           <div class="space-y-2 font-mono text-xs flex flex-col items-center md:items-end">
             <div class="footer-meta-row" style="display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.25rem 0;">
               <span class="footer-meta-label">Sub-Projects</span>
-              <span class="footer-meta-value">3 Active</span>
+              <span class="footer-meta-value">4 Active</span>
             </div>
             <div class="footer-meta-row" style="display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.25rem 0;">
               <span class="footer-meta-label">Phase</span>
