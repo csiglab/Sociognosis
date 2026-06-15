@@ -6783,6 +6783,14 @@ async function init() {
     animate();
     selectNode(null);
     
+    // Auto-load schema and global context on startup so the "Specific
+    // Properties" section renders category-specific fields immediately
+    // when a node is selected — no manual Settings step required.
+    try {
+        await loadSchema();
+    } catch (e) {
+        console.warn('Could not load schema on startup:', e);
+    }
     try {
         await loadGlobalContext();
     } catch (e) {
