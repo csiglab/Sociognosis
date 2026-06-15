@@ -464,6 +464,7 @@
         <a href="#data-model" class="toc-link">Data Model</a>
         <a href="#tools" class="toc-link">Tools</a>
         <a href="#references" class="toc-link">References</a>
+        <a href="#security" class="toc-link">Security</a>
       </nav>
 
       <!-- Overview -->
@@ -1054,6 +1055,135 @@
             <p class="docs-card-body">Graph visualization library referenced in the Space Explorer implementation.</p>
           </a>
 
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <!-- Security -->
+      <section id="security" class="anchor-offset animate-entrance delay-5">
+        <p class="section-label">08 — Security</p>
+        <h2 class="section-title">Known Risks & Limitations</h2>
+        <p class="text-muted leading-relaxed mb-4">
+          The Sociognosis web interface is a static, client-side application under active development. The following security risks have been identified in the current codebase and are documented here for transparency. Until mitigations are in place, the interactive tools should only be used on trusted machines with trusted data.
+        </p>
+
+        <div class="callout">
+          <strong>Scope:</strong> These risks apply to the static site served from <code class="font-mono text-xs">docs/</code>—principally the Space Explorer (<code class="font-mono text-xs">index/index.html</code>), the Node Editor (<code class="font-mono text-xs">index/edit.html</code>), and the placeholder page (<code class="font-mono text-xs">pending.html</code>). No server-side backend is present; all processing occurs in the browser.
+        </div>
+
+        <div class="overflow-x-auto docs-card mt-6" style="padding: 0;">
+          <table class="schema-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Risk</th>
+                <th>Severity</th>
+                <th>Affected File</th>
+                <th>Vector</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><strong>Open Redirect</strong></td>
+                <td><span class="tag-pill">Medium</span></td>
+                <td><code class="font-mono text-xs">pending.html</code></td>
+                <td>The <code class="font-mono text-xs">?back=</code> query parameter is assigned to <code class="font-mono text-xs">returnLink.href</code> without validation. An attacker can craft <code class="font-mono text-xs">pending.html?back=https://evil.com</code> to redirect users to a malicious site—usable for phishing.</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><strong>Cross-Site Scripting (XSS)</strong></td>
+                <td><span class="tag-pill">High</span></td>
+                <td><code class="font-mono text-xs">index/index.html</code></td>
+                <td>Node <code class="font-mono text-xs">name</code>, <code class="font-mono text-xs">category</code>, and <code class="font-mono text-xs">shortName</code> from <code class="font-mono text-xs">data.json</code> are injected into <code class="font-mono text-xs">innerHTML</code> without escaping (search results, category legend). Additionally, <code class="font-mono text-xs">err.message</code> is rendered unescaped on load failure. Any HTML in the data file executes in the user's browser.</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><strong>Cross-Site Scripting (XSS)</strong></td>
+                <td><span class="tag-pill">High</span></td>
+                <td><code class="font-mono text-xs">index/edit.html</code></td>
+                <td>In suggested-relation rendering, <code class="font-mono text-xs">targetNode.name</code>, <code class="font-mono text-xs">targetNode.id</code>, and <code class="font-mono text-xs">rel.targetNodeId</code> are output without <code class="font-mono text-xs">escHTML()</code>. The <code class="font-mono text-xs">data-id</code> attribute on search results is likewise unescaped. An <code class="font-mono text-xs">escHTML()</code> helper exists but is not applied consistently.</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><strong>API Token Exposure</strong></td>
+                <td><span class="tag-pill">High</span></td>
+                <td><code class="font-mono text-xs">index/edit.html</code></td>
+                <td>The DeepSeek API token can be persisted to <code class="font-mono text-xs">localStorage</code>. Combined with the XSS vulnerabilities above, any injected script can read <code class="font-mono text-xs">localStorage.getItem('sociognosis-api-token')</code> and exfiltrate it. The UI warns about <code class="font-mono text-xs">localStorage</code> accessibility, but the XSS holes make this actively exploitable.</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><strong>Prompt Injection → XSS Chain</strong></td>
+                <td><span class="tag-pill">High</span></td>
+                <td><code class="font-mono text-xs">index/edit.html</code></td>
+                <td>AI responses are parsed via <code class="font-mono text-xs">JSON.parse</code> and merged into the node graph (<code class="font-mono text-xs">Object.assign(selectedNode._data, improvedNodeData)</code>). A crafted node description can induce the model to emit malicious field values, which then flow into the unescaped render paths (risks #2–#3), achieving script execution without directly editing <code class="font-mono text-xs">data.json</code>.</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><strong>Missing Subresource Integrity (SRI)</strong></td>
+                <td><span class="tag-pill">Medium</span></td>
+                <td>All pages</td>
+                <td><code class="font-mono text-xs">cdn.tailwindcss.com</code> and Google Fonts are loaded without <code class="font-mono text-xs">integrity=</code> attributes. A compromise of either CDN would execute arbitrary JavaScript on every page that includes the script.</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td><strong>Tailwind Play CDN in Production</strong></td>
+                <td><span class="tag-pill">Low</span></td>
+                <td>All pages</td>
+                <td>The Play CDN (<code class="font-mono text-xs">cdn.tailwindcss.com</code>) is explicitly marked by Tailwind as development-only. It ships a full runtime compiler, increases bundle size, and is not optimized or cached for production use.</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td><strong>No Content Security Policy (CSP)</strong></td>
+                <td><span class="tag-pill">Medium</span></td>
+                <td>All pages</td>
+                <td>No <code class="font-mono text-xs">Content-Security-Policy</code> meta header is present on any page. A CSP would provide defense-in-depth against the XSS vulnerabilities by restricting inline scripts and unauthorized origins.</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td><strong>Reverse Tabnabbing</strong></td>
+                <td><span class="tag-pill">Low</span></td>
+                <td><code class="font-mono text-xs">pending.html</code></td>
+                <td>A <code class="font-mono text-xs">target="_blank"</code> base directive opens links in new tabs without <code class="font-mono text-xs">rel="noopener"</code>. A malicious page opened this way can access and manipulate the original tab via <code class="font-mono text-xs">window.opener</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="font-display text-lg font-medium text-fg mt-8 mb-3">Attack Surface Summary</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="docs-card">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/>
+                </svg>
+              </div>
+              <h3 class="docs-card-title">Highest Priority</h3>
+            </div>
+            <p class="docs-card-body">
+              The <strong>XSS</strong> vulnerabilities (risks #2–#3) are the most critical. They enable arbitrary script execution in the user's browser, which in turn makes the <strong>API token theft</strong> (#4) and <strong>prompt-injection chain</strong> (#5) fully exploitable. Fixing the rendering paths to consistently use <code class="font-mono text-xs">escHTML()</code>—or migrating to <code class="font-mono text-xs">textContent</code> / DOM APIs—would break the chain.
+            </p>
+          </div>
+
+          <div class="docs-card">
+            <div class="docs-card-header">
+              <div class="docs-card-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                </svg>
+              </div>
+              <h3 class="docs-card-title">Defense-in-Depth</h3>
+            </div>
+            <p class="docs-card-body">
+              Adding a <strong>Content Security Policy</strong> (#8) and <strong>SRI hashes</strong> (#6) would limit the blast radius of any remaining injection flaws. Replacing the Tailwind Play CDN (#7) with a pre-built CSS file removes a runtime attack surface and improves performance.
+            </p>
+          </div>
+        </div>
+
+        <div class="callout mt-6">
+          <strong>Status:</strong> All risks listed above are <strong>acknowledged but unmitigated</strong> as of the current release. The interactive tools should not be exposed to untrusted users or fed untrusted data until the XSS paths are fixed and a CSP is in place.
         </div>
       </section>
 
