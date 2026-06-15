@@ -1,6 +1,5 @@
 # TODO
 
-- Should I Integrate Product Space with this? https://bremontix.xyz/lab/research/product/graph.html
 - [Samuel David Alexander](https://en.wikipedia.org/wiki/Samuel_David_Alexander)
 - [Zagreb Stock Exchange](https://en.wikipedia.org/wiki/Zagreb_Stock_Exchange)
 - [European Parliamentary Research Service](https://en.wikipedia.org/wiki/European_Parliamentary_Research_Service)
@@ -26,20 +25,11 @@
 
 - How to reason about Real State?
 
-  - How to reason about the Housing Market?
-  - ...
-
-- ...
-
-## Index
-
-> Add this to the index.
-
-1. Sovereign State
-2. Intergovernmental Org
-3. Multinational Corporation
-4. Non-Governmental Org
-5. Insurgent Group
+- Sovereign State
+- Intergovernmental Org
+- Multinational Corporation
+- Non-Governmental Org
+- Insurgent Group
 6. Terrorist Network
 7. Supranational Union
 8. Autonomous Region
