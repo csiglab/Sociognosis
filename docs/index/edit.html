@@ -1137,6 +1137,58 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
 
 .settings-input::placeholder { color: var(--text-ghost); }
 
+/* Checkbox row for "Save API token in browser" preference */
+.settings-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    user-select: none;
+}
+.settings-checkbox-label input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--border-medium);
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+.settings-checkbox-label input[type="checkbox"]:checked {
+    background: var(--accent-copper);
+    border-color: var(--accent-copper);
+}
+.settings-checkbox-label input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: solid var(--bg-deep);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+.settings-checkbox-label input[type="checkbox"]:focus-visible {
+    outline: 2px solid var(--accent-copper);
+    outline-offset: 2px;
+}
+.settings-hint {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
 .settings-textarea {
     min-height: 120px;
     resize: vertical;
@@ -3167,6 +3219,11 @@ select:focus-visible {
                     <div class="settings-row">
                         <label class="settings-label">API Token</label>
                         <input type="password" class="settings-input" id="api-token" placeholder="Enter your DeepSeek API token">
+                        <label class="settings-checkbox-label" style="margin-top:8px;">
+                            <input type="checkbox" id="save-token-toggle">
+                            Save API token in this browser
+                        </label>
+                        <span class="settings-hint">When enabled, the token is stored in localStorage and auto-loaded on next visit. Note: localStorage is accessible to scripts on this origin — use only on a trusted machine.</span>
                     </div>
                     <div class="settings-row">
                         <label class="settings-label">Model</label>
@@ -3620,10 +3677,60 @@ let silhouetteDirty = true;
 /* Pre-computed hulls: { colorIndex: [{x,y}, ...] } */
 let communityHulls = {};
 
+/* ═══════ LOCAL STORAGE PERSISTENCE ═══════ */
+const STORAGE_KEY_TOKEN = 'sociognosis-api-token';
+const STORAGE_KEY_SAVE_PREF = 'sociognosis-save-token-pref';
+
+/** Returns true if the user opted into saving the token in the browser. */
+function getSaveTokenPreference() {
+    try {
+        return localStorage.getItem(STORAGE_KEY_SAVE_PREF) === '1';
+    } catch (e) {
+        return false;
+    }
+}
+
+/** Persist the user's preference for saving (or not saving) the token. */
+function setSaveTokenPreference(enabled) {
+    try {
+        localStorage.setItem(STORAGE_KEY_SAVE_PREF, enabled ? '1' : '0');
+    } catch (e) {
+        console.warn('Could not persist save-token preference:', e);
+    }
+}
+
+/** Save the API token to localStorage. */
+function persistToken(token) {
+    try {
+        localStorage.setItem(STORAGE_KEY_TOKEN, token || '');
+    } catch (e) {
+        console.warn('Could not persist API token:', e);
+    }
+}
+
+/** Remove the API token from localStorage. */
+function clearPersistedToken() {
+    try {
+        localStorage.removeItem(STORAGE_KEY_TOKEN);
+    } catch (e) {
+        console.warn('Could not clear persisted API token:', e);
+    }
+}
+
+/** Load the persisted API token (returns '' if not saved or preference off). */
+function loadPersistedToken() {
+    if (!getSaveTokenPreference()) return '';
+    try {
+        return localStorage.getItem(STORAGE_KEY_TOKEN) || '';
+    } catch (e) {
+        return '';
+    }
+}
+
 /* ═══════ AI CONFIGURATION ═══════ */
 let aiConfig = {
     endpoint: 'https://api.deepseek.com/v1/chat/completions',
-    token: '',
+    token: loadPersistedToken(),
     model: 'deepseek-v4-flash',
     schemaPath: '../data/index/schema/schema.json',
     schema: null,
@@ -3918,6 +4025,7 @@ function setupModals() {
         document.getElementById('schema-path').value = aiConfig.schemaPath;
         document.getElementById('global-context-url').value = aiConfig.contextUrl;
         document.getElementById('global-context-preview').value = aiConfig.globalContext.substring(0, 2000);
+        document.getElementById('save-token-toggle').checked = getSaveTokenPreference();
         updateAPIStatusIndicator();
         openModal('settings-modal');
     });
@@ -3941,6 +4049,16 @@ function setupModals() {
         aiConfig.model = document.getElementById('api-model').value;
         aiConfig.schemaPath = document.getElementById('schema-path').value;
         aiConfig.contextUrl = document.getElementById('global-context-url').value;
+
+        // Persist token + preference based on the toggle checkbox
+        const saveToken = document.getElementById('save-token-toggle').checked;
+        setSaveTokenPreference(saveToken);
+        if (saveToken) {
+            persistToken(aiConfig.token);
+        } else {
+            clearPersistedToken();
+        }
+
         updateAIStatus();
         closeModal('settings-modal');
     });
