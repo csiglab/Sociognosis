@@ -17636,5 +17636,91 @@
     ],
     "relationshipFamily": "ontological",
     "relationshipType": "type_of"
+  },
+  {
+    "id": "new.node.1781486005988",
+    "name": "Production Chain Firm Operating Model",
+    "category": "Reality",
+    "description": "The actual structure, processes, and strategies by which a particular firm participates in and operates within a production chain, encompassing its sourcing, production, distribution, and coordination activities.",
+    "longDescription": "This node represents the real-world operational reality of a firm embedded in a production chain. It includes the firm's internal organization, its relationships with suppliers and customers, the flow of materials and information, decision-making processes, and adaptive behaviors in response to internal and external pressures. The operating model is not a theoretical abstraction but the concrete manifestation of how the firm produces value, coordinates activities, and sustains its position within the chain.",
+    "functionalRoles": [
+      "object of study for understanding firm behavior in production chains",
+      "target of improvement interventions",
+      "source of empirical observations",
+      "case for modeling and simulation"
+    ],
+    "historicalContext": {
+      "summary": "The firm's operating model has evolved from a traditional linear production system to a more networked and adaptive configuration in response to globalization, digitalization, and increasing supply chain complexity.",
+      "chronology": []
+    },
+    "specific": {
+      "onticLayer": "ontic",
+      "onticCategory": "entity",
+      "onticSubtype": "organization",
+      "domain": "economic",
+      "realityDescription": "The actual structure and processes by which a specific firm participates in and operates within a production chain, including its input sourcing, production activities, value addition, output distribution, coordination mechanisms, and adaptation strategies.",
+      "constitutiveProperties": [
+        "production capacity",
+        "supplier network",
+        "customer base",
+        "organizational structure",
+        "governance model",
+        "operational processes",
+        "technology stack",
+        "human capital",
+        "financial resources"
+      ],
+      "stateVariables": [
+        "capacity utilization",
+        "inventory levels",
+        "order backlog",
+        "throughput rate",
+        "lead time",
+        "cost per unit",
+        "quality metrics",
+        "employee productivity",
+        "financial liquidity"
+      ],
+      "emergentProperties": [
+        "supply chain resilience",
+        "operational efficiency",
+        "coordination effectiveness",
+        "adaptability to disruptions",
+        "competitive advantage",
+        "reputation in the chain"
+      ],
+      "latentStructures": [
+        "informal communication networks",
+        "trust relationships with suppliers",
+        "organizational culture",
+        "tacit knowledge in production",
+        "hidden bottlenecks"
+      ],
+      "boundaryConditions": [
+        "market regulation",
+        "resource availability",
+        "technological constraints",
+        "labor market conditions",
+        "logistics infrastructure",
+        "legal frameworks",
+        "environmental regulations"
+      ]
+    },
+    "relationships": [],
+    "metadata": {
+      "tags": [
+        "production chain",
+        "firm operating model",
+        "organizational reality",
+        "economic system",
+        "supply chain"
+      ],
+      "inheritanceLevel": 0,
+      "confidenceScore": 0.7,
+      "sourceReference": "",
+      "createdAt": "2026-06-15T01:13:25.988Z",
+      "auditTrail": []
+    },
+    "references": []
   }
 ]
