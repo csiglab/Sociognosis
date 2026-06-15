@@ -1,17 +1,10 @@
 # Public Research Institutes (PRI)
 
-ID: PRO-1648
-L: 32
-Status: Not started
-
 > Public/Private Company Dedicated to Research and Development Industrial Technology.
-> 
 
 > Don't blindly copy PRI; acknowledge the history and temporal dynamics.
-> 
 
 > Don’t be a jack of all trades; master of none; focus.
-> 
 
 ¿What is the role of the university in applied research?
 
