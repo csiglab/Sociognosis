@@ -1007,276 +1007,274 @@
       }
     ]
   },
-{
-  "id": "market_land",
-  "name": "Land Market",
-  "category": "Reality",
-  "inheritanceLevel": 0,
-  "description": "An institutional mechanism through which rights over land are allocated, exchanged, valued, and transferred among economic actors, comprising a key segment of social-economic reality.",
-  "longDescription": "The land market is a synontic, institutional-economic system governing the exchange of land‑related rights. It encompasses transactions involving ownership, leasing, development rights, mineral rights, and other legally recognized claims over immobile, heterogeneous, location‑specific land. As a real‑world structure, it serves both as the target domain for economic observation and as the source of data for models of spatial allocation, pricing, and resource coordination.",
-  "functionalRoles": [
-    "Target domain for economic modeling",
-    "Object of observation and measurement",
-    "Source of empirical data (prices, transaction volumes)",
-    "Constraint space for land‑use policy analysis",
-    "Epistemic anchor for spatial equilibrium models",
-    "Causal substrate for urban and regional dynamics"
-  ],
-  "domainScope": [
-    "Agriculture",
-    "Real Estate",
-    "Urban Development",
-    "Industrial Development",
-    "Mining",
-    "Infrastructure",
-    "Energy",
-    "Forestry",
-    "Environmental Management"
-  ],
-  "historicalContext": {
-    "summary": "Land markets emerged alongside formal property rights systems and evolved into complex institutional mechanisms for allocating access to land and land‑based economic opportunities.",
-    "chronology": [
-      {
-        "year": -3000,
-        "event": "Early Property Systems",
-        "context": "Civilizations developed formal mechanisms for assigning and transferring land rights."
-      },
-      {
-        "year": 1200,
-        "event": "Feudal Land Tenure",
-        "context": "Land allocation became embedded within hierarchical political and economic structures."
-      },
-      {
-        "year": 1700,
-        "event": "Commercialization of Land",
-        "context": "Land increasingly became a tradable economic asset."
-      },
-      {
-        "year": 1900,
-        "event": "Modern Real Estate Markets",
-        "context": "Specialized land markets emerged for residential, industrial, commercial, and agricultural uses."
-      }
-    ]
-  },
-  "specific": {
-    "onticLayer": "synontic",
-    "onticCategory": "system",
-    "onticSubtype": "market_mechanism",
-    "domain": "economic",
-    "realityDescription": "The global system of legal, institutional, and transactional structures through which land rights are allocated and exchanged, including formal property registries, zoning regulations, taxation, brokerage, and financing.",
-    "constitutiveProperties": [
-      "Formal property rights (ownership, lease, easement)",
-      "Legal enforcement mechanisms",
-      "Spatial immobility of land parcels",
-      "Heterogeneity and location‑specificity",
-      "Existence of transaction costs",
-      "Regulatory framework (zoning, land use, taxation)"
-    ],
-    "stateVariables": [
-      "Land prices (per parcel, per zone)",
-      "Transaction volume and frequency",
-      "Vacancy rates",
-      "Lease terms (duration, rent)",
-      "Development density",
-      "Capitalization rates"
-    ],
-    "emergentProperties": [
-      "Spatial segregation of uses",
-      "Bid‑rent gradients",
-      "Market cycles (booms, busts)",
-      "Agglomeration economies",
-      "Urban sprawl patterns",
-      "Price dispersion across submarkets"
-    ],
-    "latentStructures": [
-      "Information networks among buyers and sellers",
-      "Informal norms governing negotiations",
-      "Speculative expectations and herding behavior",
-      "Political influence on land policy",
-      "Network effects in brokerage and listing"
-    ],
-    "boundaryConditions": [
-      "Geographic jurisdiction of property law",
-      "Legal definitions of land rights (fee simple, leasehold, etc.)",
-      "Availability of credit and financing",
-      "Demographic and economic growth constraints",
-      "Environmental regulations (wetlands, endangered species)"
-    ]
-  },
-  "relationships": [
-    {
-      "targetNodeId": "reality.market",
-      "relationshipType": "subtype_of",
-      "relationshipFamily": "classification",
-      "description": "The Land Market is a specialized form of market, inheriting characteristics of price formation, allocation, and exchange from the general market institution."
-    },
-    {
-      "targetNodeId": "413",
-      "relationshipType": "depends_on",
-      "relationshipFamily": "dependency",
-      "description": "The Land Market relies on a Land Registry for official recording and verification of ownership and property rights during transactions."
-    },
-    {
-      "targetNodeId": "496",
-      "relationshipType": "depends_on",
-      "relationshipFamily": "dependency",
-      "description": "The Land Market is shaped by urban planning regulations that determine permitted land uses, densities, and development constraints."
-    },
-    {
-      "targetNodeId": "49",
-      "relationshipType": "depends_on",
-      "relationshipFamily": "dependency",
-      "description": "Municipalities enact zoning laws, building codes, and land use policies that directly constrain and regulate land market transactions."
-    },
-    {
-      "targetNodeId": "69",
-      "relationshipType": "interacts_with",
-      "relationshipFamily": "interaction",
-      "description": "Landowner Associations represent property owners who participate in and influence land market dynamics through collective bargaining and advocacy."
-    },
-    {
-      "targetNodeId": "resource_land",
-      "relationshipType": "depends_on",
-      "relationshipFamily": "dependency",
-      "description": "The Land Market fundamentally depends on Land as the physical resource that is allocated, exchanged, and valued through market transactions."
-    },
-    {
-      "targetNodeId": "market_agricultural_land",
-      "relationshipType": "generalizes",
-      "relationshipFamily": "classification",
-      "description": "The Land Market is a broader category that generalizes the Agricultural Land Market, which is a specialized submarket for land used in agricultural production."
-    },
-    {
-      "targetNodeId": "market_residential_land",
-      "relationshipType": "generalizes",
-      "relationshipFamily": "classification",
-      "description": "The Land Market is a broader category that generalizes the Residential Land Market, which is a specialized submarket for land used for housing."
-    },
-    {
-      "targetNodeId": "market_commercial_land",
-      "relationshipType": "generalizes",
-      "relationshipFamily": "classification",
-      "description": "The Land Market is a broader category that generalizes the Commercial Land Market, which is a specialized submarket for land used for retail, office, and services."
-    },
-    {
-      "targetNodeId": "market_industrial_land",
-      "relationshipType": "generalizes",
-      "relationshipFamily": "classification",
-      "description": "The Land Market is a broader category that generalizes the Industrial Land Market, which is a specialized submarket for land used for manufacturing and logistics."
-    },
-    {
-      "targetNodeId": "9",
-      "relationshipType": "interacts_with",
-      "relationshipFamily": "interaction",
-      "description": "Financial Institutions (banks, mortgage lenders) provide the capital for land purchases and development, strongly influencing land market liquidity and price levels."
-    }
-  ],
-  "metadata": {
-    "tags": [
-      "land",
-      "market",
-      "factor-market",
-      "real-estate",
-      "property-rights",
-      "resource-allocation",
-      "economic-geography",
-      "synontic",
-      "institution"
-    ],
-    "confidenceScore": 0.98,
-    "sourceReference": "Urban Economics, Real Estate Economics, Economic Geography, Institutional Economics",
-    "createdAt": "2026-06-08T00:00:00Z",
-    "auditTrail": [
-      {
-        "reviewDate": "2026-06-08",
-        "reviewNote": "Initial abstract land market node."
-      },
-      {
-        "reviewDate": "2026-06-09",
-        "reviewNote": "Re‑categorized to Reality (synontic) to comply with Sociognosis schema; populated specific fields."
-      }
-    ],
-    "inheritanceLevel": 0
-  },
-  "references": [
-    {
-      "title": "Urban Economics",
-      "description": "Analysis of land markets, location choice, and spatial allocation."
-    },
-    {
-      "title": "Real Estate Economics",
-      "description": "Study of land valuation, transactions, and property rights."
-    },
-    {
-      "title": "Institutional Economics",
-      "description": "Role of property rights and governance structures in land allocation."
-    }
-  ]
-}
-,
   {
-  "id": "market_agricultural_land",
-  "name": "Agricultural Land Market",
-  "category": "Reality",
-  "inheritanceLevel": 1,
-  "description": "Market for the allocation, sale, lease, and valuation of land used primarily for agricultural production. This is a segment of social/economic reality.",
-  "functionalRoles": [
-    "Allocate farmland",
-    "Support agricultural investment",
-    "Enable agricultural production"
-  ],
-  "domainScope": [
-    "Agriculture",
-    "Food Production",
-    "Livestock"
-  ],
-  "historicalContext": {
-    "summary": "Agricultural land markets emerged with formalized property rights and commercial agriculture.",
-    "chronology": []
-  },
-  "specific": {
-    "onticLayer": "synontic",
-    "onticCategory": "system",
-    "onticSubtype": "economic_system",
-    "domain": "economic",
-    "realityDescription": "Institutional and allocative system for agricultural land as a factor of production, governed by property rights, lease agreements, and market transactions.",
-    "constitutiveProperties": [],
-    "stateVariables": [],
-    "emergentProperties": [],
-    "latentStructures": [],
-    "boundaryConditions": []
-  },
-  "relationships": [
-    {
-      "relationshipFamily": "CLASSIFICATION",
-      "relationshipType": "SPECIALIZES",
-      "targetNodeId": "market_land",
-      "description": "Specialized segment of the land market."
-    }
-  ],
-  "metadata": {
-    "tags": [
-      "land",
-      "agriculture",
-      "market"
+    "id": "market_land",
+    "name": "Land Market",
+    "category": "Reality",
+    "inheritanceLevel": 0,
+    "description": "An institutional mechanism through which rights over land are allocated, exchanged, valued, and transferred among economic actors, comprising a key segment of social-economic reality.",
+    "longDescription": "The land market is a synontic, institutional-economic system governing the exchange of land‑related rights. It encompasses transactions involving ownership, leasing, development rights, mineral rights, and other legally recognized claims over immobile, heterogeneous, location‑specific land. As a real‑world structure, it serves both as the target domain for economic observation and as the source of data for models of spatial allocation, pricing, and resource coordination.",
+    "functionalRoles": [
+      "Target domain for economic modeling",
+      "Object of observation and measurement",
+      "Source of empirical data (prices, transaction volumes)",
+      "Constraint space for land‑use policy analysis",
+      "Epistemic anchor for spatial equilibrium models",
+      "Causal substrate for urban and regional dynamics"
     ],
-    "inheritanceLevel": 1,
-    "confidenceScore": 0.99,
-    "sourceReference": "Ontology Design",
-    "createdAt": "2026-06-08T00:00:00Z",
-    "auditTrail": []
+    "domainScope": [
+      "Agriculture",
+      "Real Estate",
+      "Urban Development",
+      "Industrial Development",
+      "Mining",
+      "Infrastructure",
+      "Energy",
+      "Forestry",
+      "Environmental Management"
+    ],
+    "historicalContext": {
+      "summary": "Land markets emerged alongside formal property rights systems and evolved into complex institutional mechanisms for allocating access to land and land‑based economic opportunities.",
+      "chronology": [
+        {
+          "year": -3000,
+          "event": "Early Property Systems",
+          "context": "Civilizations developed formal mechanisms for assigning and transferring land rights."
+        },
+        {
+          "year": 1200,
+          "event": "Feudal Land Tenure",
+          "context": "Land allocation became embedded within hierarchical political and economic structures."
+        },
+        {
+          "year": 1700,
+          "event": "Commercialization of Land",
+          "context": "Land increasingly became a tradable economic asset."
+        },
+        {
+          "year": 1900,
+          "event": "Modern Real Estate Markets",
+          "context": "Specialized land markets emerged for residential, industrial, commercial, and agricultural uses."
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "synontic",
+      "onticCategory": "system",
+      "onticSubtype": "market_mechanism",
+      "domain": "economic",
+      "realityDescription": "The global system of legal, institutional, and transactional structures through which land rights are allocated and exchanged, including formal property registries, zoning regulations, taxation, brokerage, and financing.",
+      "constitutiveProperties": [
+        "Formal property rights (ownership, lease, easement)",
+        "Legal enforcement mechanisms",
+        "Spatial immobility of land parcels",
+        "Heterogeneity and location‑specificity",
+        "Existence of transaction costs",
+        "Regulatory framework (zoning, land use, taxation)"
+      ],
+      "stateVariables": [
+        "Land prices (per parcel, per zone)",
+        "Transaction volume and frequency",
+        "Vacancy rates",
+        "Lease terms (duration, rent)",
+        "Development density",
+        "Capitalization rates"
+      ],
+      "emergentProperties": [
+        "Spatial segregation of uses",
+        "Bid‑rent gradients",
+        "Market cycles (booms, busts)",
+        "Agglomeration economies",
+        "Urban sprawl patterns",
+        "Price dispersion across submarkets"
+      ],
+      "latentStructures": [
+        "Information networks among buyers and sellers",
+        "Informal norms governing negotiations",
+        "Speculative expectations and herding behavior",
+        "Political influence on land policy",
+        "Network effects in brokerage and listing"
+      ],
+      "boundaryConditions": [
+        "Geographic jurisdiction of property law",
+        "Legal definitions of land rights (fee simple, leasehold, etc.)",
+        "Availability of credit and financing",
+        "Demographic and economic growth constraints",
+        "Environmental regulations (wetlands, endangered species)"
+      ]
+    },
+    "relationships": [
+      {
+        "targetNodeId": "reality.market",
+        "relationshipType": "subtype_of",
+        "relationshipFamily": "classification",
+        "description": "The Land Market is a specialized form of market, inheriting characteristics of price formation, allocation, and exchange from the general market institution."
+      },
+      {
+        "targetNodeId": "413",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "The Land Market relies on a Land Registry for official recording and verification of ownership and property rights during transactions."
+      },
+      {
+        "targetNodeId": "496",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "The Land Market is shaped by urban planning regulations that determine permitted land uses, densities, and development constraints."
+      },
+      {
+        "targetNodeId": "49",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "Municipalities enact zoning laws, building codes, and land use policies that directly constrain and regulate land market transactions."
+      },
+      {
+        "targetNodeId": "69",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Landowner Associations represent property owners who participate in and influence land market dynamics through collective bargaining and advocacy."
+      },
+      {
+        "targetNodeId": "resource_land",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "The Land Market fundamentally depends on Land as the physical resource that is allocated, exchanged, and valued through market transactions."
+      },
+      {
+        "targetNodeId": "market_agricultural_land",
+        "relationshipType": "generalizes",
+        "relationshipFamily": "classification",
+        "description": "The Land Market is a broader category that generalizes the Agricultural Land Market, which is a specialized submarket for land used in agricultural production."
+      },
+      {
+        "targetNodeId": "market_residential_land",
+        "relationshipType": "generalizes",
+        "relationshipFamily": "classification",
+        "description": "The Land Market is a broader category that generalizes the Residential Land Market, which is a specialized submarket for land used for housing."
+      },
+      {
+        "targetNodeId": "market_commercial_land",
+        "relationshipType": "generalizes",
+        "relationshipFamily": "classification",
+        "description": "The Land Market is a broader category that generalizes the Commercial Land Market, which is a specialized submarket for land used for retail, office, and services."
+      },
+      {
+        "targetNodeId": "market_industrial_land",
+        "relationshipType": "generalizes",
+        "relationshipFamily": "classification",
+        "description": "The Land Market is a broader category that generalizes the Industrial Land Market, which is a specialized submarket for land used for manufacturing and logistics."
+      },
+      {
+        "targetNodeId": "9",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Financial Institutions (banks, mortgage lenders) provide the capital for land purchases and development, strongly influencing land market liquidity and price levels."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "land",
+        "market",
+        "factor-market",
+        "real-estate",
+        "property-rights",
+        "resource-allocation",
+        "economic-geography",
+        "synontic",
+        "institution"
+      ],
+      "confidenceScore": 0.98,
+      "sourceReference": "Urban Economics, Real Estate Economics, Economic Geography, Institutional Economics",
+      "createdAt": "2026-06-08T00:00:00Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-08",
+          "reviewNote": "Initial abstract land market node."
+        },
+        {
+          "reviewDate": "2026-06-09",
+          "reviewNote": "Re‑categorized to Reality (synontic) to comply with Sociognosis schema; populated specific fields."
+        }
+      ],
+      "inheritanceLevel": 0
+    },
+    "references": [
+      {
+        "title": "Urban Economics",
+        "description": "Analysis of land markets, location choice, and spatial allocation."
+      },
+      {
+        "title": "Real Estate Economics",
+        "description": "Study of land valuation, transactions, and property rights."
+      },
+      {
+        "title": "Institutional Economics",
+        "description": "Role of property rights and governance structures in land allocation."
+      }
+    ]
   },
-  "references": [
-    {
-      "title": "Agricultural Economics",
-      "description": "Analysis of agricultural land allocation and valuation."
-    }
-  ],
-  "longDescription": "",
-  "relationshipFamily": "classification",
-  "relationshipType": "specializes"
-},
-  
+  {
+    "id": "market_agricultural_land",
+    "name": "Agricultural Land Market",
+    "category": "Reality",
+    "inheritanceLevel": 1,
+    "description": "Market for the allocation, sale, lease, and valuation of land used primarily for agricultural production. This is a segment of social/economic reality.",
+    "functionalRoles": [
+      "Allocate farmland",
+      "Support agricultural investment",
+      "Enable agricultural production"
+    ],
+    "domainScope": [
+      "Agriculture",
+      "Food Production",
+      "Livestock"
+    ],
+    "historicalContext": {
+      "summary": "Agricultural land markets emerged with formalized property rights and commercial agriculture.",
+      "chronology": []
+    },
+    "specific": {
+      "onticLayer": "synontic",
+      "onticCategory": "system",
+      "onticSubtype": "economic_system",
+      "domain": "economic",
+      "realityDescription": "Institutional and allocative system for agricultural land as a factor of production, governed by property rights, lease agreements, and market transactions.",
+      "constitutiveProperties": [],
+      "stateVariables": [],
+      "emergentProperties": [],
+      "latentStructures": [],
+      "boundaryConditions": []
+    },
+    "relationships": [
+      {
+        "relationshipFamily": "CLASSIFICATION",
+        "relationshipType": "SPECIALIZES",
+        "targetNodeId": "market_land",
+        "description": "Specialized segment of the land market."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "land",
+        "agriculture",
+        "market"
+      ],
+      "inheritanceLevel": 1,
+      "confidenceScore": 0.99,
+      "sourceReference": "Ontology Design",
+      "createdAt": "2026-06-08T00:00:00Z",
+      "auditTrail": []
+    },
+    "references": [
+      {
+        "title": "Agricultural Economics",
+        "description": "Analysis of agricultural land allocation and valuation."
+      }
+    ],
+    "longDescription": "",
+    "relationshipFamily": "classification",
+    "relationshipType": "specializes"
+  },
   {
     "id": "market_residential_land",
     "name": "Residential Land Market",
@@ -17313,6 +17311,202 @@
         "relationshipType": "DEPENDS_ON",
         "targetNodeId": "productivity",
         "description": "Frequently used to model and explain productivity differences."
+      }
+    ]
+  },
+  {
+    "id": "new.node.1781481305477",
+    "name": "Stock Market",
+    "category": "Reality",
+    "description": "The stock market is a complex social-economic system where shares of publicly held companies are issued, bought, and sold. It reflects collective investor sentiment, corporate performance, and macroeconomic conditions, and serves as a key mechanism for capital allocation and wealth creation.",
+    "longDescription": "The stock market comprises multiple exchanges, broker-dealers, institutional and retail investors, listed companies, and regulatory bodies. It operates through a continuous double-auction mechanism that aggregates heterogeneous information into prices. Beyond its primary function of facilitating equity trading, the market generates a rich set of observable signals (prices, volumes, volatilities) that are used for risk management, corporate governance, and economic forecasting. The market's behavior is characterized by emergent phenomena such as bubbles, crashes, momentum, and mean-reversion, which are driven by investor psychology, liquidity constraints, and external shocks.",
+    "functionalRoles": [
+      "target_domain",
+      "source_of_data"
+    ],
+    "historicalContext": {
+      "summary": "Stock markets have evolved from informal gatherings of traders to highly regulated electronic trading platforms. The first formal stock exchange was established in Amsterdam in 1602 to trade shares of the Dutch East India Company. The New York Stock Exchange (NYSE) was founded in 1792. Major milestones include the Great Crash of 1929, the introduction of electronic trading in the 1970s, the 1987 Black Monday crash, the dot-com bubble of the late 1990s, and the 2008 global financial crisis. Recent decades have seen the rise of high-frequency trading and alternative trading systems.",
+      "chronology": [
+        {
+          "year": 1602,
+          "event": "Amsterdam Stock Exchange established",
+          "context": "First formal stock exchange trading shares of the Dutch East India Company."
+        },
+        {
+          "year": 1792,
+          "event": "Buttonwood Agreement signed",
+          "context": "Founded the New York Stock Exchange (NYSE) by 24 brokers."
+        },
+        {
+          "year": 1929,
+          "event": "Wall Street Crash",
+          "context": "The Great Crash led to the Great Depression; prompted extensive regulation (Securities Act 1933, Securities Exchange Act 1934)."
+        },
+        {
+          "year": 1971,
+          "event": "NASDAQ founded",
+          "context": "First electronic stock market, enabling decentralized trading."
+        },
+        {
+          "year": 1987,
+          "event": "Black Monday",
+          "context": "Global stock market crash triggered by program trading and portfolio insurance."
+        },
+        {
+          "year": 2008,
+          "event": "Global Financial Crisis",
+          "context": "Subprime mortgage crisis led to severe market dislocations and regulatory reforms (Dodd-Frank)."
+        },
+        {
+          "year": 2010,
+          "event": "Flash Crash",
+          "context": "Rapid market plunge and recovery, highlighting risks of high-frequency trading and fragmented markets."
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "synontic",
+      "onticCategory": "system",
+      "onticSubtype": "economic_system",
+      "domain": "economic",
+      "realityDescription": "The stock market as a dynamic, evolving system of exchanges, participants, and regulatory frameworks.",
+      "constitutiveProperties": [
+        "liquidity",
+        "price discovery",
+        "volatility",
+        "market capitalization"
+      ],
+      "stateVariables": [
+        "index levels",
+        "trading volume",
+        "bid-ask spreads",
+        "volatility index"
+      ],
+      "emergentProperties": [
+        "market efficiency",
+        "herding behavior",
+        "bubbles and crashes"
+      ],
+      "latentStructures": [
+        "order flow dynamics",
+        "market microstructure",
+        "network of interconnections"
+      ],
+      "boundaryConditions": [
+        "regulatory changes",
+        "macroeconomic shocks",
+        "technological disruptions"
+      ]
+    },
+    "relationships": [
+      {
+        "targetNodeId": "reality.market",
+        "relationshipType": "subtype_of",
+        "relationshipFamily": "classification",
+        "description": "The stock market is a specific type of market that specializes in equity trading and capital allocation, inheriting general market properties."
+      },
+      {
+        "targetNodeId": "9",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Financial institutions such as banks, investment banks, and brokerages are key participants in the stock market, providing liquidity, underwriting, and trading services."
+      },
+      {
+        "targetNodeId": "22",
+        "relationshipType": "enables",
+        "relationshipFamily": "dependency",
+        "description": "Central banks provide liquidity and set monetary policy that enables stock market functioning and influences asset prices."
+      },
+      {
+        "targetNodeId": "264",
+        "relationshipType": "regulates",
+        "relationshipFamily": "normative",
+        "description": "Securities commissions regulate stock markets to ensure fair trading, transparency, and investor protection."
+      },
+      {
+        "targetNodeId": "161",
+        "relationshipType": "represents",
+        "relationshipFamily": "representational",
+        "description": "Market indices such as the S&P 500 represent the aggregate performance of the stock market."
+      },
+      {
+        "targetNodeId": "40",
+        "relationshipType": "evaluates",
+        "relationshipFamily": "normative",
+        "description": "Rating agencies evaluate the creditworthiness of companies listed on the stock market, affecting investor perceptions."
+      },
+      {
+        "targetNodeId": "24",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Hedge funds are active participants in stock markets, engaging in various trading strategies and influencing market dynamics."
+      },
+      {
+        "targetNodeId": "174",
+        "relationshipType": "enables",
+        "relationshipFamily": "dependency",
+        "description": "Clearing houses enable the settlement of stock trades, reducing counterparty risk and ensuring market integrity."
+      },
+      {
+        "targetNodeId": "476",
+        "relationshipType": "controls",
+        "relationshipFamily": "normative",
+        "description": "Circuit breakers control trading activity during extreme volatility to prevent market crashes."
+      },
+      {
+        "targetNodeId": "99",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Algorithmic trading bots are automated participants that execute trades in stock markets, affecting liquidity and price discovery."
+      },
+      {
+        "targetNodeId": "463",
+        "relationshipType": "observes",
+        "relationshipFamily": "observational",
+        "description": "The GFSB monitors global stock market conditions as part of its mandate to maintain financial stability."
+      },
+      {
+        "targetNodeId": "23",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Sovereign wealth funds are large institutional investors that participate in stock markets for long-term returns."
+      },
+      {
+        "targetNodeId": "179",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Pension funds are major investors in stock markets, holding positions for retirement income."
+      },
+      {
+        "targetNodeId": "251",
+        "relationshipType": "co_occurs_with",
+        "relationshipFamily": "temporal",
+        "description": "Stock markets and foreign exchange markets are closely linked; currency movements impact stock valuations and capital flows."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "stock_market",
+        "economics",
+        "financial_system",
+        "social_system"
+      ],
+      "inheritanceLevel": 0,
+      "confidenceScore": 0.8,
+      "sourceReference": "General knowledge, https://en.wikipedia.org/wiki/Stock_market",
+      "createdAt": "2026-06-14T23:55:05.477Z",
+      "auditTrail": []
+    },
+    "references": [
+      {
+        "title": "Stock market – Wikipedia",
+        "link": "https://en.wikipedia.org/wiki/Stock_market",
+        "description": "Overview of stock market history, structure, and functioning."
+      },
+      {
+        "title": "Market microstructure and price formation",
+        "link": "https://doi.org/10.1016/...",
+        "description": "Academic literature on the mechanisms underlying price discovery and order flow."
       }
     ]
   }

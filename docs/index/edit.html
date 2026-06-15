@@ -4057,35 +4057,36 @@ function setupModals() {
     
     document.getElementById('ai-improve-btn').addEventListener('click', () => {
         if (!selectedNode) return;
-        
-        // Detect whether this is a new/empty node (Create mode) or an
-        // existing populated node (Improve mode). The merged flow means
-        // Add Node → type description → Improve generates the full node.
+
+        // Unified flow: new nodes and existing nodes both go through the
+        // AI Improve path. From the model's perspective there is no
+        // distinction — it receives the current node JSON (near-empty for
+        // a freshly added node) and "improves" it into a full node.
         const isCreateMode = isNewOrEmptyNode(selectedNode);
-        
+
         improvedNodeData = null;
         const instructionsEl = document.getElementById('ai-improve-instructions');
         const titleEl = document.querySelector('#ai-improve-modal .modal-title');
         const contextLabel = document.querySelector('#ai-improve-modal .context-label');
-        
-        if (isCreateMode) {
-            titleEl.textContent = 'AI Generate Node';
-            contextLabel.lastChild.textContent = ' What does this node represent?';
-            instructionsEl.placeholder = 'Describe what this node represents: its purpose, category, key properties, relationships to existing nodes, and any specific requirements...';
-            // Hide the diff panels for creation (no original to compare)
-            document.querySelector('.diff-container').style.display = 'none';
-            document.getElementById('diff-stats').style.display = 'none';
-            document.getElementById('diff-modified').innerHTML = '<div style="color:var(--text-muted);font-style:italic;">Click "Generate" to create the node with AI</div>';
-        } else {
-            titleEl.textContent = 'AI Improve Node';
-            contextLabel.lastChild.textContent = ' Improvement Instructions';
-            instructionsEl.placeholder = 'Describe what improvements you want for this node. E.g., \'Add more detailed description\', \'Suggest relevant relationships\', \'Improve the categorization\', \'Add missing metadata\'...';
-            document.querySelector('.diff-container').style.display = '';
-            document.getElementById('diff-original').textContent = JSON.stringify(stripRelationships(selectedNode._data), null, 2);
-            document.getElementById('diff-modified').innerHTML = '<div style="color:var(--text-muted);font-style:italic;">Click "Generate Improvements" to see changes</div>';
-            document.getElementById('diff-stats').style.display = 'none';
-        }
-        
+
+        // UI-only distinction (title/placeholder wording), same flow.
+        titleEl.textContent = isCreateMode ? 'AI Generate Node' : 'AI Improve Node';
+        contextLabel.lastChild.textContent = isCreateMode
+            ? ' What does this node represent?'
+            : ' Improvement Instructions';
+        instructionsEl.placeholder = isCreateMode
+            ? 'Describe what this node represents: its purpose, category, key properties, relationships to existing nodes, and any specific requirements...'
+            : 'Describe what improvements you want for this node. E.g., \'Add more detailed description\', \'Suggest relevant relationships\', \'Improve the categorization\', \'Add missing metadata\'...';
+
+        // Always show the diff panels. For new nodes the "original" is the
+        // near-empty scaffold, giving a meaningful before/after comparison.
+        document.querySelector('.diff-container').style.display = '';
+        document.getElementById('diff-original').textContent = JSON.stringify(stripRelationships(selectedNode._data), null, 2);
+        document.getElementById('diff-modified').innerHTML = isCreateMode
+            ? '<div style="color:var(--text-muted);font-style:italic;">Click "Generate" to create the node with AI</div>'
+            : '<div style="color:var(--text-muted);font-style:italic;">Click "Generate Improvements" to see changes</div>';
+        document.getElementById('diff-stats').style.display = 'none';
+
         instructionsEl.value = '';
         document.getElementById('ai-apply-improve-btn').disabled = true;
         document.getElementById('ai-improve-error').style.display = 'none';
@@ -4135,20 +4136,15 @@ function setupModals() {
         document.getElementById('diff-modified').innerHTML = '<div style="color:var(--text-muted);"><span class="loading-spinner"></span> Generating improvements...</div>';
         
         try {
-            // Branch: new/empty nodes → create, populated nodes → improve
-            if (isNewOrEmptyNode(selectedNode)) {
-                improvedNodeData = await aiCreateNode(instructions);
-                document.getElementById('diff-modified').innerHTML = `<pre class="preview-json">${escHTML(JSON.stringify(improvedNodeData, null, 2))}</pre>`;
-                statsEl.style.display = 'none';
-            } else {
-                improvedNodeData = await aiImproveNode(selectedNode._data, instructions);
-                const diff = computeDiff(stripRelationships(selectedNode._data), stripRelationships(improvedNodeData));
-                document.getElementById('diff-original').innerHTML = diff.origHtml;
-                document.getElementById('diff-modified').innerHTML = diff.modHtml;
-                document.getElementById('diff-additions').textContent = diff.additions;
-                document.getElementById('diff-deletions').textContent = diff.deletions;
-                statsEl.style.display = 'flex';
-            }
+            // Unified: always use the improve path. For new/empty nodes the
+            // "original" is the near-empty scaffold, and the model fills it in.
+            improvedNodeData = await aiImproveNode(selectedNode._data, instructions);
+            const diff = computeDiff(stripRelationships(selectedNode._data), stripRelationships(improvedNodeData));
+            document.getElementById('diff-original').innerHTML = diff.origHtml;
+            document.getElementById('diff-modified').innerHTML = diff.modHtml;
+            document.getElementById('diff-additions').textContent = diff.additions;
+            document.getElementById('diff-deletions').textContent = diff.deletions;
+            statsEl.style.display = 'flex';
             applyBtn.disabled = false;
         } catch (e) {
             errorEl.textContent = 'Error: ' + e.message;
