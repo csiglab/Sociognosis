@@ -20,9 +20,7 @@ Sub Projects:
 > Changes are stored on the server, which is not connected to GitHub. Therefore, you must download the latest data file before committing updates.
 
 ```bash
-wget  https://bremontix.xyz/lab/research/onto/data/index/data.json
-diff data.json docs/data/index/data.json 
-mv    data.json   docs/data/index/data.json 
+curl https://bremontix.xyz/lab/research/onto/data/index/data.json --output docs/data/index/data.js
 ga docs
 gc docs -m "feat: udpate data"
 ```

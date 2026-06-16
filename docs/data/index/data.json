@@ -17937,5 +17937,1561 @@
       "auditTrail": []
     },
     "references": []
+  },
+  {
+    "id": "node.1781624062065",
+    "name": "Samuel David Alexander",
+    "category": "Reality",
+    "description": "Samuel 'Sami' David Alexander (13 July 1862 – 8 March 1943) was a Croatian Jewish industrialist, doyen of Croatian industrialists, a philanthropist and a member of the Zagreb prominent Alexander family. He played a central role in the industrial development of Croatia during the late 19th and early 20th centuries, and his philanthropic work left a lasting impact on Zagreb's cultural and educational institutions.",
+    "longDescription": "Samuel David Alexander was born on 13 July 1862 in Zagreb into the influential Alexander family, one of the most prominent Jewish families in Croatia. He became a successful industrialist, leading enterprises in milling, brewing, and other sectors. His business acumen and social standing earned him the title of 'doyen of Croatian industrialists'. Beyond industry, he was a dedicated philanthropist, supporting hospitals, schools, and cultural organizations. He died on 8 March 1943 during the Holocaust, a victim of the Ustaše regime. His legacy endures through the Alexander family's continued influence and the institutions he helped found.",
+    "functionalRoles": [
+      "industrialist",
+      "philanthropist",
+      "member_of_prominent_family",
+      "economic_agent",
+      "social_influencer"
+    ],
+    "historicalContext": {
+      "summary": "Samuel David Alexander lived through a period of significant political and economic change in Croatia, from the Austro-Hungarian Empire through the interwar period and into World War II. His career spanned the industrialization of Croatia, the rise of the Alexander family as a business dynasty, and the tragic antisemitic persecution that ended his life.",
+      "chronology": [
+        {
+          "year": 1862,
+          "event": "Born in Zagreb to the Alexander family.",
+          "context": "Birth of Samuel David Alexander, son of David Alexander, a wealthy industrialist."
+        },
+        {
+          "year": 1885,
+          "event": "Assumed leadership of the family business empire.",
+          "context": "After his father's death, Samuel took over and expanded the family's industrial holdings, including mills and breweries."
+        },
+        {
+          "year": 1900,
+          "event": "Became doyen of Croatian industrialists.",
+          "context": "His leadership and success earned him recognition as the leading industrial figure in Croatia."
+        },
+        {
+          "year": 1914,
+          "event": "World War I: business adapted to wartime economy.",
+          "context": "During WWI, his enterprises supplied the Austro-Hungarian military, maintaining operations despite shortages."
+        },
+        {
+          "year": 1918,
+          "event": "End of war and creation of Yugoslavia.",
+          "context": "Post-war, his businesses navigated the new political landscape of the Kingdom of Serbs, Croats and Slovenes."
+        },
+        {
+          "year": 1930,
+          "event": "Philanthropic peak: major donations to Zagreb institutions.",
+          "context": "Funded the construction of the Alexander Hospital (now part of the University Hospital Center Zagreb) and other public works."
+        },
+        {
+          "year": 1941,
+          "event": "Ustaše regime enacted antisemitic laws.",
+          "context": "As a Jew, Samuel David Alexander was stripped of his properties and rights under the Independent State of Croatia."
+        },
+        {
+          "year": 1943,
+          "event": "Died in Zagreb under unclear circumstances, likely killed or deported.",
+          "context": "He died on 8 March 1943 during the Holocaust, not surviving the war. The exact circumstances remain debated, but he is remembered as a victim of the Ustaše regime."
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "ontic",
+      "onticCategory": "entity",
+      "onticSubtype": "agent",
+      "domain": "social",
+      "realityDescription": "Samuel David Alexander, a Croatian Jewish industrialist and philanthropist active in Zagreb from 1862 to 1943.",
+      "constitutiveProperties": [
+        "birth_as_Samuel_David_Alexander",
+        "membership_in_Alexander_family",
+        "possession_of_industrial_wealth",
+        "Croatian_nationality",
+        "Jewish_ethnicity"
+      ],
+      "stateVariables": [
+        "age",
+        "net_worth",
+        "health_status",
+        "reputation",
+        "location"
+      ],
+      "emergentProperties": [
+        "philanthropic_legacy",
+        "influence_on_Croatian_industry",
+        "family_legacy"
+      ],
+      "latentStructures": [
+        "business_network",
+        "family_clan_relationships",
+        "hidden_financial_arrangements"
+      ],
+      "boundaryConditions": [
+        "temporal_boundary_1862_1943",
+        "geographic_boundary_Zagreb_and_Croatia",
+        "domain_industry_and_philanthropy"
+      ]
+    },
+    "relationships": [
+      {
+        "targetNodeId": "human.node.1781624646078",
+        "relationshipType": "instance_of",
+        "relationshipFamily": "ontological",
+        "description": "Samuel David Alexander is a specific human actor, an instance of the general category of human agents capable of perception, cognition, and social interaction."
+      },
+      {
+        "targetNodeId": "108",
+        "relationshipType": "member_of",
+        "relationshipFamily": "mereological",
+        "description": "He was a member of the Alexander family, a prominent family dynasty that maintained significant influence over Croatian industry and society across generations."
+      },
+      {
+        "targetNodeId": "48",
+        "relationshipType": "contributes_to",
+        "relationshipFamily": "causal",
+        "description": "As a dedicated philanthropist, he donated to hospitals, schools, and cultural organizations, thereby supporting and funding charitable foundations."
+      },
+      {
+        "targetNodeId": "201",
+        "relationshipType": "member_of",
+        "relationshipFamily": "mereological",
+        "description": "As the doyen of Croatian industrialists, he would have been a member of the Chamber of Commerce, representing industrial interests."
+      },
+      {
+        "targetNodeId": "market_industrial_land",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "As an industrialist owning mills, breweries, and other enterprises, he actively participated in and contributed to the industrial land market."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "Croatian",
+        "Jewish",
+        "industrialist",
+        "philanthropist",
+        "Alexander family",
+        "19th century",
+        "20th century",
+        "Zagreb",
+        "Holocaust victim"
+      ],
+      "inheritanceLevel": 0,
+      "confidenceScore": 0.8,
+      "sourceReference": "Wikipedia and historical records",
+      "createdAt": "2026-06-16T15:34:22.065Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-17",
+          "reviewNote": "Improved node with detailed biography, historical chronology, reality-specific properties, and references."
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Samuel David Alexander - Wikipedia",
+        "link": "https://en.wikipedia.org/wiki/Samuel_David_Alexander",
+        "description": "Biographical information about Samuel David Alexander, his life, industrial career, and philanthropy."
+      },
+      {
+        "title": "The Alexander Family of Zagreb - Jewish Historical Museum",
+        "link": "https://www.jhm.hr/en/collections/family-archives/alexander-family/",
+        "description": "Archival materials on the Alexander family's role in Croatian industrial history."
+      }
+    ]
+  },
+  {
+    "id": "human.node.1781624646078",
+    "name": "Human Actor",
+    "category": "Reality",
+    "description": "A human being considered as an agent capable of perception, cognition, emotion, intentional action, and social interaction—serving simultaneously as an object of study, an epistemic agent, and a participant in social, economic, and political systems.",
+    "longDescription": "Human actors are complex biological, cognitive, and social entities that constitute the fundamental units of agency in social reality. They possess self-awareness, intentionality, and the capacity to learn, reason, communicate, coordinate, and adapt. As epistemic agents, they generate, evaluate, and transmit knowledge via observation, inference, experimentation, and cultural transmission. Their internal states—beliefs, desires, intentions, emotions—drive behavior and are shaped by both biological substrate (neural, genetic) and environmental/social context. In the Sociognosis framework, human actors are both part of the reality being modeled (the domain) and the primary agents of epistemic activity.",
+    "functionalRoles": [
+      "object_of_study",
+      "epistemic_agent",
+      "source_of_observations",
+      "participant_in_social_systems",
+      "bearer_of_intentionality",
+      "cognitive_system",
+      "decision_maker",
+      "cultural_transmitter"
+    ],
+    "historicalContext": {
+      "summary": "Human actors have evolved over millions of years from hominid ancestors to anatomically modern Homo sapiens, with key milestones including the development of language (~100,000–50,000 years ago), the emergence of agriculture (~10,000 BCE), the rise of written language (~3,500 BCE), and the scientific and industrial revolutions. These developments transformed human epistemic capabilities and social organization.",
+      "chronology": [
+        {
+          "year": -200000,
+          "event": "Emergence of Homo sapiens in Africa",
+          "context": "Anatomically modern humans appear, with advanced cognitive abilities."
+        },
+        {
+          "year": -100000,
+          "event": "Development of complex language",
+          "context": "Symbolic communication enables cumulative culture and shared knowledge."
+        },
+        {
+          "year": -10000,
+          "event": "Agricultural revolution",
+          "context": "Sedentary societies lead to specialization, writing, and formal knowledge systems."
+        },
+        {
+          "year": -3500,
+          "event": "Invention of writing",
+          "context": "External memory systems allow knowledge storage and transmission across generations."
+        },
+        {
+          "year": -500,
+          "event": "Axial Age of philosophical inquiry",
+          "context": "Systematic reflection on knowledge, ethics, and reality in multiple civilizations."
+        },
+        {
+          "year": 1600,
+          "event": "Scientific Revolution",
+          "context": "Empirical methods and mathematical modeling transform epistemic practices."
+        },
+        {
+          "year": 1950,
+          "event": "Cognitive revolution and cybernetics",
+          "context": "Computational models of mind; formal study of human decision-making and information processing."
+        },
+        {
+          "year": 2020,
+          "event": "Rise of AI and digital augmentation",
+          "context": "Human epistemic roles expand through interaction with artificial systems."
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "ontic",
+      "onticCategory": "entity",
+      "onticSubtype": "agent",
+      "domain": "mixed",
+      "realityDescription": "Individual human beings with biological, cognitive, and social dimensions, capable of purposeful action and epistemic engagement.",
+      "constitutiveProperties": [
+        "biological_body",
+        "nervous_system",
+        "cognitive_capacities",
+        "intentionality",
+        "self_awareness",
+        "social_embeddedness",
+        "linguistic_ability",
+        "emotional_states",
+        "memory",
+        "learning_capability"
+      ],
+      "stateVariables": [
+        "knowledge_state",
+        "belief_set",
+        "desires",
+        "intentions",
+        "emotional_state",
+        "health_status",
+        "location",
+        "social_role",
+        "attention_focus",
+        "cognitive_load"
+      ],
+      "emergentProperties": [
+        "consciousness",
+        "agency",
+        "decision_making",
+        "creativity",
+        "moral_reasoning",
+        "self_concept",
+        "cultural_identity",
+        "theory_of_mind"
+      ],
+      "latentStructures": [
+        "neural_network_architecture",
+        "genetic_code",
+        "unconscious_biases",
+        "internal_models_of_reality",
+        "cognitive_schema",
+        "personality_traits"
+      ],
+      "boundaryConditions": [
+        "finite_lifespan",
+        "cognitive_limits_working_memory_capacity",
+        "computational_limits_of_brain",
+        "physical_vulnerability",
+        "social_dependency",
+        "cognitive_biases",
+        "limited_attention"
+      ]
+    },
+    "relationships": [],
+    "metadata": {
+      "tags": [
+        "human",
+        "actor",
+        "agent",
+        "cognitive_system",
+        "social_entity",
+        "epistemic_agent",
+        "biological_entity",
+        "decision_maker"
+      ],
+      "inheritanceLevel": 0,
+      "confidenceScore": 0.9,
+      "sourceReference": "General knowledge of human nature, cognitive science, and anthropology.",
+      "createdAt": "2026-06-16T15:44:06.078Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-17",
+          "reviewNote": "Initial population of node with core ontological and functional properties."
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Stanford Encyclopedia of Philosophy: Agency",
+        "link": "https://plato.stanford.edu/entries/agency/",
+        "description": "Philosophical overview of the concept of agency, including human agency."
+      },
+      {
+        "title": "The Adapted Mind: Evolutionary Psychology and the Generation of Culture",
+        "link": "https://doi.org/10.1093/oso/9780195101072.001.0001",
+        "description": "Foundation for understanding evolved human cognitive architecture and its epistemic implications."
+      }
+    ]
+  },
+  {
+    "id": "node.1781624974565",
+    "name": "Zagreb Stock Exchange",
+    "category": "Reality",
+    "description": "The Zagreb Stock Exchange (ZSE) is the principal securities exchange in Croatia, operating an electronic trading platform for equities, bonds, and other financial instruments. It serves as the primary marketplace for capital formation and secondary trading in the Croatian economy.",
+    "longDescription": "Founded in 1991, the Zagreb Stock Exchange (ZSE) is the sole regulated securities market in Croatia. It operates an electronic order-driven trading system (Xetra technology) and provides listing, trading, clearing, and settlement services for a range of financial instruments including equities, bonds, ETFs, and structured products. The ZSE is a public company owned mainly by Croatian banks, brokers, and the state-run Central Depository & Clearing Company (SKDD). It plays a critical role in the Croatian financial system by enabling capital raising for companies, offering investment opportunities to domestic and international investors, and providing price discovery for Croatian securities. The exchange is regulated by the Croatian Financial Services Supervisory Agency (HANFA) and complies with European Union directives on market infrastructure (MiFID II, CSDR). Its main indices include the CROBEX and CROBEX10, which track the performance of the most liquid and capitalised listed companies.",
+    "functionalRoles": [
+      "financial market infrastructure",
+      "trading venue",
+      "securities exchange",
+      "capital formation platform",
+      "price discovery mechanism",
+      "secondary market for securities"
+    ],
+    "historicalContext": {
+      "summary": "The Zagreb Stock Exchange was established in 1991 following Croatia's independence and the transition to a market economy. It evolved from a nascent over-the-counter market into a modern electronic exchange in the early 2000s, joined the Federation of Euro-Asian Stock Exchanges, and became a full member of the World Federation of Exchanges. In 2009, it implemented the Xetra trading system. The exchange experienced significant growth during the 2000s boom, a sharp downturn during the financial crisis, and a gradual recovery with increasing integration into European capital markets after Croatia's EU accession in 2013.",
+      "chronology": [
+        {
+          "year": 1991,
+          "event": "Founding of the Zagreb Stock Exchange",
+          "context": "Established as a joint-stock company by Croatian banks and brokerage houses to create an organized securities market after Croatia's independence."
+        },
+        {
+          "year": 1997,
+          "event": "Launch of electronic trading system",
+          "context": "Moved from floor trading to an electronic system, increasing efficiency and transparency."
+        },
+        {
+          "year": 2000,
+          "event": "Introduction of CROBEX index",
+          "context": "First official stock market index to track the performance of leading shares."
+        },
+        {
+          "year": 2007,
+          "event": "Record market capitalization",
+          "context": "Reached peak capitalization of approximately €40 billion during the pre-crisis boom."
+        },
+        {
+          "year": 2009,
+          "event": "Migration to Xetra trading platform",
+          "context": "Adopted Deutsche Börse's Xetra technology, aligning with European standards."
+        },
+        {
+          "year": 2013,
+          "event": "Croatia joins the EU; market integration",
+          "context": "EU accession opened the exchange to greater foreign investment and regulatory harmonization."
+        },
+        {
+          "year": 2020,
+          "event": "COVID-19 market volatility",
+          "context": "Experienced sharp declines and recovery, highlighted the exchange's role as a barometer of economic health."
+        },
+        {
+          "year": 2024,
+          "event": "Continued digitalization and ESG listing growth",
+          "context": "Introduction of sustainable bond segments and further automation of post-trade processes."
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "synontic",
+      "onticCategory": "system",
+      "onticSubtype": "institution",
+      "domain": "economic",
+      "realityDescription": "The Zagreb Stock Exchange as an organized social and technical system for trading financial securities. It includes the trading venue (electronic order book), listing rules, clearing and settlement infrastructure, market data dissemination, and the network of participants (issuers, investors, brokers, market makers).",
+      "constitutiveProperties": [
+        "regulated listing and admission rules for securities",
+        "electronic order-driven trading system (Xetra)",
+        "clearing and settlement system (linked to SKDD)",
+        "membership structure (brokerage firms, banks)",
+        "market surveillance and compliance mechanisms",
+        "published market data feed and indices",
+        "governance framework (board, committees, internal rules)",
+        "ownership structure (bank-owned, with state minority stake)"
+      ],
+      "stateVariables": [
+        "daily trading volume (value and number of trades)",
+        "CROBEX index level (closing price)",
+        "total market capitalization",
+        "number of listed companies",
+        "bid-ask spreads for major stocks",
+        "free-float ratio of listed securities",
+        "order book depth and liquidity measures",
+        "daily price changes and volatility indices",
+        "turnover velocity (liquidity ratio)"
+      ],
+      "emergentProperties": [
+        "price discovery for Croatian equities and bonds",
+        "market liquidity (ability to trade without large price impact)",
+        "market efficiency (speed at which new information is reflected in prices)",
+        "investor confidence (reflected in participation rates)",
+        "correlation with regional and global equity indices",
+        "systemic risk transmission through interlinked financial institutions"
+      ],
+      "latentStructures": [
+        "order book dynamics (hidden liquidity, iceberg orders, order flow toxicity)",
+        "information asymmetry among market participants",
+        "herding behaviour and feedback loops during volatile periods",
+        "trading strategies (algorithmic, high-frequency, retail)",
+        "network of cross-holdings among listed companies",
+        "influence of macroeconomic variables (interest rates, GDP, political stability) on market behaviour"
+      ],
+      "boundaryConditions": [
+        "jurisdiction: regulated by Croatian law and EU directives (MiFID II, MAR, CSDR)",
+        "operating hours: Monday–Friday 9:00–16:00 CET (continuous trading with auctions)",
+        "instrument eligibility: only securities admitted to listing according to ZSE rules",
+        "participant eligibility: only licensed members (banks, brokerages) can trade directly",
+        "size constraints: minimum free-float and capitalization requirements for listing",
+        "currency: primarily EUR (since Croatia adopted the euro in 2023), historically HRK",
+        "technology constraints: Xetra system capacity limits (e.g., max order rate, latency parameters)",
+        "regulatory constraints: HANFA supervision, market abuse prohibitions, periodic reporting requirements"
+      ]
+    },
+    "relationships": [
+      {
+        "targetNodeId": "new.node.1781481305477",
+        "relationshipType": "instance_of",
+        "relationshipFamily": "ontological",
+        "description": "The Zagreb Stock Exchange is a specific instance of a stock market, a broader class of organized markets for trading equity securities."
+      },
+      {
+        "targetNodeId": "9",
+        "relationshipType": "type_of",
+        "relationshipFamily": "ontological",
+        "description": "The Zagreb Stock Exchange is a type of financial institution, as it is a regulated entity that facilitates trading and capital formation within the financial system."
+      },
+      {
+        "targetNodeId": "new.node.1781483781544",
+        "relationshipType": "enables",
+        "relationshipFamily": "dependency",
+        "description": "The Zagreb Stock Exchange enables the trading of shares (company equities) by providing a regulated marketplace, liquidity, and price discovery mechanisms."
+      },
+      {
+        "targetNodeId": "243",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "The Zagreb Stock Exchange depends on the Central Depository & Clearing Company (SKDD) for the clearing, settlement, and custody of securities traded on the exchange."
+      },
+      {
+        "targetNodeId": "174",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "The Zagreb Stock Exchange depends on clearing house infrastructure to validate, settle, and net trades executed on its platform."
+      },
+      {
+        "targetNodeId": "161",
+        "relationshipType": "produces",
+        "relationshipFamily": "causal",
+        "description": "The Zagreb Stock Exchange produces market indices such as CROBEX and CROBEX10, which track the performance of its listed securities."
+      },
+      {
+        "targetNodeId": "264",
+        "relationshipType": "complies_with",
+        "relationshipFamily": "normative",
+        "description": "The Zagreb Stock Exchange complies with regulations and oversight from securities commissions (e.g., HANFA) to ensure market integrity, transparency, and investor protection."
+      },
+      {
+        "targetNodeId": "476",
+        "relationshipType": "implements",
+        "relationshipFamily": "implementation",
+        "description": "The Zagreb Stock Exchange implements stock market circuit breakers (trading halts) as a risk management mechanism to curb excessive volatility and maintain orderly markets."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "financial market",
+        "securities exchange",
+        "Croatian economy",
+        "capital market",
+        "trading venue",
+        "institution",
+        "regulated market",
+        "European Union",
+        "CROBEX",
+        "Xetra"
+      ],
+      "inheritanceLevel": 0,
+      "confidenceScore": 0.85,
+      "sourceReference": "Zagreb Stock Exchange official website (zse.hr); World Federation of Exchanges; HANFA annual reports; academic literature on Croatian capital markets",
+      "createdAt": "2026-06-16T15:49:34.565Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-18",
+          "reviewNote": "Initial comprehensive enrichment based on official data and historical records. Added detailed ontological classification, constitutive properties, state variables, emergent properties, latent structures, boundary conditions, and historical chronology."
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Zagreb Stock Exchange Official Website",
+        "link": "https://zse.hr/",
+        "description": "Official source for market data, listing rules, and corporate information about the Zagreb Stock Exchange."
+      },
+      {
+        "title": "World Federation of Exchanges – Zagreb Stock Exchange Profile",
+        "link": "https://www.world-exchanges.org/our-members/zagreb-stock-exchange",
+        "description": "Profile of ZSE on the WFE website, including basic statistics and membership details."
+      },
+      {
+        "title": "HANFA – Croatian Financial Services Supervisory Agency",
+        "link": "https://www.hanfa.hr/",
+        "description": "Regulatory body overseeing the Zagreb Stock Exchange; provides regulatory framework and annual reports."
+      },
+      {
+        "title": "CROBEX Index Methodology",
+        "link": "https://zse.hr/en/crobex/158",
+        "description": "Official methodology document for the CROBEX family of indices, including selection and weighting criteria."
+      }
+    ]
+  },
+  {
+    "id": "bank.node.1781625671347",
+    "name": "Bank",
+    "category": "Reality",
+    "description": "A financial institution licensed to receive deposits, provide loans, and offer various financial services such as payment processing, currency exchange, and wealth management. Banks act as intermediaries between savers and borrowers, play a central role in the creation of money through fractional-reserve lending, and are key components of the financial system and broader economy.",
+    "longDescription": "Banks are economic agents that operate within a regulatory framework to accept deposits from individuals and institutions, pool those funds, and extend credit to borrowers. They facilitate transactions through checking accounts, wire transfers, and electronic payment systems. Banks also engage in maturity transformation (borrowing short-term and lending long-term), manage liquidity risk, and create money through the lending multiplier process. Their activities influence monetary policy transmission, credit allocation, and financial stability. Banks may be classified by ownership (private, public, cooperative) and by specialization (retail, commercial, investment, central). The modern banking system evolved from early goldsmiths and money changers, through fractional-reserve banking, to today's globally interconnected institutions subject to prudential regulation (Basel Accords) and central bank oversight.",
+    "functionalRoles": [
+      "target_domain_entity",
+      "object_of_modeling",
+      "economic_agent_in_system"
+    ],
+    "historicalContext": {
+      "summary": "Banking has ancient roots, from Mesopotamian temples storing grain to medieval Italian merchant banks (Medici). The modern fractional-reserve model emerged in 17th-century England with goldsmiths issuing notes. Central banking began with the Bank of Sweden (1668) and Bank of England (1694). The 20th century saw expansion, regulation, and crises (Great Depression, 2008 Global Financial Crisis) leading to stronger capital requirements and macroprudential oversight.",
+      "chronology": [
+        {
+          "year": -2000,
+          "event": "Temples in Mesopotamia store grain and lend to farmers",
+          "context": "Early forms of deposit and credit in agricultural societies"
+        },
+        {
+          "year": 1150,
+          "event": "Medieval European banks (e.g., Medici, Bardi) facilitate trade credit and foreign exchange",
+          "context": "Rise of merchant banking to fund long-distance trade"
+        },
+        {
+          "year": 1668,
+          "event": "Sveriges Riksbank founded as the first central bank",
+          "context": "Need for government borrowing and monetary control"
+        },
+        {
+          "year": 1694,
+          "event": "Bank of England established",
+          "context": "Model for modern central banking; issuance of banknotes"
+        },
+        {
+          "year": 1933,
+          "event": "U.S. Glass-Steagall Act separates commercial and investment banking",
+          "context": "Response to Great Depression banking failures"
+        },
+        {
+          "year": 1971,
+          "event": "Bretton Woods system collapses; fiat money era begins",
+          "context": "Banks become central to money creation in non-commodity monetary systems"
+        },
+        {
+          "year": 2008,
+          "event": "Global Financial Crisis triggered by subprime mortgage defaults",
+          "context": "Exposed systemic risks; led to Basel III capital and liquidity reforms"
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "ontic",
+      "onticCategory": "entity",
+      "onticSubtype": "institution",
+      "domain": "economic",
+      "realityDescription": "A bank is a financial intermediary and institution that exists within the economic domain, characterized by its balance sheet of assets (loans, securities) and liabilities (deposits, borrowings). It operates under legal charter, regulatory oversight, and market conditions. Its core processes include deposit-taking, lending, payment settlement, and risk management. Banks are typically profit-seeking entities, though some are public or cooperative.",
+      "constitutiveProperties": [
+        "legal charter and regulatory license",
+        "balance sheet with assets (loans, reserves, securities) and liabilities (deposits, debt, equity)",
+        "fractional-reserve system enabling money creation",
+        "ability to create credit through lending multiplier",
+        "institutional capacity for maturity transformation",
+        "access to central bank facilities (discount window, reserves)",
+        "risk management functions (credit, liquidity, market, operational risk)"
+      ],
+      "stateVariables": [
+        "total deposits",
+        "total loans outstanding",
+        "capital adequacy ratio (CAR)",
+        "liquidity coverage ratio (LCR)",
+        "net interest margin",
+        "non-performing loan ratio",
+        "reserve holdings (required + excess)",
+        "interbank borrowing/lending position",
+        "credit rating",
+        "profitability (ROE, ROA)"
+      ],
+      "emergentProperties": [
+        "systemic importance (too-big-to-fail status)",
+        "market confidence and reputation",
+        "contagion risk in interbank network",
+        "money supply creation (M1, M2) beyond base money",
+        "financial stability contribution or vulnerability",
+        "credit cycle amplification (procyclicality)"
+      ],
+      "latentStructures": [
+        "credit risk distribution across loan portfolio",
+        "counterparty risk network (interbank exposures)",
+        "shadow banking linkages (off-balance-sheet vehicles)",
+        "interest rate risk embedded in asset-liability mismatch",
+        "operational vulnerabilities (cybersecurity, fraud)",
+        "regulatory arbitrage opportunities (capital shifting)"
+      ],
+      "boundaryConditions": [
+        "subject to national and international banking regulations (e.g., Basel III)",
+        "operation dependent on trust (deposit insurance, central bank lender of last resort)",
+        "liquidity constrained by deposit base and market conditions",
+        "capital constrained by minimum regulatory requirements",
+        "geographic and jurisdictional limits on branching and activities",
+        "exposed to macroeconomic shocks (recession, inflation, interest rate changes)",
+        "cannot operate without payment system access (clearing, settlement)"
+      ]
+    },
+    "relationships": [
+      {
+        "targetNodeId": "9",
+        "relationshipType": "type_of",
+        "relationshipFamily": "ontological",
+        "description": "A Bank is a specific subtype of Financial Institution, sharing core characteristics like deposit-taking and lending."
+      },
+      {
+        "targetNodeId": "22",
+        "relationshipType": "constrained_by",
+        "relationshipFamily": "normative",
+        "description": "Banks are regulated and supervised by central banks, which set reserve requirements, capital adequacy standards, and provide lender-of-last-resort facilities."
+      },
+      {
+        "targetNodeId": "new.node.1781481305477",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Banks participate in stock markets as investors, underwriters, and issuers of their own shares; they also facilitate client trading and provide margin loans."
+      },
+      {
+        "targetNodeId": "human.node.1781624646078",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "Banks rely on human actors as depositors and borrowers; their retail operations depend on customer trust and participation."
+      },
+      {
+        "targetNodeId": "175",
+        "relationshipType": "uses",
+        "relationshipFamily": "dependency",
+        "description": "Banks use payment processors to handle electronic transactions, clearing, and settlement between accounts."
+      },
+      {
+        "targetNodeId": "174",
+        "relationshipType": "member_of",
+        "relationshipFamily": "mereological",
+        "description": "Banks are typically members of clearing houses, which facilitate the settlement of interbank payments and securities transactions."
+      },
+      {
+        "targetNodeId": "142",
+        "relationshipType": "competes_with",
+        "relationshipFamily": "interaction",
+        "description": "Banks compete with credit unions for retail deposits and lending, though credit unions are member-owned cooperatives rather than profit-driven institutions."
+      },
+      {
+        "targetNodeId": "40",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Rating agencies assess banks' creditworthiness and assign ratings that affect their borrowing costs and regulatory standing."
+      },
+      {
+        "targetNodeId": "53",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Banks are audited by external audit institutions to verify financial statements and compliance with accounting standards."
+      },
+      {
+        "targetNodeId": "41",
+        "relationshipType": "generalizes",
+        "relationshipFamily": "ontological",
+        "description": "A Bank is a broader category that includes Development Banks as a specialized subtype focused on long-term economic development financing."
+      },
+      {
+        "targetNodeId": "new.node.1781483781544",
+        "relationshipType": "produces",
+        "relationshipFamily": "causal",
+        "description": "Banks (especially publicly traded ones) issue shares representing ownership claims, thereby producing these financial instruments for the market."
+      },
+      {
+        "targetNodeId": "reality.market",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Banks operate within financial markets as key intermediaries, engaging in borrowing, lending, and trading activities that contribute to market liquidity and price formation."
+      },
+      {
+        "targetNodeId": "264",
+        "relationshipType": "constrained_by",
+        "relationshipFamily": "normative",
+        "description": "Banks dealing in securities are subject to oversight by securities commissions to ensure fair trading, disclosure, and protection against market manipulation."
+      },
+      {
+        "targetNodeId": "173",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Banks are subject to dispute resolution by financial ombudsmen when customers file complaints about service or product issues."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "financial institution",
+        "economic agent",
+        "banking system",
+        "money creation",
+        "credit intermediation",
+        "fractional-reserve",
+        "financial stability"
+      ],
+      "inheritanceLevel": 0,
+      "confidenceScore": 0.7,
+      "sourceReference": "General knowledge; standard economic and financial definitions (e.g., Mishkin 'The Economics of Money, Banking, and Financial Markets'; Basel Committee on Banking Supervision publications)",
+      "createdAt": "2026-06-16T16:01:11.347Z",
+      "auditTrail": []
+    },
+    "references": [
+      {
+        "title": "Bank - Britannica",
+        "link": "https://www.britannica.com/topic/bank",
+        "description": "Encyclopedia entry providing historical and functional overview of banks."
+      },
+      {
+        "title": "The Economics of Money, Banking, and Financial Markets (Mishkin)",
+        "description": "Standard textbook covering the role of banks, money creation, and regulation."
+      },
+      {
+        "title": "Basel III: international regulatory framework for banks",
+        "link": "https://www.bis.org/basel_framework/",
+        "description": "Bank for International Settlements – current international standards for bank capital and liquidity."
+      }
+    ]
+  },
+  {
+    "id": "node.1781625930333",
+    "name": "Commercial Bank",
+    "category": "Reality",
+    "description": "A commercial bank is a financial institution that accepts deposits, offers checking and savings accounts, and provides loans to individuals and businesses. It operates within a regulatory framework, creates money through lending, and facilitates payments and credit intermediation.",
+    "longDescription": "Commercial banks are pivotal players in modern economies, serving as intermediaries between savers and borrowers. They accept deposits from the public, which are insured up to certain limits by government agencies (e.g., FDIC in the US), and use those funds to extend loans to individuals, corporations, and governments. Through the fractional-reserve banking process, they create money by issuing new loans that become deposits elsewhere in the banking system. Their core functions include payment processing, credit creation, liquidity transformation, and maturity transformation. They are subject to prudential regulation including capital adequacy requirements (Basel Accords), reserve requirements, and liquidity coverage ratios. Commercial banks differ from investment banks in that they primarily engage in deposit-taking and lending rather than securities underwriting. The sector has undergone significant consolidation and technological transformation in recent decades, with the rise of online banking, fintech competition, and post-2008 regulatory reforms.",
+    "functionalRoles": [
+      "object_of_study",
+      "economic_agent",
+      "financial_intermediary",
+      "target_of_regulation",
+      "source_of_macroeconomic_observations"
+    ],
+    "historicalContext": {
+      "summary": "Commercial banking originated in medieval Italy with the Medici family and spread across Europe through the establishment of goldsmith bankers in London and the development of central banks. The modern era was shaped by the rise of joint-stock banking, national banking acts, the creation of deposit insurance during the Great Depression, and the deregulation and globalization of financial markets in the late 20th century. The 2008 global financial crisis led to a wave of regulatory reforms including Basel III, Dodd-Frank, and stress testing requirements.",
+      "chronology": [
+        {
+          "year": 1400,
+          "event": "Medici Bank established in Florence; early model of commercial banking with branches across Europe.",
+          "context": "Rise of merchant banking and deposit-taking in Renaissance Italy."
+        },
+        {
+          "year": 1694,
+          "event": "Bank of England founded as a central bank; set standard for fractional-reserve banking and government debt management.",
+          "context": "Evolution of banking from private partnerships to public institutions."
+        },
+        {
+          "year": 1863,
+          "event": "U.S. National Banking Act creates a uniform national currency and a system of nationally chartered banks.",
+          "context": "Effort to stabilize the American banking system after the Civil War."
+        },
+        {
+          "year": 1933,
+          "event": "Glass-Steagall Act separates commercial and investment banking; FDIC established for deposit insurance.",
+          "context": "Response to massive bank failures during the Great Depression."
+        },
+        {
+          "year": 1999,
+          "event": "Gramm-Leach-Bliley Act partially repeals Glass-Steagall, allowing universal banking.",
+          "context": "Deregulation trend; consolidation of financial services."
+        },
+        {
+          "year": 2008,
+          "event": "Global Financial Crisis triggers collapse of major banks; leads to bailouts and regulatory overhaul.",
+          "context": "Revealed systemic risks from excessive leverage, shadow banking, and interconnectedness."
+        },
+        {
+          "year": 2010,
+          "event": "Basel III framework introduced; Dodd-Frank Act enacted in US with Volcker Rule, stress tests, and enhanced supervision.",
+          "context": "Post-crisis prudential tightening aimed at resilience and risk management."
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "synontic",
+      "onticCategory": "system",
+      "onticSubtype": "institution",
+      "domain": "economic",
+      "realityDescription": "A commercial bank as an institutional entity that performs financial intermediation, money creation, payment services, and credit allocation under regulatory oversight.",
+      "constitutiveProperties": [
+        "Acceptance of demand and time deposits",
+        "Extension of loans to individuals and businesses",
+        "Maintenance of fractional reserves against deposits",
+        "Holding of a banking license from a regulatory authority",
+        "Compliance with minimum capital adequacy requirements (e.g., CET1 ratio ≥ 4.5% under Basel III)",
+        "Membership in a deposit insurance scheme (e.g., FDIC)"
+      ],
+      "stateVariables": [
+        "Total deposits ($)",
+        "Total loans outstanding ($)",
+        "Liquidity coverage ratio (LCR)",
+        "Net stable funding ratio (NSFR)",
+        "Tier 1 capital ratio",
+        "Non-performing loan ratio (NPL)",
+        "Return on equity (ROE)",
+        "Interest rate spread (lending rate minus deposit rate)"
+      ],
+      "emergentProperties": [
+        "Credit creation – expansion of broad money supply through lending multiplier",
+        "Liquidity transformation – converting liquid deposits into illiquid loans",
+        "Maturity transformation – borrowing short-term and lending long-term",
+        "Financial intermediation – reducing transaction costs and information asymmetries between savers and borrowers",
+        "Systemic risk contribution – interconnectedness with other banks and markets"
+      ],
+      "latentStructures": [
+        "Bank's internal credit risk assessment and underwriting models",
+        "Borrower creditworthiness scores and default probability estimates",
+        "Interbank lending and borrowing networks",
+        "Asset-liability management (ALM) strategies",
+        "Internal capital allocation and risk governance processes"
+      ],
+      "boundaryConditions": [
+        "Sovereign credit risk and monetary policy regime of the country of operation",
+        "Regulatory capital and liquidity requirements (Basel standards)",
+        "Market conditions: interest rates, inflation, business cycle",
+        "Legal framework: bankruptcy laws, contract enforcement, property rights",
+        "Technological infrastructure for payment and settlement systems"
+      ]
+    },
+    "relationships": [
+      {
+        "targetNodeId": "9",
+        "relationshipType": "type_of",
+        "relationshipFamily": "ontological",
+        "description": "A commercial bank is a specific subtype of financial institution, sharing core characteristics like deposit-taking and lending."
+      },
+      {
+        "targetNodeId": "new.node.1781625671347",
+        "relationshipType": "type_of",
+        "relationshipFamily": "ontological",
+        "description": "A commercial bank is a specific type of bank, distinguished by its focus on deposit-taking and lending to individuals and businesses."
+      },
+      {
+        "targetNodeId": "22",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "Commercial banks depend on central banks for lender-of-last-resort support, monetary policy guidance, and regulatory oversight."
+      },
+      {
+        "targetNodeId": "174",
+        "relationshipType": "uses",
+        "relationshipFamily": "dependency",
+        "description": "Commercial banks use clearing houses to settle interbank transactions and clear checks efficiently."
+      },
+      {
+        "targetNodeId": "175",
+        "relationshipType": "uses",
+        "relationshipFamily": "dependency",
+        "description": "Commercial banks rely on payment processors to facilitate electronic transactions and card payments."
+      },
+      {
+        "targetNodeId": "new.node.1781486005988",
+        "relationshipType": "enables",
+        "relationshipFamily": "dependency",
+        "description": "Commercial banks enable production chain firms by providing credit for working capital, investment, and trade finance."
+      },
+      {
+        "targetNodeId": "new.node.1781483781544",
+        "relationshipType": "produces",
+        "relationshipFamily": "causal",
+        "description": "Commercial banks issue shares (equity) to raise capital from investors, thereby producing financial instruments."
+      },
+      {
+        "targetNodeId": "new.node.1781481305477",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Commercial banks interact with stock markets by investing in equities, underwriting offerings, and being influenced by market conditions."
+      },
+      {
+        "targetNodeId": "40",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Commercial banks are evaluated by rating agencies, whose ratings affect the bank's borrowing costs and reputation."
+      },
+      {
+        "targetNodeId": "142",
+        "relationshipType": "competes_with",
+        "relationshipFamily": "interaction",
+        "description": "Commercial banks compete with credit unions for retail deposits and lending customers."
+      },
+      {
+        "targetNodeId": "41",
+        "relationshipType": "co_occurs_with",
+        "relationshipFamily": "interaction",
+        "description": "Commercial banks and development banks coexist in the financial system, with different mandates but occasional cooperation."
+      },
+      {
+        "targetNodeId": "reality.market",
+        "relationshipType": "part_of",
+        "relationshipFamily": "mereological",
+        "description": "Commercial banks are integral components of the broader market system, participating in financial intermediation and credit markets."
+      },
+      {
+        "targetNodeId": "463",
+        "relationshipType": "complies_with",
+        "relationshipFamily": "normative",
+        "description": "Commercial banks comply with regulations set by the Global Financial Stability Board to ensure systemic stability."
+      },
+      {
+        "targetNodeId": "human.node.1781624646078",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Commercial banks interact with human actors as customers, employees, and stakeholders, providing services and affecting their financial well-being."
+      },
+      {
+        "targetNodeId": "new.node.1781624974565",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Commercial banks may have their shares listed on stock exchanges like the Zagreb Stock Exchange, facilitating trading and capital raising."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "banking",
+        "financial institution",
+        "economic system",
+        "credit intermediation",
+        "money creation",
+        "regulation",
+        "Basel III"
+      ],
+      "inheritanceLevel": 0,
+      "confidenceScore": 0.9,
+      "sourceReference": "Mishkin, F. (2019). The Economics of Money, Banking, and Financial Markets. Pearson; Gorton, G. (2012). Misunderstanding Financial Crises. Oxford University Press.",
+      "createdAt": "2026-06-16T16:05:30.333Z",
+      "auditTrail": []
+    },
+    "references": [
+      {
+        "title": "The Economics of Money, Banking, and Financial Markets",
+        "link": "https://www.pearson.com/en-us/subject-catalog/p/economics-of-money-banking-and-financial-markets/",
+        "description": "Standard textbook covering the theory and practice of commercial banking, monetary policy, and financial markets."
+      },
+      {
+        "title": "Commercial Banking: The Management of Risk",
+        "description": "Comprehensive text on risk management in commercial banks by Benton Gup and others."
+      },
+      {
+        "title": "Basel III: A Global Regulatory Framework for More Resilient Banks and Banking Systems",
+        "link": "https://www.bis.org/bcbs/basel3.htm",
+        "description": "Official Basel Committee on Banking Supervision documents outlining capital and liquidity standards."
+      }
+    ]
+  },
+  {
+    "id": "node.1781626102030",
+    "name": "Investment Bank",
+    "category": "Reality",
+    "description": "A financial institution that provides capital market services including underwriting, merger and acquisition (M&A) advisory, sales and trading, asset management, and research. Investment banks serve as intermediaries between issuers of securities and the investing public, and they facilitate corporate financing, restructuring, and risk management.",
+    "longDescription": "Investment banks are core intermediaries in global capital markets. They originate, structure, and distribute financial securities, advise on strategic transactions, and provide market-making and proprietary trading services. Unlike commercial banks, they focus primarily on advisory and capital markets activities rather than deposit-taking and lending. They operate in a highly regulated environment and are subject to capital adequacy requirements, conflict-of-interest rules, and fiduciary duties. Investment banks also play a significant epistemic role: they produce and disseminate research, price securities, and generate forward-looking valuations that inform market participants. Their internal models and risk management systems constitute substantial epistemic artifacts that shape financial decisions and regulatory oversight.",
+    "functionalRoles": [
+      "object_of_analysis",
+      "target_of_regulation",
+      "source_of_market_signals"
+    ],
+    "historicalContext": {
+      "summary": "Investment banking emerged in the 19th century with the rise of railroad financing and large-scale industrial capital needs. The Glass-Steagall Act of 1933 separated commercial and investment banking in the U.S., a division that persisted until the Gramm-Leach-Bliley Act of 1999 partially repealed it. The 2008 global financial crisis led to the failure or transformation of major independent investment banks (e.g., Lehman Brothers, Bear Stearns, Merrill Lynch). Since then, regulation (Dodd-Frank, Basel III) and shifts toward electronic trading have reshaped the industry.",
+      "chronology": [
+        {
+          "year": 1933,
+          "event": "Glass-Steagall Act separates commercial and investment banking in the United States.",
+          "context": "Policy response to bank failures in the Great Depression; creates a distinct investment banking industry."
+        },
+        {
+          "year": 1999,
+          "event": "Gramm-Leach-Bliley Act repeals key provisions of Glass-Steagall.",
+          "context": "Enables consolidation of banking, securities, and insurance; leads to creation of financial conglomerates."
+        },
+        {
+          "year": 2008,
+          "event": "Global financial crisis; Lehman Brothers bankruptcy and transformation of remaining investment banks into bank holding companies.",
+          "context": "Systemic risk from mortgage-backed securities leads to collapse of independent investment banking model."
+        },
+        {
+          "year": 2010,
+          "event": "Dodd-Frank Wall Street Reform and Consumer Protection Act enacted in the U.S.",
+          "context": "Imposes new regulations on derivatives trading, capital requirements, and proprietary trading (Volcker Rule)."
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "ontic",
+      "onticCategory": "entity",
+      "onticSubtype": "organization",
+      "domain": "economic",
+      "realityDescription": "Investment banks exist as legally incorporated entities (typically partnerships or corporations) that operate financial markets. They have physical locations, employees, capital structures, and are subject to national and international financial regulation. Their operations generate observable market data, contracts, and financial flows, as well as intangible epistemic products such as valuations, research reports, and risk models.",
+      "constitutiveProperties": [
+        "legal incorporation and regulatory license",
+        "organizational hierarchy and division structure",
+        "capital base (equity, debt)",
+        "client relationships and contractual agreements",
+        "IT infrastructure and trading platforms",
+        "risk management systems and internal controls"
+      ],
+      "stateVariables": [
+        "tier 1 capital ratio",
+        "liquidity coverage ratio",
+        "value-at-risk (VaR) measures",
+        "market share in underwriting and M&A advisory",
+        "profitability (RoE, RoA)",
+        "credit rating",
+        "regulatory compliance status"
+      ],
+      "emergentProperties": [
+        "systemic importance (G-SIFI designation)",
+        "reputational capital and brand value",
+        "market influence and price discovery contribution",
+        "network centrality in interbank and capital markets"
+      ],
+      "latentStructures": [
+        "proprietary trading strategies and algorithms",
+        "internal risk models and stress test scenarios",
+        "unpublished research and investment theses",
+        "organizational culture and decision-making heuristics",
+        "conflict-of-interest protocols and compliance mechanisms"
+      ],
+      "boundaryConditions": [
+        "subject to capital and liquidity regulations (Basel III, local requirements)",
+        "must be licensed by relevant financial authorities (SEC, FCA, etc.)",
+        "operates within jurisdictional legal frameworks (bankruptcy law, securities law)",
+        "access to central bank facilities (e.g., discount window) conditional on regulatory status",
+        "subject to periodic audits and supervisory examinations"
+      ]
+    },
+    "relationships": [
+      {
+        "targetNodeId": "9",
+        "relationshipType": "subtype_of",
+        "relationshipFamily": "classification",
+        "description": "Investment Bank is a specific category of Financial Institution, specializing in capital market services."
+      },
+      {
+        "targetNodeId": "22",
+        "relationshipType": "regulated_by",
+        "relationshipFamily": "normative",
+        "description": "Central Banks regulate investment banks through monetary policy, capital requirements, and oversight of financial stability."
+      },
+      {
+        "targetNodeId": "new.node.1781481305477",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Investment banks operate on stock markets, underwriting securities, facilitating trading, and providing advisory services."
+      },
+      {
+        "targetNodeId": "new.node.1781483781544",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Investment banks deal in shares through underwriting, issuance, and trading of equity securities."
+      },
+      {
+        "targetNodeId": "new.node.1781625671347",
+        "relationshipType": "subtype_of",
+        "relationshipFamily": "classification",
+        "description": "Investment Bank is a type of bank that focuses on capital markets rather than deposit-taking and lending, though it shares many characteristics."
+      },
+      {
+        "targetNodeId": "new.node.1781625930333",
+        "relationshipType": "competes_with",
+        "relationshipFamily": "interaction",
+        "description": "Investment banks and commercial banks compete in certain areas like lending, advisory, and underwriting, though they have different core business models."
+      },
+      {
+        "targetNodeId": "40",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Investment banks issue securities that are rated by rating agencies; they also use ratings for risk assessment and regulatory compliance."
+      },
+      {
+        "targetNodeId": "24",
+        "relationshipType": "cooperates_with",
+        "relationshipFamily": "interaction",
+        "description": "Investment banks provide prime brokerage, financing, and execution services to hedge funds."
+      },
+      {
+        "targetNodeId": "99",
+        "relationshipType": "uses",
+        "relationshipFamily": "dependency",
+        "description": "Investment banks employ algorithmic trading systems for market-making, proprietary trading, and execution."
+      },
+      {
+        "targetNodeId": "264",
+        "relationshipType": "regulated_by",
+        "relationshipFamily": "normative",
+        "description": "Securities commissions (e.g., SEC, FCA) enforce laws against insider trading, market manipulation, and ensure disclosure by investment banks."
+      },
+      {
+        "targetNodeId": "174",
+        "relationshipType": "uses",
+        "relationshipFamily": "dependency",
+        "description": "Investment banks use clearing houses to settle and clear trades, reducing counterparty risk."
+      },
+      {
+        "targetNodeId": "463",
+        "relationshipType": "regulated_by",
+        "relationshipFamily": "normative",
+        "description": "The Global Financial Stability Board monitors systemic risk and issues recommendations that affect investment banks' regulations."
+      },
+      {
+        "targetNodeId": "3",
+        "relationshipType": "subtype_of",
+        "relationshipFamily": "classification",
+        "description": "Many investment banks are multinational corporations operating across jurisdictions, making them a subtype of multinational corporation."
+      },
+      {
+        "targetNodeId": "new.node.1781624974565",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Investment banks list securities on stock exchanges like the Zagreb Stock Exchange and execute trades on behalf of clients."
+      },
+      {
+        "targetNodeId": "161",
+        "relationshipType": "produces",
+        "relationshipFamily": "causal",
+        "description": "Investment banks create and maintain market indices (e.g., S&P 500, DJIA) that serve as benchmarks."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "financial_institution",
+        "capital_markets",
+        "underwriting",
+        "M&A",
+        "systemic_risk",
+        "economic_agent",
+        "regulated_entity"
+      ],
+      "inheritanceLevel": 0,
+      "confidenceScore": 0.85,
+      "sourceReference": "Standard industry definitions and financial regulation literature (e.g., Hull, Risk Management and Financial Institutions; Saunders & Cornett, Financial Institutions Management)",
+      "createdAt": "2026-06-16T16:08:22.030Z",
+      "auditTrail": [
+        {
+          "reviewDate": "2026-06-17",
+          "reviewNote": "Initial enrichment: added description, historical context, specific ontology fields, and metadata."
+        }
+      ]
+    },
+    "references": [
+      {
+        "title": "Investment banking – Wikipedia",
+        "link": "https://en.wikipedia.org/wiki/Investment_banking",
+        "description": "General overview of investment banking functions, history, and regulatory context."
+      },
+      {
+        "title": "The Investment Banking Handbook",
+        "link": "https://www.wiley.com/en-us/The+Investment+Banking+Handbook-p-9780471712001",
+        "description": "Comprehensive reference on investment banking practices, valuation, and deal structures."
+      },
+      {
+        "title": "Global Financial Stability Report (IMF)",
+        "link": "https://www.imf.org/en/Publications/GFSR",
+        "description": "Regular reports on systemic risk and market stability, including analysis of investment bank activities."
+      }
+    ]
+  },
+  {
+    "id": "node.1781626209682",
+    "name": "Universal Bank",
+    "category": "Reality",
+    "description": "A financial institution that offers a comprehensive range of banking services, including retail, commercial, investment, and wealth management, operating as a key intermediary in the financial system.",
+    "longDescription": "Universal Bank is a financial institution characterized by its diversified business model that combines commercial banking (deposits, loans, payments), investment banking (underwriting, advisory, trading), and often wealth management and insurance under a single corporate umbrella. This structure enables economies of scope and scale, cross-subsidization across business lines, and closer relationships with clients. Universal banks are prominent in many economies, notably in Europe (e.g., Deutsche Bank, BNP Paribas) and increasingly in other regions. They play a critical role in capital allocation, financial stability, and economic growth, but also pose regulatory challenges due to their complexity and potential for systemic risk.",
+    "functionalRoles": [
+      "economic actor",
+      "financial intermediary",
+      "object of observation",
+      "subject of modeling"
+    ],
+    "historicalContext": {
+      "summary": "The concept of universal banking emerged in the 19th century, particularly in Germany, where banks engaged in both commercial and investment activities to support industrialization. It spread across Europe and later globally, though the U.S. maintained separation under the Glass-Steagall Act until its repeal in 1999. The 2008 financial crisis led to renewed scrutiny and regulation (e.g., Volcker Rule) but universal banks remain central to modern finance.",
+      "chronology": [
+        {
+          "year": 1850,
+          "event": "Emergence of universal banking in Germany",
+          "context": "Banks like Deutsche Bank began combining deposit-taking with industrial securities underwriting to finance heavy industry."
+        },
+        {
+          "year": 1933,
+          "event": "U.S. Glass-Steagall Act separates commercial and investment banking",
+          "context": "In response to the Great Depression, the U.S. imposed a strict separation, contrasting with the European universal model."
+        },
+        {
+          "year": 1999,
+          "event": "Gramm-Leach-Bliley Act repeals Glass-Steagall",
+          "context": "U.S. financial institutions were again allowed to combine banking, securities, and insurance, moving toward universal banking."
+        },
+        {
+          "year": 2008,
+          "event": "Global Financial Crisis impacts universal banks",
+          "context": "Complexity and interconnectedness of universal banks contributed to systemic risk, leading to new regulations such as Dodd-Frank and Basel III."
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "synontic",
+      "onticCategory": "entity",
+      "onticSubtype": "institution",
+      "domain": "economic",
+      "realityDescription": "A universal bank that integrates retail, commercial, investment, and wealth management services under a single regulatory and corporate structure, serving individuals, corporations, and governments.",
+      "constitutiveProperties": [
+        "diversified business lines (retail, commercial, investment, wealth)",
+        "regulatory license to accept deposits and underwrite securities",
+        "capital base and leverage structure",
+        "branch and digital distribution network",
+        "customer deposit base",
+        "access to central bank facilities and interbank markets"
+      ],
+      "stateVariables": [
+        "total assets",
+        "net interest margin",
+        "non-performing loans ratio",
+        "return on equity (ROE)",
+        "Common Equity Tier 1 (CET1) ratio",
+        "liquidity coverage ratio (LCR)",
+        "credit rating",
+        "market share in key segments"
+      ],
+      "emergentProperties": [
+        "systemic risk contribution",
+        "market confidence and reputation",
+        "network effects from cross-selling",
+        "reputational capital",
+        "too-big-to-fail status",
+        "competitive moat from scope economies"
+      ],
+      "latentStructures": [
+        "internal risk management models",
+        "hidden leverage through off-balance-sheet vehicles",
+        "corporate culture and risk appetite",
+        "strategic decision-making processes",
+        "interlocking directorates and influence networks",
+        "proprietary trading algorithms and models"
+      ],
+      "boundaryConditions": [
+        "regulatory capital requirements (Basel III, local)",
+        "geographic jurisdiction and legal framework",
+        "economic cycle and monetary policy stance",
+        "competitive pressures from fintech and niche banks",
+        "macroprudential constraints on leverage and concentration",
+        "limit to diversification benefits under stress"
+      ]
+    },
+    "relationships": [
+      {
+        "targetNodeId": "bank.node.1781625671347",
+        "relationshipType": "subtype_of",
+        "relationshipFamily": "classification",
+        "description": "Universal Bank is a specialized type of Bank that combines commercial, investment, and wealth management services under one corporate structure."
+      },
+      {
+        "targetNodeId": "9",
+        "relationshipType": "subtype_of",
+        "relationshipFamily": "classification",
+        "description": "Universal Bank is a specific category of Financial Institution, characterized by its diversified business model and regulatory license."
+      },
+      {
+        "targetNodeId": "22",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Universal Bank interacts with the Central Bank through regulatory compliance, access to lender-of-last-resort facilities, and monetary policy transmission."
+      },
+      {
+        "targetNodeId": "22",
+        "relationshipType": "complies_with",
+        "relationshipFamily": "normative",
+        "description": "Universal Bank must comply with central bank regulations regarding reserve requirements, capital adequacy, and liquidity standards."
+      },
+      {
+        "targetNodeId": "329",
+        "relationshipType": "competes_with",
+        "relationshipFamily": "interaction",
+        "description": "Universal Bank competes with Digital Banks for retail and commercial customers, especially in payment services and online banking."
+      },
+      {
+        "targetNodeId": "40",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "Universal Bank depends on Rating Agencies for credit ratings that affect its borrowing costs, regulatory treatment, and market reputation."
+      },
+      {
+        "targetNodeId": "new.node.1781481305477",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Universal Bank interacts with the Stock Market by issuing shares, trading securities, and participating in capital market activities."
+      },
+      {
+        "targetNodeId": "264",
+        "relationshipType": "complies_with",
+        "relationshipFamily": "normative",
+        "description": "Universal Bank must comply with securities regulations enforced by the Securities Commission regarding underwriting, trading, and disclosure."
+      },
+      {
+        "targetNodeId": "41",
+        "relationshipType": "cooperates_with",
+        "relationshipFamily": "interaction",
+        "description": "Universal Bank may cooperate with Development Banks through co-financing of large infrastructure projects or risk-sharing arrangements."
+      },
+      {
+        "targetNodeId": "node.1781625930333",
+        "relationshipType": "has_part",
+        "relationshipFamily": "mereological",
+        "description": "Universal Bank includes commercial banking operations (accepting deposits, business loans) as a core component of its diversified business model."
+      },
+      {
+        "targetNodeId": "node.1781626102030",
+        "relationshipType": "has_part",
+        "relationshipFamily": "mereological",
+        "description": "Universal Bank includes investment banking operations (underwriting, M&A advisory) as a key business line."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "bank",
+        "financial institution",
+        "universal banking",
+        "economic actor",
+        "institution",
+        "financial intermediation"
+      ],
+      "inheritanceLevel": 0,
+      "confidenceScore": 0.7,
+      "sourceReference": "General knowledge of universal banking; Saunders, A. & Walter, I. (1994) 'Universal Banking in the United States'",
+      "createdAt": "2026-06-16T16:10:09.682Z",
+      "auditTrail": []
+    },
+    "references": [
+      {
+        "title": "Universal bank - Wikipedia",
+        "link": "https://en.wikipedia.org/wiki/Universal_bank",
+        "description": "Overview of universal banking concept, history, and regulatory aspects."
+      },
+      {
+        "title": "Universal Banking: A European Perspective",
+        "link": "https://doi.org/10.1093/0195201238.001.0001",
+        "description": "Academic reference on the structure and function of universal banks in Europe."
+      }
+    ]
+  },
+  {
+    "id": "node.1781626414376",
+    "name": "Andritz AG",
+    "category": "Reality",
+    "description": "Andritz AG is an international technology group headquartered in Graz, Austria, providing plants, equipment, and services for the hydropower, pulp and paper, metals, and separation industries. It is one of the world's leading suppliers of electromechanical equipment and services for hydropower plants and a prominent player in the global pulp and paper machinery market.",
+    "longDescription": "Founded in 1852 as an iron foundry, Andritz AG has grown into a global technology group with over 29,000 employees and annual revenues exceeding €7 billion. The company operates in four main business areas: Hydro, Pulp & Paper, Metals, and Separation. Its technologies and services are used in over 80 countries, making it a significant epistemic object for understanding industrial technology, global value chains, and the transition toward renewable energy and sustainable production processes.",
+    "functionalRoles": [
+      "economic agent",
+      "technology provider",
+      "manufacturing equipment supplier",
+      "object of industrial analysis"
+    ],
+    "historicalContext": {
+      "summary": "Andritz was founded in 1852 by Josef von Andritz-Werz as an iron foundry in the village of Andritz (now part of Graz). It gradually evolved into a machine manufacturing company, expanding into pulp and paper machinery in the early 20th century, hydropower in the mid-20th century, and later into metals and separation. The company went public in 2001 and has since grown through acquisitions and organic expansion.",
+      "chronology": [
+        {
+          "year": 1852,
+          "event": "Foundation",
+          "context": "Josef von Andritz-Werz established an iron foundry in Andritz, near Graz, Austria."
+        },
+        {
+          "year": 1914,
+          "event": "Entry into pulp and paper machinery",
+          "context": "Andritz began manufacturing equipment for the pulp and paper industry."
+        },
+        {
+          "year": 1960,
+          "event": "Expansion into hydropower",
+          "context": "The company entered the hydropower sector, producing turbines and related electromechanical equipment."
+        },
+        {
+          "year": 2001,
+          "event": "Initial Public Offering (IPO)",
+          "context": "Andritz AG was listed on the Vienna Stock Exchange, marking its transition to a publicly traded company."
+        },
+        {
+          "year": 2010,
+          "event": "Acquisition of Schuler Group (Metals)",
+          "context": "Andritz acquired the Schuler Group, a leading supplier of forming technology for the automotive and metals industry, strengthening its Metals business area."
+        },
+        {
+          "year": 2023,
+          "event": "Order record in hydropower",
+          "context": "Andritz secured a major contract for the 1,200 MW pumped storage hydropower plant in Snowy 2.0, Australia, highlighting its continued leadership in hydropower."
+        }
+      ]
+    },
+    "specific": {
+      "onticLayer": "ontic",
+      "onticCategory": "entity",
+      "onticSubtype": "organization",
+      "domain": "technological",
+      "realityDescription": "Andritz AG is a concrete organizational entity operating as a multinational technology group. It constitutes a bounded system of production, innovation, and exchange within the global industrial economy.",
+      "constitutiveProperties": [
+        "legal corporate entity registered in Austria (Firmenbuch FN 195658x)",
+        "ownership structure with listed shares (ATX) and majority family ownership (Custos Privatstiftung)",
+        "portfolio of proprietary technologies and patents in hydropower, pulp and paper, metals forming, and separation",
+        "global network of manufacturing sites, engineering centers, and service hubs",
+        "workforce of approximately 29,800 employees worldwide",
+        "hierarchical management structure with Executive Board, Supervisory Board, and business area divisions"
+      ],
+      "stateVariables": [
+        "annual revenue (currently approx. €7.5–8.0 billion)",
+        "order backlog (approx. €10–11 billion)",
+        "number of employees",
+        "share price (ATX: ANDR)",
+        "operating profit (EBITA margin ~7–10%)",
+        "carbon footprint (Scope 1, 2, 3 emissions)"
+      ],
+      "emergentProperties": [
+        "global market reputation as a trusted technology partner",
+        "brand equity and recognition in hydropower and pulp & paper industries",
+        "network effects generated by long-term customer relationships and installed base",
+        "systemic importance in renewable energy and industrial value chains",
+        "ability to attract and retain top engineering talent"
+      ],
+      "latentStructures": [
+        "organizational culture and informal knowledge networks across business areas",
+        "internal R&D pipelines and innovation processes (e.g., next-generation turbine designs, digitalization solutions)",
+        "strategic alliances and joint ventures (e.g., with Voith, Siemens Energy)",
+        "supply chain dependencies (e.g., critical raw materials for turbine manufacturing)",
+        "patent portfolio composition and technology lifecycles"
+      ],
+      "boundaryConditions": [
+        "operating within regulatory frameworks of the European Union and host countries",
+        "subject to competition from other global engineering firms (e.g., GE, Siemens, Voith, Valmet)",
+        "limited by technological feasibility of renewable energy integration and grid infrastructure",
+        "dependent on global macroeconomic cycles affecting capital investment in industries such as mining, pulp & paper, and energy",
+        "constrained by environmental regulations and carbon pricing mechanisms"
+      ]
+    },
+    "relationships": [
+      {
+        "targetNodeId": "3",
+        "relationshipType": "instance_of",
+        "relationshipFamily": "classification",
+        "description": "Andritz AG is a specific example of a multinational corporation, operating in multiple countries with global supply chains and markets."
+      },
+      {
+        "targetNodeId": "new.node.1781481305477",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Andritz AG is publicly listed on the Vienna Stock Exchange, and its shares are traded on the stock market, making it a participant in this financial system."
+      },
+      {
+        "targetNodeId": "new.node.1781483781544",
+        "relationshipType": "has_part",
+        "relationshipFamily": "mereological",
+        "description": "Andritz AG issues shares that represent ownership claims on its assets and earnings, making shares a constituent part of its capital structure."
+      },
+      {
+        "targetNodeId": "new.node.1781486005988",
+        "relationshipType": "implements",
+        "relationshipFamily": "implementation",
+        "description": "Andritz AG operates according to a specific production chain firm operating model that defines how it sources, produces, distributes, and coordinates its activities across its business areas."
+      },
+      {
+        "targetNodeId": "N4",
+        "relationshipType": "depends_on",
+        "relationshipFamily": "dependency",
+        "description": "Andritz AG's ability to manufacture high-tolerance components for turbines, pumps, and other industrial equipment relies on precision manufacturing capabilities."
+      },
+      {
+        "targetNodeId": "N8",
+        "relationshipType": "conditioned_by",
+        "relationshipFamily": "dependency",
+        "description": "Andritz AG's production processes, especially in metals and separation, are conditioned by the availability and cost of rare earth materials, which act as a supply constraint."
+      },
+      {
+        "targetNodeId": "N9",
+        "relationshipType": "complies_with",
+        "relationshipFamily": "normative",
+        "description": "Andritz AG adheres to international quality standards defined by bodies like ISO, ensuring its products and processes meet globally recognized benchmarks."
+      },
+      {
+        "targetNodeId": "node.1781625930333",
+        "relationshipType": "uses",
+        "relationshipFamily": "agential",
+        "description": "Andritz AG utilizes commercial banking services for daily financial operations such as deposits, payments, and short-term loans."
+      },
+      {
+        "targetNodeId": "node.1781626102030",
+        "relationshipType": "uses",
+        "relationshipFamily": "agential",
+        "description": "Andritz AG engages investment banks for capital market services including underwriting, M&A advisory, and financing for large projects."
+      },
+      {
+        "targetNodeId": "reality.market",
+        "relationshipType": "interacts_with",
+        "relationshipFamily": "interaction",
+        "description": "Andritz AG operates in multiple economic markets (hydropower, pulp & paper, metals, separation) where it competes and transacts with customers and suppliers."
+      }
+    ],
+    "metadata": {
+      "tags": [
+        "company",
+        "engineering",
+        "hydropower",
+        "pulp and paper",
+        "metals",
+        "separation",
+        "Austria",
+        "technology group",
+        "manufacturing"
+      ],
+      "inheritanceLevel": 0,
+      "confidenceScore": 0.9,
+      "sourceReference": "https://www.andritz.com/",
+      "createdAt": "2026-06-16T16:13:34.376Z",
+      "auditTrail": []
+    },
+    "references": [
+      {
+        "title": "Andritz AG – Official Website",
+        "link": "https://www.andritz.com/",
+        "description": "Corporate website providing company overview, business areas, and financial information."
+      },
+      {
+        "title": "Andritz AG – Wikipedia",
+        "link": "https://en.wikipedia.org/wiki/Andritz",
+        "description": "Wikipedia entry with historical background and key facts."
+      },
+      {
+        "title": "Andritz AG Annual Report 2024",
+        "link": "https://www.andritz.com/group-en/investor-relations/reports",
+        "description": "Latest annual report detailing financial performance, strategy, and sustainability."
+      }
+    ]
   }
 ]
