@@ -25,6 +25,7 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 
 SAVE_ENDPOINT = "/api/graph/save"
+HEALTH_ENDPOINT = "/health"
 
 
 class SyncHandler(SimpleHTTPRequestHandler):
@@ -51,6 +52,36 @@ class SyncHandler(SimpleHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(204)
         self.end_headers()
+
+    # ------------------------------------------------------------------
+    # GET
+    # ------------------------------------------------------------------
+
+    def do_GET(self):
+        path = self.path.split("?", 1)[0]
+
+        if path == HEALTH_ENDPOINT:
+            self._handle_health()
+            return
+
+        super().do_GET()
+
+    def _handle_health(self):
+        exists = self.data_file.exists()
+
+        self._send_json(
+            {
+                "status": "ok",
+                "service": "sociognosis-sync",
+                "data_file": str(self.data_file),
+                "data_file_exists": exists,
+                "data_file_size": (
+                    self.data_file.stat().st_size
+                    if exists
+                    else None
+                ),
+            }
+        )
 
     # ------------------------------------------------------------------
     # POST
@@ -252,10 +283,11 @@ def main():
     print("══════════════════════════════════════════════")
     print("  Sociognosis Sync Server")
     print("──────────────────────────────────────────────")
-    print(f"  Root:    {root_dir}")
-    print(f"  Data:    {data_file}")
     print(
         f"  Save:    http://{display_host}:{args.port}{SAVE_ENDPOINT}"
+    )
+    print(
+        f"  Health:  http://{display_host}:{args.port}{HEALTH_ENDPOINT}"
     )
     print("══════════════════════════════════════════════")
     print()
