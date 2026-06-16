@@ -6835,6 +6835,7 @@ function addNewNode() {
     markNodeChanged(id);
 }
 
+// TODO: WE NEED TO ENABLE DELETE
 function deleteNode() {
     if (!selectedNode) return;
     if (!confirm('Delete node "' + (selectedNode.name || selectedNode.id) + '"?')) return;
