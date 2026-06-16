@@ -6831,6 +6831,8 @@ function addNewNode() {
     nodes.push(node); nodeMap[id] = node;
     selectNode(node); fitToNode(node); alpha = 1; updateStats();
     markGraphDirty();
+    // Track new node as pending so Save syncs it to the backend
+    markNodeChanged(id);
 }
 
 function deleteNode() {
@@ -6851,6 +6853,12 @@ function deleteNode() {
 async function handleSave() {
     const saveBtn = document.getElementById('save-btn');
     const originalHTML = saveBtn.innerHTML;
+
+    // Auto-commit any uncommitted form edits before syncing so the latest
+    // values (including newly added nodes) are included in the patch.
+    if (selectedNode && isDirty) {
+        applyChanges();
+    }
 
     if (backendConfig.saveUrl) {
         // Backend sync mode — send JSON patch
