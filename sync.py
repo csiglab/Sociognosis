@@ -158,6 +158,7 @@ class SyncHandler(SimpleHTTPRequestHandler):
                     )
 
                 os.replace(tmp_path, self.data_file)
+                os.chmod(self.data_file, 0o644) # Only the owner to write (usually safer).
 
             except Exception:
                 try:
