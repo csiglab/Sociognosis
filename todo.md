@@ -12,6 +12,7 @@
 [ ] Coventry
 [ ] Bristol
 [ ] Middlesbrough
+[ ] What is the ownwership structure of a stock market?
 [ ] Mercados de Abastecimientos de Barcelona, S.A.
 [ ] [Karl August von Hardenberg](https://en.wikipedia.org/wiki/Karl_August_von_Hardenberg)
 [ ] [European Parliamentary Research Service](https://en.wikipedia.org/wiki/European_Parliamentary_Research_Service)
