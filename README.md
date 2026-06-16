@@ -21,6 +21,7 @@ Sub Projects:
 
 ```bash
 wget  https://bremontix.xyz/lab/research/onto/data/index/data.json
+diff data.json docs/data/index/data.json 
 mv    data.json   docs/data/index/data.json 
 ga docs
 gc docs -m "feat: udpate data"
