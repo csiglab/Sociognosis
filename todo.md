@@ -25,6 +25,8 @@
 
 - How to reason about Real State?
 
+- we need to create  mechanism to teel the user - that a editing node is dirty - and has not been save yet - and even ask for configuration - if the edit window is closed or another node is loaded.
+
 - Sovereign State
 - Intergovernmental Org
 - Multinational Corporation
