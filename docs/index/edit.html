@@ -3262,6 +3262,23 @@ select:focus-visible {
                         <textarea class="settings-input settings-textarea" id="global-context-preview" readonly placeholder="Context will appear here after loading..."></textarea>
                     </div>
                 </div>
+
+                <!-- Backend Sync Configuration -->
+                <div class="settings-section">
+                    <div class="settings-title">Backend Sync</div>
+                    <div class="settings-row">
+                        <label class="settings-label">Backend Save URL</label>
+                        <input type="text" class="settings-input" id="backend-save-url" placeholder="https://your-backend.example.com/api/graph/save">
+                        <span class="settings-hint">When configured, the Save button sends a JSON patch (the list of modified nodes) to this URL via HTTP POST. When left empty, Save downloads a full JSON file instead.</span>
+                    </div>
+                    <div class="settings-row">
+                        <label class="settings-checkbox-label">
+                            <input type="checkbox" id="save-backend-url-toggle">
+                            Save backend URL in this browser
+                        </label>
+                        <span class="settings-hint">When enabled, the backend URL is stored in localStorage and auto-loaded on next visit.</span>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-ghost btn-sm" id="settings-cancel">Cancel</button>
@@ -3680,6 +3697,8 @@ let communityHulls = {};
 /* ═══════ LOCAL STORAGE PERSISTENCE ═══════ */
 const STORAGE_KEY_TOKEN = 'sociognosis-api-token';
 const STORAGE_KEY_SAVE_PREF = 'sociognosis-save-token-pref';
+const STORAGE_KEY_BACKEND_URL = 'sociognosis-backend-save-url';
+const STORAGE_KEY_SAVE_BACKEND_PREF = 'sociognosis-save-backend-url-pref';
 
 /** Returns true if the user opted into saving the token in the browser. */
 function getSaveTokenPreference() {
@@ -3725,6 +3744,101 @@ function loadPersistedToken() {
     } catch (e) {
         return '';
     }
+}
+
+/* ═══════ BACKEND SYNC CONFIGURATION ═══════ */
+/* Tracks which nodes have pending (unsaved) changes so we can send a
+   minimal JSON patch to the backend instead of the whole graph. */
+const pendingChanges = new Set(); // node IDs with unsaved edits
+
+function markNodeChanged(nodeId) {
+    pendingChanges.add(nodeId);
+    updateSaveBadge();
+}
+
+function clearPendingChanges() {
+    pendingChanges.clear();
+    updateSaveBadge();
+}
+
+/* Update the Save button badge to show how many nodes have pending edits. */
+function updateSaveBadge() {
+    const saveBtn = document.getElementById('save-btn');
+    if (!saveBtn) return;
+    let badge = saveBtn.querySelector('.apply-badge');
+    if (pendingChanges.size > 0) {
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'apply-badge error-count';
+            saveBtn.appendChild(badge);
+        }
+        badge.textContent = pendingChanges.size;
+        badge.style.background = 'rgba(212, 168, 87, 0.2)';
+        badge.style.color = 'var(--accent-amber)';
+    } else if (badge) {
+        badge.remove();
+    }
+}
+
+let backendConfig = {
+    saveUrl: loadPersistedBackendUrl()
+};
+
+function getSaveBackendUrlPreference() {
+    try { return localStorage.getItem(STORAGE_KEY_SAVE_BACKEND_PREF) === '1'; } catch { return false; }
+}
+function setSaveBackendUrlPreference(enabled) {
+    try { localStorage.setItem(STORAGE_KEY_SAVE_BACKEND_PREF, enabled ? '1' : '0'); } catch (e) { console.warn(e); }
+}
+function persistBackendUrl(url) {
+    try { localStorage.setItem(STORAGE_KEY_BACKEND_URL, url || ''); } catch (e) { console.warn(e); }
+}
+function clearPersistedBackendUrl() {
+    try { localStorage.removeItem(STORAGE_KEY_BACKEND_URL); } catch (e) { console.warn(e); }
+}
+function loadPersistedBackendUrl() {
+    if (!getSaveBackendUrlPreference()) return '';
+    try { return localStorage.getItem(STORAGE_KEY_BACKEND_URL) || ''; } catch { return ''; }
+}
+
+/* Build the JSON patch payload: only nodes with pending changes. */
+function buildPatch() {
+    const changedNodes = [];
+    for (const id of pendingChanges) {
+        const node = nodeMap[id];
+        if (node) changedNodes.push(node._data);
+    }
+    return {
+        nodes: changedNodes,
+        timestamp: new Date().toISOString()
+    };
+}
+
+/* Send the JSON patch to the configured backend URL via HTTP POST.
+   Returns true on success, throws on error. */
+async function saveToBackend() {
+    if (!backendConfig.saveUrl) {
+        throw new Error('No backend URL configured.');
+    }
+
+    const patch = buildPatch();
+    if (patch.nodes.length === 0) {
+        console.log('Save: no pending changes to send.');
+        return true;
+    }
+
+    const response = await fetch(backendConfig.saveUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(patch)
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text().catch(() => response.statusText);
+        throw new Error(`Backend error (${response.status}): ${errorText}`);
+    }
+
+    return true;
 }
 
 /* ═══════ AI CONFIGURATION ═══════ */
@@ -3954,7 +4068,7 @@ function updateAIStatus() {
     const statusText = document.getElementById('ai-status-text');
     
     chip.classList.remove('unconfigured', 'loading', 'ready');
-    
+
     if (!aiConfig.token) {
         chip.classList.add('unconfigured');
         statusText.textContent = 'Not configured';
@@ -4026,6 +4140,8 @@ function setupModals() {
         document.getElementById('global-context-url').value = aiConfig.contextUrl;
         document.getElementById('global-context-preview').value = aiConfig.globalContext.substring(0, 2000);
         document.getElementById('save-token-toggle').checked = getSaveTokenPreference();
+        document.getElementById('backend-save-url').value = backendConfig.saveUrl;
+        document.getElementById('save-backend-url-toggle').checked = getSaveBackendUrlPreference();
         updateAPIStatusIndicator();
         openModal('settings-modal');
     });
@@ -4057,6 +4173,16 @@ function setupModals() {
             persistToken(aiConfig.token);
         } else {
             clearPersistedToken();
+        }
+
+        // Persist backend URL + preference
+        backendConfig.saveUrl = document.getElementById('backend-save-url').value.trim();
+        const saveBackend = document.getElementById('save-backend-url-toggle').checked;
+        setSaveBackendUrlPreference(saveBackend);
+        if (saveBackend) {
+            persistBackendUrl(backendConfig.saveUrl);
+        } else {
+            clearPersistedBackendUrl();
         }
 
         updateAIStatus();
@@ -6241,6 +6367,8 @@ function applyChanges() {
     document.getElementById('panel-title').textContent = selectedNode.name || selectedNode.id;
     document.getElementById('panel-subtitle').textContent = selectedNode.category || 'Unknown';
     updateStats();
+    // Track this node as having pending changes for the backend patch
+    markNodeChanged(selectedNode._data.id);
 }
 
 /* Render validation summary and highlight invalid fields */
@@ -6329,6 +6457,34 @@ function deleteNode() {
     delete nodeMap[selectedNode.id];
     selectNode(null); updateStats();
     markGraphDirty();
+}
+
+/* Save handler: sends pending changes to backend if configured,
+   otherwise falls back to downloading a full JSON file. */
+async function handleSave() {
+    const saveBtn = document.getElementById('save-btn');
+    const originalHTML = saveBtn.innerHTML;
+
+    if (backendConfig.saveUrl) {
+        // Backend sync mode — send JSON patch
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<span class="loading-spinner"></span> Saving...';
+        try {
+            await saveToBackend();
+            clearPendingChanges();
+            saveBtn.innerHTML = '✓ Saved';
+            setTimeout(() => { saveBtn.innerHTML = originalHTML; saveBtn.disabled = false; }, 1500);
+        } catch (e) {
+            console.error('Backend save failed:', e);
+            alert('Failed to save to backend:\n' + e.message + '\n\nWould you like to download a JSON file instead?');
+            if (confirm('Download JSON file instead?')) saveJSON();
+            saveBtn.innerHTML = originalHTML;
+            saveBtn.disabled = false;
+        }
+    } else {
+        // Fallback: download full JSON file
+        saveJSON();
+    }
 }
 
 function saveJSON() {
@@ -6688,7 +6844,7 @@ function setupEventHandlers() {
     });
     
     document.getElementById('add-node-btn').addEventListener('click', addNewNode);
-    document.getElementById('save-btn').addEventListener('click', saveJSON);
+    document.getElementById('save-btn').addEventListener('click', handleSave);
     document.getElementById('toggle-panel-btn').addEventListener('click', () => {
         // The editor panel may only be open while a node is selected.
         if (document.body.classList.contains('panel-collapsed') && !selectedNode) return;
