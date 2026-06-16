@@ -4052,7 +4052,7 @@ function deriveHealthUrl(saveUrl) {
         const idx = saveUrl.indexOf('/api/');
         if (idx >= 0) return saveUrl.substring(0, idx) + '/api/health';
         // Or if it ends with /api/graph/save, strip that
-        return saveUrl.replace(/\/api\/graph\/save\/?$/, '/health');
+        return saveUrl.replace(/\/api\/graph\/save\/?$/, '/api/health');
     }
 }
 
