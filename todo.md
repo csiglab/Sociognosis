@@ -1,3 +1,4 @@
+[ ] Add epistemic - and tecnica.
 [ ] Job
 [ ] William Cockerill
 [ ] Juan Antonio de Riaño y Bárcena
