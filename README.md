@@ -15,6 +15,17 @@ Sub Projects:
 - Firm Space
 - Literary Space
 
+## Data Sync
+
+> Changes are stored on the server, which is not connected to GitHub. Therefore, you must download the latest data file before committing updates.
+
+```bash
+wget  https://bremontix.xyz/lab/research/onto/data/index/data.json
+mv    data.json   docs/data/index/data.json 
+ga docs
+gc docs -m "feat: udpate data"
+```
+
 ## References
 
 - [Actor](https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Noetic/Actor/)
