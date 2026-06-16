@@ -3053,6 +3053,170 @@ select:focus-visible {
 
 /* 7. Disabled controls must still convey state clearly to AT */
 .btn:disabled { opacity: 0.45; }
+
+/* ═════════════════════════════════════════════════════════════════════════ */
+/* ═══════ STATUS BAR CHIPS v2 — Minimal icon-only indicators + hover tips ═══════ */
+/* Compact 28×28 icon buttons with a tiny status dot (bottom-right corner).   */
+/* Full details revealed on hover via glassmorphism tooltip (data-tip attr).   */
+/* Placed last so equal-specificity rules win by source order.                 */
+/* ═════════════════════════════════════════════════════════════════════════ */
+
+/* Base chip — compact icon-only square */
+.status-bar .sb-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border-radius: 7px;
+    background: transparent;
+    border: 1px solid transparent;
+    transition: all 150ms ease-out;
+    cursor: pointer;
+    position: relative;
+    margin: 0 1px;
+    overflow: visible;
+}
+
+.status-bar .sb-chip .sb-chip-icon {
+    opacity: 0.4;
+    transition: opacity 150ms ease-out;
+}
+
+.status-bar .sb-chip:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--border-subtle);
+}
+.status-bar .sb-chip:hover .sb-chip-icon {
+    opacity: 0.75;
+}
+
+/* Hide text labels in the chip — details revealed via hover tooltip */
+.status-bar .sb-chip .sb-chip-label,
+.status-bar .sb-chip .sb-chip-value { display: none; }
+
+/* Suppress inherited inter-span divider pseudo-element on chips */
+.status-bar .sb-chip::before { content: none; }
+
+/* ═══════ Hover tooltip — glassmorphism pill (data-tip attribute) ═══════ */
+.status-bar .sb-chip[data-tip]:hover::before {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(22, 27, 38, 0.98);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border-medium);
+    border-left: 2px solid var(--accent-copper);
+    border-radius: var(--radius-sm);
+    padding: 7px 14px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 200;
+    box-shadow: var(--shadow-md);
+    letter-spacing: 0.04em;
+    animation: sbTipFade 150ms ease-out;
+}
+@keyframes sbTipFade {
+    from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ═══════ Status dot — tiny colored indicator (bottom-right corner) ═══════ */
+.status-bar .sb-chip::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    opacity: 0.35;
+    border: 1.5px solid rgba(31, 35, 45, 0.95);
+    box-sizing: content-box;
+    transition: all 200ms ease;
+}
+
+/* State: error / offline / unconfigured → rose */
+.status-bar .sb-chip.offline::after,
+.status-bar .sb-chip.unconfigured::after {
+    background: var(--accent-rose);
+    opacity: 0.75;
+}
+
+/* State: warning / checking / loading → amber (pulsing) */
+.status-bar .sb-chip.checking::after,
+.status-bar .sb-chip.loading::after {
+    background: var(--accent-amber);
+    opacity: 0.85;
+    animation: sbDotPulse 1.4s ease-in-out infinite;
+}
+
+/* State: healthy / online / ready → sage */
+.status-bar .sb-chip.online::after,
+.status-bar .sb-chip.ready::after {
+    background: var(--accent-sage);
+    opacity: 0.85;
+}
+@keyframes sbDotPulse {
+    0%, 100% { opacity: 0.5; }
+    50%      { opacity: 1; }
+}
+
+/* ═══════ Selection chip — gilt dot when a node is selected ═══════ */
+.status-bar .sb-selection { cursor: default; }
+.status-bar .sb-selection.has-selection { cursor: pointer; }
+.status-bar .sb-selection.has-selection::after {
+    background: var(--gilt);
+    opacity: 0.9;
+    box-shadow: 0 0 6px rgba(196, 185, 152, 0.35);
+}
+.status-bar .sb-selection.has-selection .sb-chip-icon {
+    opacity: 0.65;
+    color: var(--gilt);
+}
+
+/* Deselect × — tiny corner badge; visible on hover when something is selected.
+   Higher specificity than legacy .sb-selection:hover rules to ensure override. */
+.status-bar .sb-selection .sb-deselect-btn {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 14px;
+    height: 14px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-medium);
+    border-radius: 50%;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    opacity: 1;
+    z-index: 5;
+    transition: all 150ms ease-out;
+}
+.status-bar .sb-selection.has-selection:hover .sb-deselect-btn {
+    display: flex;
+}
+.status-bar .sb-deselect-btn:hover {
+    color: var(--accent-rose);
+    border-color: var(--accent-rose);
+    background: rgba(196, 125, 138, 0.15);
+}
+.status-bar .sb-deselect-btn svg {
+    width: 8px;
+    height: 8px;
+}
     </style>
 </head>
 <body>
@@ -3153,26 +3317,26 @@ select:focus-visible {
             <div class="sb-sep"></div>
             <div class="status-bar-right">
                 <span id="sb-search"></span>
-                <span class="sb-chip sb-selection" id="selection-chip">
-                    <svg class="sb-chip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <span class="sb-chip sb-selection" id="selection-chip" data-tip="No node selected">
+                    <svg class="sb-chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/>
                     </svg>
                     <span class="sb-chip-label">Selected</span>
                     <span class="sb-chip-value" id="selected-name">None</span>
-                    <button class="sb-deselect-btn" id="deselect-btn" title="Deselect (Esc)" style="display:none;">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <button class="sb-deselect-btn" id="deselect-btn" type="button" aria-label="Deselect (Esc)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                         </svg>
                     </button>
                 </span>
-                <span class="sb-chip sb-backend offline" id="backend-status" title="Backend sync health — click to check now" role="button" tabindex="0">
-                    <svg class="sb-chip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <span class="sb-chip sb-backend offline" id="backend-status" data-tip="Backend: Offline — click to check" role="button" tabindex="0">
+                    <svg class="sb-chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                     </svg>
                     <span class="sb-chip-label" id="backend-status-text">Backend: Offline</span>
                 </span>
-                <span class="sb-chip sb-ai unconfigured" id="ai-status" title="Click to configure AI settings">
-                    <svg class="sb-chip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <span class="sb-chip sb-ai unconfigured" id="ai-status" data-tip="AI: Not configured — click to set up">
+                    <svg class="sb-chip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                     </svg>
                     <span class="sb-chip-label" id="ai-status-text">Not configured</span>
@@ -3947,7 +4111,10 @@ function updateBackendStatus(status, label) {
     if (chip && chipText) {
         chip.classList.remove('offline', 'online', 'checking');
         chip.classList.add(status);
-        chipText.textContent = label || 'Backend: Unknown';
+        const displayLabel = label || 'Backend: Unknown';
+        chipText.textContent = displayLabel;
+        const clickHint = status === 'checking' ? '' : ' · click to recheck';
+        chip.setAttribute('data-tip', displayLabel + clickHint);
     }
 
     // Settings modal indicator
@@ -4267,15 +4434,19 @@ function updateAIStatus() {
     if (!aiConfig.token) {
         chip.classList.add('unconfigured');
         statusText.textContent = 'Not configured';
+        chip.setAttribute('data-tip', 'AI: Not configured — click to set up');
     } else if (aiConfig.schema && aiConfig.globalContext) {
         chip.classList.add('ready');
         statusText.textContent = 'Ready';
+        chip.setAttribute('data-tip', `AI: Ready · ${aiConfig.model}`);
     } else if (aiConfig.schema) {
         chip.classList.add('loading');
         statusText.textContent = 'Schema loaded, no context';
+        chip.setAttribute('data-tip', 'AI: Schema loaded, no context — click to configure');
     } else {
         chip.classList.add('loading');
         statusText.textContent = 'Token set, configure schema';
+        chip.setAttribute('data-tip', 'AI: Token set — click to load schema');
     }
 }
 
@@ -5815,9 +5986,15 @@ function selectNode(node) {
     }
     
     selectedNode = node;
-    document.getElementById('selected-name').textContent = node ? (node.name || node.id) : 'None';
-    const deselectBtn = document.getElementById('deselect-btn');
-    if (deselectBtn) deselectBtn.style.display = node ? 'flex' : 'none';
+    const selChip = document.getElementById('selection-chip');
+    const selName = node ? (node.name || node.id) : 'None';
+    document.getElementById('selected-name').textContent = selName;
+    if (selChip) {
+        selChip.classList.toggle('has-selection', !!node);
+        selChip.setAttribute('data-tip', node
+            ? `Selected: ${selName} — click × to deselect`
+            : 'No node selected');
+    }
     
     if (node) {
         nodeSnapshot = takeSnapshot(node._data);
