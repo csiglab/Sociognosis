@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Codex — The Reckoning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper:        #f3ebdc;
+  --paper-soft:   #ede3d0;
+  --paper-warm:   #faf3e3;
+  --ink:          #1c1611;
+  --ink-soft:     #3d3328;
+  --muted:        #8a7a64;
+  --muted-soft:   #b3a487;
+  --accent:       #7d2a2a;   /* oxblood */
+  --accent-soft:  #a04545;
+  --gold:         #b08840;
+  --gold-soft:    #c9a467;
+  --green:        #5a6b3a;
+  --line:         #d8c9a8;
+  --line-soft:    #e3d6b8;
+  --shadow:       0 2px 12px rgba(60, 40, 20, 0.06);
+  --shadow-lg:    0 8px 32px rgba(60, 40, 20, 0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--paper);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(176, 136, 64, 0.06), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(125, 42, 42, 0.04), transparent 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding: 64px 24px 120px;
+}
+
+.container { max-width: 920px; margin: 0 auto; }
+
+/* ─── Masthead ─────────────────────────── */
+.masthead { text-align: center; margin-bottom: 44px; }
+
+.dateline {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 26px;
+  font-weight: 500;
+}
+.dateline::before, .dateline::after {
+  content: '';
+  width: 36px;
+  height: 1px;
+  background: var(--line);
+}
+
+.title {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  font-size: clamp(52px, 9vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  font-variation-settings: "opsz" 144;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.subtitle {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 17px;
+  color: var(--muted);
+  letter-spacing: 0.01em;
+}
+
+/* ─── Statistical Sections ─────────────── */
+.section {
+  margin-bottom: 64px;
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 24px;
+  font-style: italic;
+  color: var(--ink);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.section-title .roman {
+  font-size: 14px;
+  color: var(--muted-soft);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+.section-desc {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed var(--line);
+}
+
+/* ─── 1. The Ledger Heatmap ───────────── */
+.heatmap-wrap {
+  background: rgba(255, 250, 240, 0.4);
+  border: 1px solid var(--line);
+  padding: 24px;
+  border-radius: 2px;
+  box-shadow: var(--shadow);
+}
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  gap: 5px;
+  margin-bottom: 16px;
+}
+.day-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background: var(--line-soft);
+  transition: transform 0.2s ease;
+  cursor: default;
+  position: relative;
+}
+.day-cell:hover { transform: scale(1.3); z-index: 2; box-shadow: 0 0 0 1px var(--ink-soft); }
+.day-cell.lvl-1 { background: rgba(176, 136, 64, 0.25); }
+.day-cell.lvl-2 { background: rgba(176, 136, 64, 0.55); }
+.day-cell.lvl-3 { background: rgba(176, 136, 64, 0.85); }
+.day-cell.lvl-4 { background: var(--accent); }
+
+.heatmap-legend {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.heatmap-legend .swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+/* ─── 2. Time Series (SVG) ────────────── */
+.chart-container {
+  background: rgba(255, 250, 240, 0.4);
+  border: 1px solid var(--line);
+  padding: 24px;
+  border-radius: 2px;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+.time-series-svg {
+  width: 100%;
+  height: 250px;
+  overflow: visible;
+}
+.ts-grid line {
+  stroke: var(--line);
+  stroke-dasharray: 3, 3;
+  stroke-width: 0.5;
+}
+.ts-axis text {
+  font-family: 'Manrope', sans-serif;
+  font-size: 9px;
+  fill: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.ts-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ts-area {
+  fill-opacity: 0.1;
+}
+.ts-dot {
+  stroke: var(--paper);
+  stroke-width: 2;
+}
+.ts-legend {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 16px;
+}
+.ts-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.ts-legend-swatch {
+  width: 16px;
+  height: 2px;
+}
+
+/* ─── 3. Radial Polar Chart ───────────── */
+.polar-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 40px;
+  align-items: center;
+  background: rgba(255, 250, 240, 0.4);
+  border: 1px solid var(--line);
+  padding: 24px;
+  border-radius: 2px;
+  box-shadow: var(--shadow);
+}
+.polar-svg {
+  width: 100%;
+  height: auto;
+}
+.polar-grid circle, .polar-grid line {
+  stroke: var(--line);
+  fill: none;
+  stroke-width: 0.5;
+}
+.polar-axis text {
+  font-family: 'Fraunces', serif;
+  font-size: 11px;
+  font-style: italic;
+  fill: var(--ink-soft);
+}
+.polar-shape {
+  fill: rgba(125, 42, 42, 0.15);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+.polar-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.polar-legend-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.polar-legend-name {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+}
+.polar-legend-val {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ─── 4. Flow Funnel ──────────────────── */
+.funnel-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.funnel-step {
+  display: flex;
+  align-items: center;
+  background: var(--paper-warm);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin: 0 auto;
+  transition: width 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.funnel-bar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  color: var(--paper);
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.funnel-meta {
+  padding: 0 20px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ─── 5. Pictograph Isotype ───────────── */
+.isotype-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 12px;
+  background: rgba(255, 250, 240, 0.4);
+  border: 1px solid var(--line);
+  padding: 24px;
+  border-radius: 2px;
+  box-shadow: var(--shadow);
+}
+.isotype-unit {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.isotype-unit svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.5;
+}
+.isotype-unit.resolved svg {
+  fill: rgba(125, 42, 42, 0.1);
+  stroke: var(--accent);
+}
+.isotype-unit.pending svg {
+  fill: rgba(176, 136, 64, 0.1);
+  stroke: var(--gold);
+}
+.isotype-legend {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 16px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.isotype-legend-item { display: flex; align-items: center; gap: 8px; }
+.isotype-swatch { width: 12px; height: 12px; border: 1.5px solid; border-radius: 2px; }
+
+/* ─── Colophon ─────────────────────────── */
+.colophon {
+  margin-top: 80px;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted-soft);
+  font-weight: 500;
+}
+.colophon span { margin: 0 12px; color: var(--line); }
+
+@media (max-width: 768px) {
+  .heatmap-grid { grid-template-columns: repeat(10, 1fr); }
+  .polar-layout { grid-template-columns: 1fr; gap: 24px; }
+  .isotype-grid { grid-template-columns: repeat(6, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="masthead">
+    <div class="dateline">
+      <span>Folio · The Reckoning</span>
+    </div>
+    <h1 class="title">Codex <em>Analytics</em></h1>
+    <p class="subtitle">A statistical projection of the scholar's register</p>
+  </header>
+
+  <!-- I. The Ledger Heatmap -->
+  <div class="section">
+    <h2 class="section-title"><span class="roman">I.</span> The Ledger Heatmap</h2>
+    <p class="section-desc">A chronological density map of resolutions over the past three moons.</p>
+    
+    <div class="heatmap-wrap">
+      <div class="heatmap-grid">
+        <!-- 45 days generated to form a pattern -->
+        <div class="day-cell"></div><div class="day-cell lvl-1"></div><div class="day-cell lvl-2"></div>
+        <div class="day-cell"></div><div class="day-cell lvl-1"></div><div class="day-cell lvl-3"></div>
+        <div class="day-cell lvl-2"></div><div class="day-cell"></div><div class="day-cell lvl-1"></div>
+        <div class="day-cell lvl-4"></div><div class="day-cell lvl-2"></div><div class="day-cell lvl-1"></div>
+        <div class="day-cell"></div><div class="day-cell lvl-1"></div><div class="day-cell lvl-2"></div>
+
+        <div class="day-cell lvl-3"></div><div class="day-cell lvl-1"></div><div class="day-cell"></div>
+        <div class="day-cell lvl-2"></div><div class="day-cell lvl-4"></div><div class="day-cell lvl-2"></div>
+        <div class="day-cell lvl-1"></div><div class="day-cell"></div><div class="day-cell lvl-1"></div>
+        <div class="day-cell lvl-2"></div><div class="day-cell lvl-3"></div><div class="day-cell lvl-1"></div>
+        <div class="day-cell"></div><div class="day-cell lvl-2"></div><div class="day-cell lvl-1"></div>
+
+        <div class="day-cell"></div><div class="day-cell"></div><div class="day-cell lvl-1"></div>
+        <div class="day-cell lvl-2"></div><div class="day-cell lvl-3"></div><div class="day-cell"></div>
+        <div class="day-cell lvl-1"></div><div class="day-cell lvl-2"></div><div class="day-cell lvl-4"></div>
+        <div class="day-cell lvl-2"></div><div class="day-cell"></div><div class="day-cell lvl-1"></div>
+        <div class="day-cell lvl-2"></div><div class="day-cell lvl-3"></div><div class="day-cell lvl-1"></div>
+      </div>
+      <div class="heatmap-legend">
+        <span>Less</span>
+        <div class="swatch" style="background: var(--line-soft);"></div>
+        <div class="swatch" style="background: rgba(176, 136, 64, 0.25);"></div>
+        <div class="swatch" style="background: rgba(176, 136, 64, 0.55);"></div>
+        <div class="swatch" style="background: rgba(176, 136, 64, 0.85);"></div>
+        <div class="swatch" style="background: var(--accent);"></div>
+        <span>More</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- II. The Ebb & Flow (Time Series) -->
+  <div class="section">
+    <h2 class="section-title"><span class="roman">II.</span> The Ebb & Flow</h2>
+    <p class="section-desc">A dual-axis projection contrasting matters inscribed against those resolved.</p>
+    
+    <div class="chart-container">
+      <svg class="time-series-svg" viewBox="0 0 800 250" preserveAspectRatio="none">
+        <!-- Grid -->
+        <g class="ts-grid">
+          <line x1="0" y1="50" x2="800" y2="50" />
+          <line x1="0" y1="100" x2="800" y2="100" />
+          <line x1="0" y1="150" x2="800" y2="150" />
+          <line x1="0" y1="200" x2="800" y2="200" />
+        </g>
+        
+        <!-- Area fill for Inscribed -->
+        <path class="ts-area" style="fill: var(--ink-soft);" d="M0,180 L70,140 L140,160 L210,90 L280,110 L350,60 L420,80 L490,40 L560,70 L630,50 L700,90 L800,60 L800,250 L0,250 Z" />
+        
+        <!-- Line: Inscribed (New Tasks) -->
+        <path class="ts-line" style="stroke: var(--ink-soft);" d="M0,180 L70,140 L140,160 L210,90 L280,110 L350,60 L420,80 L490,40 L560,70 L630,50 L700,90 L800,60" />
+        
+        <!-- Line: Resolved (Completed Tasks) -->
+        <path class="ts-line" style="stroke: var(--accent); stroke-dasharray: 4, 4;" d="M0,200 L70,190 L140,170 L210,180 L280,140 L350,150 L420,110 L490,130 L560,90 L630,100 L700,70 L800,80" />
+
+        <!-- Data Points (Inscribed) -->
+        <circle class="ts-dot" cx="0" cy="180" r="3" fill="var(--ink-soft)" />
+        <circle class="ts-dot" cx="210" cy="90" r="3" fill="var(--ink-soft)" />
+        <circle class="ts-dot" cx="490" cy="40" r="3" fill="var(--ink-soft)" />
+        <circle class="ts-dot" cx="800" cy="60" r="3" fill="var(--ink-soft)" />
+
+        <!-- Data Points (Resolved) -->
+        <circle class="ts-dot" cx="0" cy="200" r="3" fill="var(--accent)" />
+        <circle class="ts-dot" cx="280" cy="140" r="3" fill="var(--accent)" />
+        <circle class="ts-dot" cx="560" cy="90" r="3" fill="var(--accent)" />
+        <circle class="ts-dot" cx="800" cy="80" r="3" fill="var(--accent)" />
+
+        <!-- X Axis labels -->
+        <g class="ts-axis">
+          <text x="0" y="240" text-anchor="start">Week I</text>
+          <text x="200" y="240" text-anchor="middle">Week III</text>
+          <text x="400" y="240" text-anchor="middle">Week V</text>
+          <text x="600" y="240" text-anchor="middle">Week VII</text>
+          <text x="800" y="240" text-anchor="end">Week IX</text>
+        </g>
+      </svg>
+      <div class="ts-legend">
+        <div class="ts-legend-item">
+          <div class="ts-legend-swatch" style="background: var(--ink-soft);"></div>
+          Inscribed
+        </div>
+        <div class="ts-legend-item">
+          <div class="ts-legend-swatch" style="background: var(--accent); border-top: 2px dashed var(--accent);"></div>
+          Resolved
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- III. The Radial Spheres (Polar Chart) -->
+  <div class="section">
+    <h2 class="section-title"><span class="roman">III.</span> The Radial Spheres</h2>
+    <p class="section-desc">The angular distribution of effort across the five primary spheres of action.</p>
+    
+    <div class="polar-layout">
+      <svg class="polar-svg" viewBox="0 0 200 200">
+        <g transform="translate(100, 100)">
+          <!-- Grid Circles -->
+          <g class="polar-grid">
+            <circle cx="0" cy="0" r="20" />
+            <circle cx="0" cy="0" r="40" />
+            <circle cx="0" cy="0" r="60" />
+            <circle cx="0" cy="0" r="80" />
+            <!-- Axis Lines -->
+            <line x1="0" y1="0" x2="0" y2="-80" />
+            <line x1="0" y1="0" x2="76" y2="24" />
+            <line x1="0" y1="0" x2="47" y2="65" />
+            <line x1="0" y1="0" x2="-47" y2="65" />
+            <line x1="0" y1="0" x2="-76" y2="24" />
+          </g>
+          
+          <!-- Data Polygon -->
+          <!-- Correspondence (Top, 90%), Writing (Top-Right, 70%), Reading (Bottom-Right, 50%), Archives (Bottom-Left, 40%), Errands (Top-Left, 30%) -->
+          <path class="polar-shape" d="M0,-72 L53,17 L29,40 L-24,33 L-30,10 Z" />
+
+          <!-- Axis Labels -->
+          <g class="polar-axis">
+            <text x="0" y="-90" text-anchor="middle">Corresp.</text>
+            <text x="90" y="25" text-anchor="start">Writing</text>
+            <text x="55" y="80" text-anchor="middle">Reading</text>
+            <text x="-55" y="80" text-anchor="middle">Archives</text>
+            <text x="-90" y="25" text-anchor="end">Errands</text>
+          </g>
+        </g>
+      </svg>
+
+      <div class="polar-legend">
+        <div class="polar-legend-item">
+          <span class="polar-legend-name">Correspondence</span>
+          <span class="polar-legend-val">9 entries</span>
+        </div>
+        <div class="polar-legend-item">
+          <span class="polar-legend-name">Writing</span>
+          <span class="polar-legend-val">7 entries</span>
+        </div>
+        <div class="polar-legend-item">
+          <span class="polar-legend-name">Reading</span>
+          <span class="polar-legend-val">5 entries</span>
+        </div>
+        <div class="polar-legend-item">
+          <span class="polar-legend-name">Archives</span>
+          <span class="polar-legend-val">4 entries</span>
+        </div>
+        <div class="polar-legend-item">
+          <span class="polar-legend-name">Errands</span>
+          <span class="polar-legend-val">3 entries</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IV. The Funnel of Diligence -->
+  <div class="section">
+    <h2 class="section-title"><span class="roman">IV.</span> The Funnel of Diligence</h2>
+    <p class="section-desc">The narrowing progression from initial inscription to final resolution.</p>
+    
+    <div class="chart-container">
+      <div class="funnel-container">
+        <div class="funnel-step" style="width: 100%;">
+          <div class="funnel-bar" style="background: var(--ink-soft); width: 100%;">Inscribed</div>
+          <div class="funnel-meta">28 matters</div>
+        </div>
+        <div class="funnel-step" style="width: 85%;">
+          <div class="funnel-bar" style="background: var(--ink); width: 100%;">Pending</div>
+          <div class="funnel-meta">24 matters</div>
+        </div>
+        <div class="funnel-step" style="width: 60%;">
+          <div class="funnel-bar" style="background: var(--gold); width: 100%;">Due This Week</div>
+          <div class="funnel-meta">17 matters</div>
+        </div>
+        <div class="funnel-step" style="width: 35%;">
+          <div class="funnel-bar" style="background: var(--accent-soft); width: 100%;">In Progress</div>
+          <div class="funnel-meta">10 matters</div>
+        </div>
+        <div class="funnel-step" style="width: 20%;">
+          <div class="funnel-bar" style="background: var(--accent); width: 100%;">Resolved</div>
+          <div class="funnel-meta">6 matters</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <footer class="colophon">Derived from plain ink<span>·</span>No external accounts<span>·</span>A static projection</footer>
+</div>
+</body>
+</html>
