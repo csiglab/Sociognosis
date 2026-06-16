@@ -837,6 +837,63 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     background: rgba(123, 163, 136, 0.14);
 }
 
+/* Backend health chip — clickable, color-coded (mirrors .sb-ai pattern) */
+.sb-backend {
+    cursor: pointer;
+    transition: background 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+.sb-backend:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: var(--border-subtle);
+    box-shadow: var(--shadow-sm);
+}
+.sb-backend:active {
+    transform: translateY(0);
+}
+.sb-backend.offline {
+    background: rgba(196, 125, 138, 0.08);
+    border-color: rgba(196, 125, 138, 0.15);
+}
+.sb-backend.offline .sb-chip-label {
+    color: var(--accent-rose);
+}
+.sb-backend.offline .sb-chip-icon {
+    opacity: 0.6;
+    color: var(--accent-rose);
+}
+.sb-backend.offline:hover {
+    background: rgba(196, 125, 138, 0.14);
+    border-color: rgba(196, 125, 138, 0.25);
+}
+.sb-backend.checking {
+    background: rgba(212, 168, 87, 0.08);
+    border-color: rgba(212, 168, 87, 0.15);
+}
+.sb-backend.checking .sb-chip-label {
+    color: var(--accent-amber);
+}
+.sb-backend.checking .sb-chip-icon {
+    opacity: 0.6;
+    color: var(--accent-amber);
+}
+.sb-backend.checking:hover {
+    background: rgba(212, 168, 87, 0.14);
+}
+.sb-backend.online {
+    background: rgba(123, 163, 136, 0.08);
+    border-color: rgba(123, 163, 136, 0.15);
+}
+.sb-backend.online .sb-chip-label {
+    color: var(--accent-sage);
+}
+.sb-backend.online .sb-chip-icon {
+    opacity: 0.6;
+    color: var(--accent-sage);
+}
+.sb-backend.online:hover {
+    background: rgba(123, 163, 136, 0.14);
+}
+
 /* Search chip */
 .sb-search-chip {
     display: inline-flex;
@@ -3108,6 +3165,12 @@ select:focus-visible {
                         </svg>
                     </button>
                 </span>
+                <span class="sb-chip sb-backend offline" id="backend-status" title="Backend sync health — click to check now" role="button" tabindex="0">
+                    <svg class="sb-chip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                    </svg>
+                    <span class="sb-chip-label" id="backend-status-text">Backend: Offline</span>
+                </span>
                 <span class="sb-chip sb-ai unconfigured" id="ai-status" title="Click to configure AI settings">
                     <svg class="sb-chip-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
@@ -3277,6 +3340,14 @@ select:focus-visible {
                             Save backend URL in this browser
                         </label>
                         <span class="settings-hint">When enabled, the backend URL is stored in localStorage and auto-loaded on next visit.</span>
+                    </div>
+                    <div class="settings-row" style="display:flex;gap:10px;align-items:center;">
+                        <button class="btn btn-sm" id="check-health-btn" type="button">Check Health</button>
+                        <span class="status-indicator" id="backend-health-indicator"></span>
+                        <span id="backend-health-text" style="color:var(--text-muted);font-size:0.74rem;">Not checked</span>
+                    </div>
+                    <div class="settings-row">
+                        <span class="settings-hint">Queries the backend <code>/health</code> endpoint (derived from the Save URL) to verify the sync service is reachable and the data file is accessible. Health is polled automatically every 60 seconds and shown in the status bar.</span>
                     </div>
                 </div>
             </div>
@@ -3801,6 +3872,130 @@ function loadPersistedBackendUrl() {
     try { return localStorage.getItem(STORAGE_KEY_BACKEND_URL) || ''; } catch { return ''; }
 }
 
+/* ═══════ BACKEND HEALTH CHECK ═══════ */
+/* Derives the /health endpoint URL from the configured Save URL.
+   sync.py serves both endpoints from the same origin:
+   - Save:   <origin>/api/graph/save
+   - Health: <origin>/health
+   So we strip the save path and append '/health'. */
+function deriveHealthUrl(saveUrl) {
+    if (!saveUrl) return '';
+    try {
+        const u = new URL(saveUrl, window.location.origin);
+        return `${u.origin}/health`;
+    } catch (e) {
+        // Fallback: basic string manipulation if URL parsing fails
+        const idx = saveUrl.indexOf('/api/');
+        if (idx >= 0) return saveUrl.substring(0, idx) + '/health';
+        // Or if it ends with /api/graph/save, strip that
+        return saveUrl.replace(/\/api\/graph\/save\/?$/, '/health');
+    }
+}
+
+let backendHealthInterval = null;
+let backendHealthStatus = 'unknown'; // 'online' | 'offline' | 'checking' | 'unknown'
+
+/* Query the backend /health endpoint and update the UI.
+   Uses AbortController for a timeout (health checks should be fast).
+   Returns the health object on success, throws on error. */
+async function checkBackendHealth() {
+    const healthUrl = deriveHealthUrl(backendConfig.saveUrl);
+    if (!healthUrl) {
+        updateBackendStatus('offline', 'No backend URL configured');
+        return null;
+    }
+
+    updateBackendStatus('checking', 'Checking...');
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+
+    try {
+        const response = await fetch(healthUrl, {
+            method: 'GET',
+            signal: controller.signal,
+            headers: { 'Accept': 'application/json' },
+        });
+        clearTimeout(timeout);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        const exists = data.data_file_exists;
+        const size = data.data_file_size;
+        const sizeStr = size != null ? ` (${(size / 1024).toFixed(1)} KB)` : '';
+        const label = exists ? `Backend: Online${sizeStr}` : `Backend: No data file`;
+        updateBackendStatus('online', label);
+        return data;
+    } catch (e) {
+        clearTimeout(timeout);
+        const msg = e.name === 'AbortError' ? 'Timeout' : (e.message || 'Unreachable');
+        updateBackendStatus('offline', `Backend: ${msg}`);
+        throw e;
+    }
+}
+
+/* Update both the status bar chip and the settings modal indicator. */
+function updateBackendStatus(status, label) {
+    backendHealthStatus = status;
+
+    // Status bar chip
+    const chip = document.getElementById('backend-status');
+    const chipText = document.getElementById('backend-status-text');
+    if (chip && chipText) {
+        chip.classList.remove('offline', 'online', 'checking');
+        chip.classList.add(status);
+        chipText.textContent = label || 'Backend: Unknown';
+    }
+
+    // Settings modal indicator
+    const indicator = document.getElementById('backend-health-indicator');
+    const indicatorText = document.getElementById('backend-health-text');
+    if (indicator && indicatorText) {
+        indicator.classList.remove('connected', 'error', 'loading');
+        if (status === 'online') {
+            indicator.classList.add('connected');
+            indicatorText.textContent = label || 'Online';
+            indicatorText.style.color = 'var(--accent-sage)';
+        } else if (status === 'checking') {
+            indicator.classList.add('loading');
+            indicatorText.textContent = label || 'Checking...';
+            indicatorText.style.color = 'var(--accent-amber)';
+        } else {
+            indicator.classList.add('error');
+            indicatorText.textContent = label || 'Offline';
+            indicatorText.style.color = 'var(--accent-rose)';
+        }
+    }
+}
+
+/* Start polling the backend health endpoint every 60 seconds.
+   Stops any existing interval first to avoid duplicates. */
+function startBackendHealthPolling() {
+    if (backendHealthInterval) clearInterval(backendHealthInterval);
+    if (!backendConfig.saveUrl) {
+        updateBackendStatus('offline', 'No backend URL configured');
+        return;
+    }
+    // Immediate check + interval
+    checkBackendHealth().catch(() => { /* errors already handled in updateBackendStatus */ });
+    backendHealthInterval = setInterval(() => {
+        if (backendConfig.saveUrl) {
+            checkBackendHealth().catch(() => {});
+        }
+    }, 60000); // 60 seconds
+}
+
+/* Stop health polling (e.g., when backend URL is cleared). */
+function stopBackendHealthPolling() {
+    if (backendHealthInterval) {
+        clearInterval(backendHealthInterval);
+        backendHealthInterval = null;
+    }
+}
+
 /* Build the JSON patch payload: only nodes with pending changes. */
 function buildPatch() {
     const changedNodes = [];
@@ -4148,6 +4343,19 @@ function setupModals() {
     
     document.getElementById('settings-close').addEventListener('click', () => closeModal('settings-modal'));
     document.getElementById('settings-cancel').addEventListener('click', () => closeModal('settings-modal'));
+
+    // Health check button — query the backend /health endpoint
+    document.getElementById('check-health-btn').addEventListener('click', async () => {
+        // Use the current input value (may not be saved yet)
+        const tempUrl = document.getElementById('backend-save-url').value.trim();
+        const prevUrl = backendConfig.saveUrl;
+        backendConfig.saveUrl = tempUrl;
+        try {
+            await checkBackendHealth();
+        } finally {
+            backendConfig.saveUrl = prevUrl; // restore until saved
+        }
+    });
     
     document.getElementById('load-schema-btn').addEventListener('click', async () => {
         aiConfig.schemaPath = document.getElementById('schema-path').value;
@@ -4186,6 +4394,8 @@ function setupModals() {
         }
 
         updateAIStatus();
+        // Restart health polling if the backend URL changed
+        startBackendHealthPolling();
         closeModal('settings-modal');
     });
     
@@ -6875,6 +7085,18 @@ function setupEventHandlers() {
         document.getElementById('settings-btn').click();
     });
 
+    // Click on backend status chip — triggers an immediate health check
+    const backendChip = document.getElementById('backend-status');
+    backendChip.addEventListener('click', () => {
+        checkBackendHealth().catch(() => {});
+    });
+    backendChip.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            checkBackendHealth().catch(() => {});
+        }
+    });
+
     setupHelp();
     setupWritingAssistant();
     
@@ -7070,6 +7292,9 @@ async function init() {
     } catch (e) {
         console.warn('Could not load global context on startup:', e);
     }
+
+    // Start backend health polling if a backend URL is configured
+    startBackendHealthPolling();
 }
 /* ═══════ KEYBOARD SHORTCUTS REGISTRY ═══════ */
 const KEYBINDINGS = {
