@@ -1,5 +1,6 @@
 [ ] Add epistemic - and tecnica.
 [ ] Job
+[ ] How do commercial entities structure and operate the sale of high-value products such as specialized bicycles? Does they buy it to the producer? How is interaction between consumer and producers structured?
 [ ] William Cockerill
 [ ] Juan Antonio de Riaño y Bárcena
 [ ] Concejo de la Mesta
