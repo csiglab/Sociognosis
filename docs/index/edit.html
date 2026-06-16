@@ -4040,17 +4040,17 @@ function loadPersistedBackendUrl() {
 /* Derives the /health endpoint URL from the configured Save URL.
    sync.py serves both endpoints from the same origin:
    - Save:   <origin>/api/graph/save
-   - Health: <origin>/health
-   So we strip the save path and append '/health'. */
+   - Health: <origin>/api/health
+   So we strip the save path and append '/api/health'. */
 function deriveHealthUrl(saveUrl) {
     if (!saveUrl) return '';
     try {
         const u = new URL(saveUrl, window.location.origin);
-        return `${u.origin}/health`;
+        return `${u.origin}/api/health`;
     } catch (e) {
         // Fallback: basic string manipulation if URL parsing fails
         const idx = saveUrl.indexOf('/api/');
-        if (idx >= 0) return saveUrl.substring(0, idx) + '/health';
+        if (idx >= 0) return saveUrl.substring(0, idx) + '/api/health';
         // Or if it ends with /api/graph/save, strip that
         return saveUrl.replace(/\/api\/graph\/save\/?$/, '/health');
     }

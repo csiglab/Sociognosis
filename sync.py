@@ -25,7 +25,7 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 
 SAVE_ENDPOINT = "/api/graph/save"
-HEALTH_ENDPOINT = "/health"
+HEALTH_ENDPOINT = "/api/health"
 
 
 class SyncHandler(SimpleHTTPRequestHandler):
