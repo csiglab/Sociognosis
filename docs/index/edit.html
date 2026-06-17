@@ -2365,21 +2365,25 @@ body.panel-collapsed .edit-panel {
     flex: 1;
 }
 
-/* Dirty badge — premium status chip with pill shape */
-.dirty-badge {
-    display: none;
-    font-family: var(--font-mono);
-    font-size: 0.52rem;
-    font-weight: 500;
-    padding: 2px 8px;
-    background: rgba(212, 168, 87, 0.12);
-    border: 1px solid rgba(212, 168, 87, 0.28);
-    border-radius: 10px;
-    color: var(--accent-amber);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    line-height: 1.4;
-    white-space: nowrap;
+/* Dirty-state subtle indicator — pulsing amber dot on panel title + faint header glow.
+   Replaces the old text "Modified" badge with a non-textual, ambient cue. */
+.panel-header.dirty {
+    box-shadow: inset 2px 0 0 var(--accent-amber);
+}
+.panel-title.dirty::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent-amber);
+    margin-right: 8px;
+    vertical-align: middle;
+    animation: dirtyPulse 2s ease-in-out infinite;
+}
+@keyframes dirtyPulse {
+    0%, 100% { opacity: 0.5; box-shadow: 0 0 0 0 rgba(212, 168, 87, 0); }
+    50% { opacity: 1; box-shadow: 0 0 6px 1px rgba(212, 168, 87, 0.4); }
 }
 
 /* Danger Footer — de-emphasized, separated by faint rose top-border */
@@ -3031,7 +3035,6 @@ select:focus-visible {
 .status-bar { font-size: 0.66rem; }
 .help-kbd { font-size: 0.7rem; min-width: 24px; }
 .json-validity { font-size: 0.66rem; }
-.dirty-badge { font-size: 0.58rem; }
 .apply-badge { font-size: 0.54rem; }
 
 /* 5. Comfortable line-height for reading panes & form text */
@@ -3494,7 +3497,6 @@ select:focus-visible {
                 <div class="workflow-stage">
                     <div class="stage-header">
                         <span class="stage-label">Commit</span>
-                        <span class="dirty-badge" id="dirty-badge">Modified</span>
                         <div class="stage-rule"></div>
                     </div>
                     <div class="stage-actions">
@@ -5962,15 +5964,39 @@ function takeSnapshot(nodeData) {
 function checkDirty() {
     if (!selectedNode || !nodeSnapshot) { isDirty = false; }
     else { isDirty = takeSnapshot(selectedNode._data) !== nodeSnapshot; }
-    
-    const badge = document.getElementById('dirty-badge');
-    if (badge) badge.style.display = isDirty ? 'inline-block' : 'none';
+
+    // Subtle indicator: toggle .dirty on the panel-title (pulsing dot)
+    // and panel-header (amber left-border glow) instead of a text badge.
+    const titleEl = document.getElementById('panel-title');
+    const headerEl = document.querySelector('.panel-header');
+    if (titleEl) titleEl.classList.toggle('dirty', isDirty);
+    if (headerEl) headerEl.classList.toggle('dirty', isDirty);
     return isDirty;
 }
 
+/* Promise-based unsaved-changes prompt.
+   When the node is dirty, shows a toast with "Discard" / "Cancel" actions.
+   Resolves true if the user discards (or if not dirty); false if they cancel. */
 function confirmDiscard(action) {
-    if (!isDirty) return true;
-    return confirm(`You have unsaved changes. ${action}? Click OK to discard changes.`);
+    if (!isDirty) return Promise.resolve(true);
+    return new Promise((resolve) => {
+        showToast({
+            type: 'warning',
+            title: 'Unsaved changes',
+            message: `This node has unsaved edits. ${action}?`,
+            duration: 0, // persist until user chooses
+            actions: [
+                {
+                    label: 'Discard changes',
+                    onClick: () => resolve(true)
+                },
+                {
+                    label: 'Keep editing',
+                    onClick: () => resolve(false)
+                }
+            ]
+        });
+    });
 }
 
 /* Attach dirty listeners to form inputs after renderForm */
@@ -6079,12 +6105,13 @@ function updateCompletenessIndicator() {
 }
 
 /* ═══════ SELECTION & EDITING ═══════ */
-function selectNode(node) {
+async function selectNode(node) {
     // Guard against switching away with unsaved changes
     if (selectedNode && node !== selectedNode && isDirty) {
-        if (!confirmDiscard('Switch to another node')) return;
+        const ok = await confirmDiscard('Switch to another node');
+        if (!ok) return;
     }
-    
+
     selectedNode = node;
     const selChip = document.getElementById('selection-chip');
     const selName = node ? (node.name || node.id) : 'None';
@@ -6095,11 +6122,14 @@ function selectNode(node) {
             ? `Selected: ${selName} — click × to deselect`
             : 'No node selected');
     }
-    
+
     if (node) {
         nodeSnapshot = takeSnapshot(node._data);
         isDirty = false;
-        document.getElementById('dirty-badge').style.display = 'none';
+        const titleEl = document.getElementById('panel-title');
+        const headerEl = document.querySelector('.panel-header');
+        if (titleEl) titleEl.classList.remove('dirty');
+        if (headerEl) headerEl.classList.remove('dirty');
         document.getElementById('panel-title').textContent = node.name || node.id;
         document.getElementById('panel-subtitle').textContent = node.category || 'Unknown';
         document.getElementById('panel-actions').style.display = 'flex';
@@ -7064,8 +7094,10 @@ function clearDirtyState() {
     if (selectedNode) {
         nodeSnapshot = takeSnapshot(selectedNode._data);
         isDirty = false;
-        const dirtyBadge = document.getElementById('dirty-badge');
-        if (dirtyBadge) dirtyBadge.style.display = 'none';
+        const titleEl = document.getElementById('panel-title');
+        const headerEl = document.querySelector('.panel-header');
+        if (titleEl) titleEl.classList.remove('dirty');
+        if (headerEl) headerEl.classList.remove('dirty');
     }
 }
 
@@ -7506,7 +7538,13 @@ function setupEventHandlers() {
     
     document.getElementById('add-node-btn').addEventListener('click', addNewNode);
     document.getElementById('save-btn').addEventListener('click', handleSave);
-    document.getElementById('toggle-panel-btn').addEventListener('click', () => {
+    document.getElementById('toggle-panel-btn').addEventListener('click', async () => {
+        // If closing the panel with unsaved changes, ask for confirmation first.
+        const isCurrentlyOpen = !document.body.classList.contains('panel-collapsed');
+        if (isCurrentlyOpen && isDirty) {
+            const ok = await confirmDiscard('Close the editor panel');
+            if (!ok) return;
+        }
         // The editor panel may only be open while a node is selected.
         if (document.body.classList.contains('panel-collapsed') && !selectedNode) return;
         document.body.classList.toggle('panel-collapsed');
