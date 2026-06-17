@@ -1,5 +1,3 @@
-[ ] We need to create  mechanism to teel the user - that a editing node is dirty - and has not been save yet - and even ask for configuration - if the edit window is closed or another node is loaded.
-[ ] Fix the saving notifications.
 [ ] We should allow for deletions.
 
 [ ] How do commercial entities structure and operate the sale of high-value products such as specialized bicycles? Does they buy it to the producer? How is interaction between consumer and producers structured?
@@ -13,7 +11,7 @@
 [ ] Develop a methodological framework and accompanying guides for decomposing products into their constituent techniques, capabilities, and production processes.
 [ ] Improve the Schema to Support Production Sector - Categories.
 
-[ ] Chemical Industries Association 
+[ ] Chemical Industries Association
 [ ] North East of England Process Industry Cluster.
 [ ] ...
 
