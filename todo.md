@@ -1,11 +1,18 @@
-[ ] Add epistemic - and tecnica.
-[ ] Job
+[ ] We need to create  mechanism to teel the user - that a editing node is dirty - and has not been save yet - and even ask for configuration - if the edit window is closed or another node is loaded.
+[ ] Fix the saving notifications.
+
+
 [ ] How do commercial entities structure and operate the sale of high-value products such as specialized bicycles? Does they buy it to the producer? How is interaction between consumer and producers structured?
-[ ] William Cockerill
-[ ] Juan Antonio de Riaño y Bárcena
-[ ] Concejo de la Mesta
-[ ] Sheffield
-[ ] Manchester
+[ ] What is the ownwership structure of a stock market?
+[ ] How to reason about Real State?
+[ ] How to reason about retail? What is the deep role of retail?
+[ ] What is the nature of commerce?
+[ ] Why can specialized  retail can exists, like lulemon?
+[ ] How it's revenew recogniized using accounting?
+[ ] Integrate the Technical Space into this project and construct a graph-based representation linking products to their underlying techniques.
+[ ] Develop a methodological framework and accompanying guides for decomposing products into their constituent techniques, capabilities, and production processes.
+[ ] Improve the Schema to Support Production Sector - Categories.
+
 [ ] Birmingham
 [ ] Leeds
 [ ] Glasgow
@@ -13,133 +20,110 @@
 [ ] Coventry
 [ ] Bristol
 [ ] Middlesbrough
-[ ] What is the ownwership structure of a stock market?
-[ ] Mercados de Abastecimientos de Barcelona, S.A.
-[ ] [Karl August von Hardenberg](https://en.wikipedia.org/wiki/Karl_August_von_Hardenberg)
-[ ] [European Parliamentary Research Service](https://en.wikipedia.org/wiki/European_Parliamentary_Research_Service)
-[ ] [Royal Swedish Academy of Sciences](https://en.wikipedia.org/wiki/Royal_Swedish_Academy_of_Sciences)
-[ ] [MIIT](https://en.wikipedia.org/wiki/Ministry_of_Industry_and_Information_Technology)
-[ ] Pilot Technology Projects - Case - Ultra-high energy-density dielectric materials and devices — Tsinghua University
-[ ] [Taptools](https://www.taptools.io/)
-[ ] Integrate the Technical Space into this project and construct a graph-based representation linking products to their underlying techniques.
-[ ] Develop a methodological framework and accompanying guides for decomposing products into their constituent techniques, capabilities, and production processes.
-[ ] Improve the Schema to Support Production Sector - Categories.
+
 [ ] Meat Cattle Production
 [ ] Add the  Technical Category of `Market Research`
 [ ] Market Consolidation
 [ ] Market Competition
 [ ] Market Research
 [ ] Profit Marging
-[ ] How to reason about retail? What is the deep role of retail?
-  - What is the nature of commerce?
-  - Why can specialized  retail can exists, like lulemon?
-- Add Accounting to Techniques Domain
-  - How it's revenew recogniized using accounting?
 
-- How to reason about Real State?
+[ ] Intergovernmental Org
+[ ] Multinational Corporation
+[ ] Non-Governmental Org
+[ ] Insurgent Group
+[ ] Terrorist Network
+[ ] Supranational Union
+[ ] Autonomous Region
+[ ] Financial Institution
+[ ] Religious Entity
+[ ] Advocacy Network
+[ ] Private Military Co.
+[ ] Criminal Syndicate
+[ ] Indigenous Governance
+[ ] Special Admin Region
+[ ] Government-In-Exile
+[ ] Occupied Territory
+[ ] Federal Province
+[ ] Trust Territory
 
-- we need to create  mechanism to teel the user - that a editing node is dirty - and has not been save yet - and even ask for configuration - if the edit window is closed or another node is loaded.
+[ ] Hedge Fund
+[ ] Export Credit Agency
+[ ] Trade Union
+[ ] Industry Lobby
+[ ] Think Tank
+[ ] Intelligence Agency
+[ ] Cyber-Hacktivist Group
+[ ] Decentralized Autonomous Org
+[ ] Cryptocurrency Exchange
+[ ] International Court
+[ ] Diaspora Network
+[ ] Paramilitary Force
+[ ] Separatist Movement
+[ ] Religious Order
+[ ] Tech Giant
+[ ] Social Media Platform
+[ ] Rating Agency
+[ ] Development Bank
+[ ] News Paper
+[ ] Urban Gang
+[ ] Cartel
+[ ] Mercenary Group
+[ ] International Federation
+[ ] Charitable Foundation
+[ ] Municipality
+[ ] Ethnic Association
+[ ] Global Governance Institution
+[ ] Venture Capital Firm
+[ ] Audit Institution
+[ ] Energy Cartel
+[ ] Academic Consortium
+[ ] Constitutional Monarchy
+[ ] Self-Defense Force
+[ ] Treaty Alliance
+[ ] Occupational Syndicate
+[ ] Human Rights Org
+[ ] Surveillance Apparatus
+[ ] Media Conglomerate
+[ ] Refugee Camp
+[ ] Pharmaceutical Alliance
+[ ] Peacekeeping Force
+[ ] Free Economic Zone
+[ ] Shadow Government
+[ ] Digital Community
+[ ] Landowner Association
+[ ] Consumer Co-op
+[ ] International Standards Body
+[ ] Ideological Sect
+[ ] Whistleblower Platform
+[ ] Arms Manufacturer
+[ ] Electoral Commission
+[ ] Pirate Organization
+[ ] Space Agency
+[ ] Interpol
+[ ] Insider Network
+[ ] Sovereign Council
+[ ] Public Intellectual
+[ ] Food Security Org
+[ ] Global Insurance Pool
+[ ] Vigilante Group
+[ ] Labor Union Federation
+[ ] Information Ministry
+[ ] Hereditary Chiefdom
+[ ] Ecoterrorism Group
+[ ] Shipping Conglomerate
+[ ] Telecom Monopoly
+[ ] Sports Federation
+[ ] Cultural Heritage Org
+[ ] Nuclear Regulatory Body
+[ ] Agribusiness Giant
+[ ] Disaster Relief Agency
+[ ] Social Credit System
+[ ] Political Action Committee
+[ ] Autonomous Collective
+[ ] Algorithmic Trading Bot
+[ ] Slum Network
 
-- Sovereign State
-- Intergovernmental Org
-- Multinational Corporation
-- Non-Governmental Org
-- Insurgent Group
-6. Terrorist Network
-7. Supranational Union
-8. Autonomous Region
-9. Financial Institution
-10. Religious Entity
-11. Advocacy Network
-12. Private Military Co.
-13. Criminal Syndicate
-14. Indigenous Governance
-15. Special Admin Region
-16. City-State
-17. Government-In-Exile
-18. Micronation
-19. Occupied Territory
-20. Federal Province
-21. Trust Territory
-22. Central Bank
-23. Sovereign Wealth Fund
-24. Hedge Fund
-25. Export Credit Agency
-26. Trade Union
-27. Industry Lobby
-28. Think Tank
-29. Intelligence Agency
-30. Cyber-Hacktivist Group
-31. Decentralized Autonomous Org
-32. Cryptocurrency Exchange
-33. International Court
-34. Diaspora Network
-35. Paramilitary Force
-36. Separatist Movement
-37. Religious Order
-38. Tech Giant
-39. Social Media Platform
-40. Rating Agency
-41. Development Bank
-42. Political Party
-43. News Conglomerate
-44. Urban Gang
-45. Cartel
-46. Mercenary Group
-47. International Federation
-48. Charitable Foundation
-49. Municipality
-50. Ethnic Association
-51. Global Governance Institution
-52. Venture Capital Firm
-53. Audit Institution
-54. Energy Cartel
-55. Academic Consortium
-56. Constitutional Monarchy
-57. Self-Defense Force
-58. Treaty Alliance
-59. Occupational Syndicate
-60. Human Rights Org
-61. Surveillance Apparatus
-62. Media Conglomerate
-63. Refugee Camp
-64. Pharmaceutical Alliance
-65. Peacekeeping Force
-66. Free Economic Zone
-67. Shadow Government
-68. Digital Community
-69. Landowner Association
-70. Consumer Co-op
-71. International Standards Body
-72. Ideological Sect
-73. Whistleblower Platform
-74. Arms Manufacturer
-75. Electoral Commission
-76. Pirate Organization
-77. Space Agency
-78. Interpol
-79. Insider Network
-80. Sovereign Council
-81. Public Intellectual
-82. Food Security Org
-83. Global Insurance Pool
-84. Vigilante Group
-85. Labor Union Federation
-86. Information Ministry
-87. Hereditary Chiefdom
-88. Ecoterrorism Group
-89. Shipping Conglomerate
-90. Telecom Monopoly
-91. Sports Federation
-92. Cultural Heritage Org
-93. Nuclear Regulatory Body
-94. Agribusiness Giant
-95. Disaster Relief Agency
-96. Social Credit System
-97. Political Action Committee
-98. Autonomous Collective
-99. Algorithmic Trading Bot
-100. Slum Network
 101. Tax Haven
 102. Cybersecurity Firm
 103. Public Health Authority
@@ -1313,3 +1297,4 @@
 - Grupo Luksic
 - Financial Techniques (Relative Strengh Index)
 - How to think about debt in the national currency?
+- [Taptools](https://www.taptools.io/)
