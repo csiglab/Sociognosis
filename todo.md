@@ -1,6 +1,6 @@
 [ ] We need to create  mechanism to teel the user - that a editing node is dirty - and has not been save yet - and even ask for configuration - if the edit window is closed or another node is loaded.
 [ ] Fix the saving notifications.
-
+[ ] We should allow for deletions.
 
 [ ] How do commercial entities structure and operate the sale of high-value products such as specialized bicycles? Does they buy it to the producer? How is interaction between consumer and producers structured?
 [ ] What is the ownwership structure of a stock market?
@@ -13,19 +13,12 @@
 [ ] Develop a methodological framework and accompanying guides for decomposing products into their constituent techniques, capabilities, and production processes.
 [ ] Improve the Schema to Support Production Sector - Categories.
 
-[ ] Birmingham
-[ ] Leeds
-[ ] Glasgow
-[ ] Liverpool
-[ ] Coventry
-[ ] Bristol
-[ ] Middlesbrough
-
-[ ] Government Debt (in National Currency) as Pseudo-Debt   (Debt  ->  Mechanism; Goal - Tool to Managemnt the Monetary System) -> Monetary System Debt Tool -> Cuasideuda -> Quasi-debt -> Quasiobligation
-[ ] Government Debt (in Foreign Currency)   (Debt) (Obligation)
+[ ] Chemical Industries Association 
+[ ] North East of England Process Industry Cluster.
+[ ] ...
 
 [ ] Meat Cattle Production
-[ ] Add the  Technical Category of `Market Research`
+[ ] Add the Technical Category of `Market Research`
 [ ] Market Consolidation
 [ ] Market Competition
 [ ] Market Research
@@ -1290,14 +1283,17 @@
 - Toyota: History, Deversification, etc.
 - Meat Cattle Industry Research
 - Technology and Innovation Exhibition Center
-- Sumitomo Group
-- Energy Industry
-- Does the term token economy makes sense?
-- Productivity
-- What underlying epistemic artifact informs the idea that a nation producing potatoes can be just as rich as a nation producing potato chips?
-- Market
-- GDP
-- Grupo Luksic
-- Financial Techniques (Relative Strengh Index)
-- How to think about debt in the national currency?
-- [Taptools](https://www.taptools.io/)
+[ ] Sumitomo Group
+[ ] Energy Industry
+[ ] Does the term token economy makes sense?
+[ ] Productivity
+[ ] What underlying epistemic artifact informs the idea that a nation producing potatoes can be just as rich as a nation producing potato chips?
+[ ] Market
+[ ] GDP
+[ ] Grupo Luksic
+[ ] Financial Techniques (Relative Strengh Index)
+[ ] How to think about debt in the national currency?
+[ ] [Taptools](https://www.taptools.io/)
+
+[ ] Government Debt (in National Currency) as Pseudo-Debt   (Debt  ->  Mechanism; Goal - Tool to Managemnt the Monetary System) -> Monetary System Debt Tool -> Cuasideuda -> Quasi-debt -> Quasiobligation
+[ ] Government Debt (in Foreign Currency)   (Debt) (Obligation)

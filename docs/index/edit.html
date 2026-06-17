@@ -3217,6 +3217,102 @@ select:focus-visible {
     width: 8px;
     height: 8px;
 }
+
+/* ═══════ TOAST NOTIFICATIONS ═══════ */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+    max-width: 380px;
+}
+
+.toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    background: rgba(31, 35, 45, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border-medium);
+    border-left: 3px solid var(--text-muted);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    pointer-events: auto;
+    animation: toastIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.removing { opacity: 0; transform: translateX(40px); }
+
+.toast.success { border-left-color: var(--accent-sage); }
+.toast.error   { border-left-color: var(--accent-rose); }
+.toast.info    { border-left-color: var(--accent-copper); }
+.toast.warning { border-left-color: var(--accent-amber); }
+
+.toast-icon {
+    flex-shrink: 0;
+    margin-top: 1px;
+    opacity: 0.8;
+}
+.toast.success .toast-icon { color: var(--accent-sage); }
+.toast.error   .toast-icon { color: var(--accent-rose); }
+.toast.info    .toast-icon { color: var(--accent-copper); }
+.toast.warning .toast-icon { color: var(--accent-amber); }
+
+.toast-body { flex: 1; min-width: 0; }
+
+.toast-title {
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+.toast-message { font-size: 0.76rem; color: var(--text-secondary); }
+
+.toast-actions { display: flex; gap: 8px; margin-top: 8px; }
+.toast-action-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    padding: 5px 12px;
+    font-size: 0.7rem;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.toast-action-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-strong);
+    color: var(--text-primary);
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0;
+    font-size: 16px;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+.toast-close:hover { color: var(--text-primary); }
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
     </style>
 </head>
 <body>
@@ -3377,6 +3473,12 @@ select:focus-visible {
                         <div class="stage-rule"></div>
                     </div>
                     <div class="stage-actions">
+                        <button class="btn btn-ai btn-sm" id="ai-improve-btn" title="AI: Generate or enhance this node's content">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                            </svg>
+                            Enhance
+                        </button>
                         <button class="btn btn-amber btn-sm" id="ai-relations-btn" title="AI: Discover relationships to other nodes">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
@@ -3384,12 +3486,7 @@ select:focus-visible {
                             </svg>
                             Find Relations
                         </button>
-                        <button class="btn btn-ai btn-sm" id="ai-improve-btn" title="AI: Generate or enhance this node's content">
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                            </svg>
-                            Enhance
-                        </button>
+                        
                     </div>
                 </div>
 
@@ -3690,6 +3787,9 @@ select:focus-visible {
             </div>
         </div>
     </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container" aria-live="polite" aria-atomic="true"></div>
 
     <!-- Writing Assistant Popover -->
     <div class="writing-assistant-popover" id="writing-assistant-popover">
@@ -6704,23 +6804,26 @@ function markGraphDirty() {
 }
 
 /* ═══════ SAVE & ADD NODE ═══════ */
-function applyChanges() {
-    if (!selectedNode) return;
-    
+/* Collect form/JSON edits into selectedNode._data WITHOUT any UI side effects.
+   Used by both applyChanges() (Apply button) and handleSave() (Save button) so
+   the Save flow can commit pending data without disrupting the current UI state
+   (no validation banner, no panel reload, no title change).
+   Returns true on success, false if the JSON tab has a parse error. */
+function commitFormData() {
+    if (!selectedNode) return false;
+
     // Collect inline edits from expanded list items first
     collectInlineEdits();
-    
+
     if (currentTab === 'json') {
         try {
             const parsed = JSON.parse(document.getElementById('json-textarea').value);
             Object.assign(selectedNode._data, parsed);
             selectedNode.name = parsed.name || selectedNode.id;
             selectedNode.category = parsed.category || 'Reality';
-            document.getElementById('json-error').style.display = 'none';
+            return true;
         } catch (e) {
-            document.getElementById('json-error').textContent = 'Invalid JSON: ' + e.message;
-            document.getElementById('json-error').style.display = 'block';
-            return;
+            return false; // invalid JSON — caller decides how to surface
         }
     } else {
         selectedNode._data.id = document.getElementById('edit-id').value;
@@ -6729,26 +6832,50 @@ function applyChanges() {
         selectedNode._data.description = document.getElementById('edit-description').value;
         selectedNode._data.longDescription = document.getElementById('edit-longdesc').value;
         selectedNode._data.functionalRoles = getArrayValues('functionalRoles');
-        
+
         selectedNode._data.historicalContext = selectedNode._data.historicalContext || { summary: '', chronology: [] };
         selectedNode._data.historicalContext.summary = document.getElementById('edit-hist-summary').value;
-        
+
         selectedNode._data.specific = collectSpecificValues();
-        
+
         if (!selectedNode._data.metadata) selectedNode._data.metadata = {};
         selectedNode._data.metadata.tags = getArrayValues('tags');
         selectedNode._data.metadata.inheritanceLevel = parseInt(document.getElementById('edit-inheritance').value) || 0;
         selectedNode._data.metadata.confidenceScore = parseFloat(document.getElementById('edit-confidence').value) || 0.7;
         selectedNode._data.metadata.sourceReference = document.getElementById('edit-source').value;
-        
+
         selectedNode.name = selectedNode._data.name;
         selectedNode.category = selectedNode._data.category;
+        return true;
     }
-    
+}
+
+/* Apply button: commit data, then update UI (validation banner, title, stats). */
+function applyChanges() {
+    if (!selectedNode) return;
+
+    if (!commitFormData()) {
+        // JSON parse error — show the error in the panel (Apply context only)
+        if (currentTab === 'json') {
+            try {
+                JSON.parse(document.getElementById('json-textarea').value);
+            } catch (e) {
+                document.getElementById('json-error').textContent = 'Invalid JSON: ' + e.message;
+                document.getElementById('json-error').style.display = 'block';
+            }
+        }
+        return;
+    }
+
+    // Clear JSON error display on success
+    if (currentTab === 'json') {
+        document.getElementById('json-error').style.display = 'none';
+    }
+
     // Schema validation
     const errors = validateNode(selectedNode._data);
     showValidationSummary(errors);
-    
+
     const idx = data.findIndex(d => d.id === selectedNode._data.id);
     if (idx >= 0) data[idx] = selectedNode._data;
     document.getElementById('panel-title').textContent = selectedNode.name || selectedNode.id;
@@ -6849,17 +6976,114 @@ function deleteNode() {
     markGraphDirty();
 }
 
+/* ═══════ TOAST NOTIFICATIONS ═══════ */
+const TOAST_ICONS = {
+    success: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+    error:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+    info:    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    warning: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+};
+
+/**
+ * Show a toast notification.
+ * @param {Object} opts
+ * @param {string} opts.type       - 'success' | 'error' | 'info' | 'warning'
+ * @param {string} opts.title      - Bold title text
+ * @param {string} [opts.message]  - Descriptive message
+ * @param {number} [opts.duration] - Auto-dismiss after ms (0 = manual close only)
+ * @param {Array<{label, onClick}>} [opts.actions] - Action buttons
+ */
+function showToast({ type = 'info', title, message = '', duration = 5000, actions = [] }) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    const iconHtml = TOAST_ICONS[type] || TOAST_ICONS.info;
+
+    let actionsHtml = '';
+    if (actions.length > 0) {
+        actionsHtml = '<div class="toast-actions">' +
+            actions.map((a, i) => `<button class="toast-action-btn" data-toast-action="${i}">${escHTML(a.label)}</button>`).join('') +
+            '</div>';
+    }
+
+    toast.innerHTML = `
+        <span class="toast-icon">${iconHtml}</span>
+        <div class="toast-body">
+            <div class="toast-title">${escHTML(title)}</div>
+            ${message ? `<div class="toast-message">${escHTML(message)}</div>` : ''}
+            ${actionsHtml}
+        </div>
+        <button class="toast-close" type="button" aria-label="Dismiss notification">&times;</button>
+    `;
+
+    // Wire up action buttons
+    if (actions.length > 0) {
+        toast.querySelectorAll('.toast-action-btn').forEach((btn, i) => {
+            btn.addEventListener('click', () => {
+                if (actions[i].onClick) actions[i].onClick();
+                removeToast(toast);
+            });
+        });
+    }
+
+    // Close button
+    toast.querySelector('.toast-close').addEventListener('click', () => removeToast(toast));
+
+    container.appendChild(toast);
+
+    // Auto-dismiss
+    if (duration > 0) {
+        setTimeout(() => removeToast(toast), duration);
+    }
+}
+
+function removeToast(toast) {
+    if (!toast || !toast.parentElement) return;
+    toast.classList.add('removing');
+    setTimeout(() => toast.remove(), 300);
+}
+
+/* Rebuild the Save button's inner HTML (SVG icon + label).
+   Used to restore the button after showing "Saving..." / "✓ Saved" states,
+   avoiding stale captured HTML that may include a removed badge. */
+function rebuildSaveButtonHTML() {
+    return `<svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+                    </svg>
+                    Save`;
+}
+
+/* Clear all dirty-state indicators after a successful save (backend or file).
+   Resets the per-node snapshot, the dirty flag, the Modified badge, and the
+   pending-changes set so the UI no longer shows stale "unsaved" cues. */
+function clearDirtyState() {
+    clearPendingChanges();
+    if (selectedNode) {
+        nodeSnapshot = takeSnapshot(selectedNode._data);
+        isDirty = false;
+        const dirtyBadge = document.getElementById('dirty-badge');
+        if (dirtyBadge) dirtyBadge.style.display = 'none';
+    }
+}
+
 /* Save handler: sends pending changes to backend if configured,
    otherwise falls back to downloading a full JSON file. */
 async function handleSave() {
     const saveBtn = document.getElementById('save-btn');
-    const originalHTML = saveBtn.innerHTML;
 
     // Auto-commit any uncommitted form edits before syncing so the latest
     // values (including newly added nodes) are included in the patch.
+    // Uses commitFormData() (not applyChanges()) so the UI state is preserved
+    // — no validation banner flash, no panel reload, no title re-render.
     if (selectedNode && isDirty) {
-        applyChanges();
+        commitFormData();
     }
+
+    // Snapshot the count BEFORE clearing — used for the success message.
+    const pendingCount = pendingChanges.size;
 
     if (backendConfig.saveUrl) {
         // Backend sync mode — send JSON patch
@@ -6867,19 +7091,55 @@ async function handleSave() {
         saveBtn.innerHTML = '<span class="loading-spinner"></span> Saving...';
         try {
             await saveToBackend();
-            clearPendingChanges();
+            clearDirtyState();
+
+            if (pendingCount > 0) {
+                showToast({
+                    type: 'success',
+                    title: 'Saved to backend',
+                    message: `${pendingCount} node${pendingCount !== 1 ? 's' : ''} synced successfully.`
+                });
+            } else {
+                showToast({
+                    type: 'info',
+                    title: 'Nothing to save',
+                    message: 'No pending changes to sync.'
+                });
+            }
+
+            // Brief "✓ Saved" flash on the button
             saveBtn.innerHTML = '✓ Saved';
-            setTimeout(() => { saveBtn.innerHTML = originalHTML; saveBtn.disabled = false; }, 1500);
+            setTimeout(() => {
+                saveBtn.innerHTML = rebuildSaveButtonHTML();
+                saveBtn.disabled = false;
+            }, 1200);
         } catch (e) {
             console.error('Backend save failed:', e);
-            alert('Failed to save to backend:\n' + e.message + '\n\nWould you like to download a JSON file instead?');
-            if (confirm('Download JSON file instead?')) saveJSON();
-            saveBtn.innerHTML = originalHTML;
+            saveBtn.innerHTML = rebuildSaveButtonHTML();
             saveBtn.disabled = false;
+            showToast({
+                type: 'error',
+                title: 'Save failed',
+                message: e.message || 'Could not sync to the backend.',
+                duration: 0, // persistent until dismissed
+                actions: [
+                    { label: 'Download JSON', onClick: () => saveJSON() },
+                    { label: 'Dismiss',       onClick: () => {} }
+                ]
+            });
         }
     } else {
         // Fallback: download full JSON file
         saveJSON();
+        clearDirtyState();
+
+        // Brief "✓ Saved" flash on the button
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '✓ Saved';
+        setTimeout(() => {
+            saveBtn.innerHTML = rebuildSaveButtonHTML();
+            saveBtn.disabled = false;
+        }, 1200);
     }
 }
 
@@ -6889,6 +7149,11 @@ function saveJSON() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = 'data.json'; a.click();
     URL.revokeObjectURL(url);
+    showToast({
+        type: 'success',
+        title: 'Graph exported',
+        message: `${nodes.length} nodes downloaded as data.json.`
+    });
 }
 
 function updateStats() {
