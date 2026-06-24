@@ -1,5 +1,7 @@
 [ ] We should allow for deletions.
 
+[ ] Should create a diffeernt sub project for the product - technical space? How to think about this?
+
 [ ] How do commercial entities structure and operate the sale of high-value products such as specialized bicycles? Does they buy it to the producer? How is interaction between consumer and producers structured?
 [ ] What is the ownwership structure of a stock market?
 [ ] How to reason about Real State?
