@@ -25,7 +25,6 @@
 [ ] Intergovernmental Org
 [ ] Multinational Corporation
 [ ] Non-Governmental Org
-[ ] Insurgent Group
 [ ] Terrorist Network
 [ ] Supranational Union
 [ ] Autonomous Region
@@ -41,7 +40,6 @@
 [ ] Federal Province
 [ ] Trust Territory
 
-[ ] Hedge Fund
 [ ] Export Credit Agency
 [ ] Trade Union
 [ ] Industry Lobby
@@ -119,7 +117,6 @@
 [ ] Slum Network
 
 101. Tax Haven
-102. Cybersecurity Firm
 103. Public Health Authority
 104. Pension Fund
 105. Exiled Opposition
