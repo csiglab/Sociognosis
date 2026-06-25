@@ -656,9 +656,9 @@
 <body>
     <aside class="toolbox" id="sidebar">
         <div class="sb-header">
-            <span class="sb-eyebrow">Epistemic Space Atlas</span>
+            <span class="sb-eyebrow">Social Reality Space Atlas</span>
             <h2 class="sb-title">Space Explorer</h2>
-            <p class="sb-subtitle">Mapping the architecture of epistemic capabilities.</p>
+            <p class="sb-subtitle">Parsing social reality.</p>
         </div>
 
         <div class="sb-search">
@@ -759,58 +759,39 @@
         function isFiniteNum(v){return typeof v==='number'&&isFinite(v);}
 
         /* ═══════ CATEGORY COLOR SYSTEM ═══════ */
-        // Ontologically meaningful color assignments
-        var CATEGORY_COLORS = {
-            // Foundational / Ontic
-            'Reality': '#6B8DD6',           // Deep blue - the ground of being
-            'Epistemic Domain (Target Domain)': '#7BA3E0', // Lighter blue - domain scope
-            'Epistemic Gap': '#8B6BB5',     // Purple - the unknown
-            
-            // Observation / Interface
-            'Observation Interface': '#3CAEA3', // Teal - sensory/technical interface
-            'Observation Encoding': '#44B3A8',  // Slightly different teal
-            'Encoding Substrate': '#3B9D92',    // Darker teal - physical basis
-            
-            // Representation / Structure
-            'Epistemic Representation Form (Epistemic Blueprint)': '#4ECDC4', // Bright cyan
-            'Concrete Epistemic Artifact': '#45B7AA', // Materialized knowledge
-            
-            // Agency / Action
-            'Epistemic Agent': '#E8A855',       // Warm gold - the knower
-            'Epistemic Act': '#F0B060',         // Brighter gold - the action
-            'Epistemic Process (Activity)': '#E0A04A', // Structured activity
-            
-            // Purpose / Teleology
-            'Epistemic Purpose': '#FFD166',     // Bright gold - the telos
-            'Epistemic Goal': '#FFC233',        // Deep gold - the objective
-            
-            // Standards / Constraints
-            'Epistemic Standard': '#E06C75',    // Soft red - normative
-            'Epistemic Constraint': '#D45A63',  // Darker red - limitation
-            
-            // Infrastructure / Systems
-            'Epistemic Infrastructure': '#C678DD', // Purple - technical substrate
-            'Epistemic Feedback': '#B86CB5',    // Magenta - returned signal
-            
-            // Frameworks / Methods
-            'Epistemic Principle': '#98C379',   // Green - foundational truth
-            'Epistemic Framework': '#8BC370',   // Leaf green - structure
-            'Epistemic Strategy': '#7CB368',    // Strategic green
-            'Epistemic Prior (Inductive Bias)': '#A0C97A', // Light green - pre-knowledge
-            'Epistemic Operator': '#7EC699'     // Operational green
-        };
+        // Colors are generated dynamically from the data — no hardcoded
+        // category → color map. Each unique category discovered in the
+        // dataset gets a stable, visually distinct color via golden-angle
+        // hue distribution, so it works for any schema/dataset.
+        var CATEGORY_COLORS = {};
+        var _catColorIdx = 0;
 
-        // Category groupings for legend organization
-        var CATEGORY_GROUPS = {
-            'Foundational': ['Reality', 'Epistemic Domain (Target Domain)', 'Epistemic Gap'],
-            'Observation': ['Observation Interface', 'Observation Encoding', 'Encoding Substrate'],
-            'Representation': ['Epistemic Representation Form (Epistemic Blueprint)', 'Concrete Epistemic Artifact'],
-            'Agency': ['Epistemic Agent', 'Epistemic Act', 'Epistemic Process (Activity)'],
-            'Teleology': ['Epistemic Purpose', 'Epistemic Goal'],
-            'Normative': ['Epistemic Standard', 'Epistemic Constraint'],
-            'Infrastructure': ['Epistemic Infrastructure', 'Epistemic Feedback'],
-            'Methodological': ['Epistemic Principle', 'Epistemic Framework', 'Epistemic Strategy', 'Epistemic Prior (Inductive Bias)', 'Epistemic Operator']
-        };
+        function hslToHex(h, s, l) {
+            s /= 100; l /= 100;
+            var c = (1 - Math.abs(2 * l - 1)) * s;
+            var x = c * (1 - Math.abs((h / 60) % 2 - 1));
+            var m = l - c / 2;
+            var r = 0, g = 0, b = 0;
+            if (h < 60)       { r = c; g = x; b = 0; }
+            else if (h < 120) { r = x; g = c; b = 0; }
+            else if (h < 180) { r = 0; g = c; b = x; }
+            else if (h < 240) { r = 0; g = x; b = c; }
+            else if (h < 300) { r = x; g = 0; b = c; }
+            else              { r = c; g = 0; b = x; }
+            r = Math.round((r + m) * 255);
+            g = Math.round((g + m) * 255);
+            b = Math.round((b + m) * 255);
+            return '#' + (0x1000000 + r * 0x10000 + g * 0x100 + b).toString(16).slice(1);
+        }
+
+        function catColor(cat) {
+            if (!CATEGORY_COLORS[cat]) {
+                var hue = (_catColorIdx * 137.508) % 360;
+                CATEGORY_COLORS[cat] = hslToHex(hue, 62, 60);
+                _catColorIdx++;
+            }
+            return CATEGORY_COLORS[cat];
+        }
 
         /* ═══════ STATE ═══════ */
         var nodes=[], gE=[], nM={};
@@ -1259,7 +1240,7 @@
             var html='';
             Object.keys(CATEGORY_COLORS).forEach(function(cat){
                 var col=CATEGORY_COLORS[cat];
-                var shortName=cat.replace('Epistemic ','').replace(' (Target Domain)','').replace(' (Epistemic Blueprint)','').replace(' (Inductive Bias)','').replace(' (Activity)','');
+                var shortName=cat;
                 html+='<div class="cat-legend-item" data-category="'+cat+'">';
                 html+='<div class="cat-legend-dot" style="background:'+col+'"></div>';
                 html+='<span>'+shortName+'</span>';
@@ -1286,9 +1267,14 @@
                 if(!r.id)return;
                 var id=r.id.replace(/\s+/g,'_');
                 var yr=null;
-                if(r.historicalContext&&r.historicalContext.chronology){
-                    var years=r.historicalContext.chronology.map(function(c){return c.year}).filter(isFiniteNum);
+                // New schema: chronology.events[] (was historicalContext.chronology[])
+                if(r.chronology&&Array.isArray(r.chronology.events)){
+                    var years=r.chronology.events.map(function(c){return c.year}).filter(isFiniteNum);
                     if(years.length)yr=Math.min.apply(null,years);
+                }else if(r.historicalContext&&r.historicalContext.chronology){
+                    // Backward-compat fallback for legacy data shape
+                    var yearsOld=r.historicalContext.chronology.map(function(c){return c.year}).filter(isFiniteNum);
+                    if(yearsOld.length)yr=Math.min.apply(null,yearsOld);
                 }
                 if(yr!==null&&yr<minY)minY=yr;
                 if(yr!==null&&yr>maxY)maxY=yr;
@@ -1312,6 +1298,8 @@
                 nM[id]=nd;
                 degC[id]=0;
                 catVisibility[r.category]=true;
+                // Assign a dynamic color for this category
+                catColor(r.category);
             });
 
             data.forEach(function(r){

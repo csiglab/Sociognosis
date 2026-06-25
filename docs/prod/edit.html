@@ -3853,65 +3853,73 @@ function friendlyLabel(k) {
     return k.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').replace(/^./, s => s.toUpperCase()).trim();
 }
 
-/* ═══════ CONSTANTS ═══════ */
-const CATEGORIES = [
-    'Epistemic Purpose', 'Reality', 'Observation Interface', 'Observation Encoding',
-    'Epistemic Representation Form (Epistemic Blueprint)', 'Concrete Epistemic Artifact',
-    'Epistemic Gap', 'Epistemic Agent', 'Epistemic Goal', 'Epistemic Process (Activity)',
-    'Epistemic Standard', 'Encoding Substrate', 'Epistemic Domain (Target Domain)',
-    'Epistemic Constraint', 'Epistemic Infrastructure', 'Epistemic Feedback',
-    'Epistemic Act', 'Epistemic Principle', 'Epistemic Prior (Inductive Bias)',
-    'Epistemic Strategy', 'Epistemic Framework', 'Epistemic Operator'
-];
+/* ═══════ SCHEMA-DERIVED VOCABULARIES ═══════ */
+/* All option lists below are populated at runtime from schema.json
+   (enum values) and the loaded dataset (observed values). Nothing
+   is hardcoded — the UI adapts to any schema/dataset combination. */
+let CATEGORIES = [];
+let LAYERS = [];
+let RELATIONSHIP_FAMILIES = [];
+let RELATIONSHIP_TYPES = [];
+let RELATIONSHIP_TYPE_GROUPS = {};
 
-const RELATIONSHIP_FAMILIES = [
-    'ontological', 'mereological', 'causal', 'dependency', 'representational',
-    'observational', 'epistemic', 'inferential', 'agential', 'normative',
-    'constraint', 'temporal', 'classification', 'implementation', 'semantic',
-    'interaction', 'not_specified'
-];
+/* Rebuild all vocabulary arrays from schema + data. Called after
+   loadData() and again after loadSchema() so the lists reflect
+   whichever sources are available. */
+function rebuildVocabularies() {
+    const cats = new Set();
+    const layers = new Set();
+    const families = new Set();
+    const types = new Set();
+    const familyToTypes = {}; // family -> Set<type>
 
-const RELATIONSHIP_TYPES = [
-    'instance_of', 'type_of', 'subtype_of', 'generalizes', 'specializes', 'realizes',
-    'manifests', 'emerges_from', 'supervenes_on', 'grounded_in', 'part_of', 'has_part',
-    'component_of', 'contains', 'member_of', 'aggregates', 'composes', 'causes',
-    'contributes_to', 'inhibits', 'amplifies', 'regulates', 'triggers', 'generates',
-    'produces', 'maintains', 'destabilizes', 'depends_on', 'requires', 'enables',
-    'supported_by', 'derived_from', 'conditioned_by', 'represents', 'models', 'describes',
-    'encodes', 'abstracts', 'approximates', 'simulates', 'maps_to', 'refers_to',
-    'observes', 'measures', 'samples', 'detects', 'senses', 'captures', 'quantifies',
-    'validates', 'falsifies', 'confirms', 'corroborates', 'critiques', 'explains',
-    'predicts', 'estimates', 'characterizes', 'infers', 'deduces', 'induces', 'abduces',
-    'derives', 'computes', 'calculates', 'pursues', 'selects', 'uses', 'intervenes_on',
-    'controls', 'monitors', 'coordinates', 'governs', 'constrains', 'evaluates',
-    'complies_with', 'violates', 'justifies', 'legitimizes', 'limits', 'bounds',
-    'restricts', 'shapes', 'determines_feasibility_of', 'precedes', 'succeeds',
-    'evolves_from', 'transforms_into', 'persists_as', 'co_occurs_with', 'classifies',
-    'categorizes', 'groups', 'partitions', 'implements', 'executes', 'instantiates',
-    'deploys', 'denotes', 'signifies', 'interprets', 'translates', 'interacts_with',
-    'exchanges_with', 'communicates_with', 'competes_with', 'cooperates_with', 'not_specified'
-];
+    // 1. Pull enum values from schema.json (authoritative allowed values)
+    if (aiConfig.schema && aiConfig.schema.properties) {
+        const props = aiConfig.schema.properties;
+        if (props.category && Array.isArray(props.category.enum)) {
+            props.category.enum.forEach(v => cats.add(v));
+        }
+        if (props.layer && Array.isArray(props.layer.enum)) {
+            props.layer.enum.forEach(v => layers.add(v));
+        }
+    }
 
-/* Tier 3.I: Relationship types grouped by family for the select dropdown */
-const RELATIONSHIP_TYPE_GROUPS = {
-    'Compositional': ['part_of', 'has_part', 'component_of', 'contains', 'member_of', 'aggregates', 'composes'],
-    'Ontological': ['instance_of', 'type_of', 'subtype_of', 'generalizes', 'specializes', 'realizes', 'manifests', 'emerges_from', 'supervenes_on', 'grounded_in'],
-    'Causal': ['causes', 'contributes_to', 'inhibits', 'amplifies', 'regulates', 'triggers', 'generates', 'produces', 'maintains', 'destabilizes'],
-    'Dependency': ['depends_on', 'requires', 'enables', 'supported_by', 'derived_from', 'conditioned_by'],
-    'Representational': ['represents', 'models', 'describes', 'encodes', 'abstracts', 'approximates', 'simulates', 'maps_to', 'refers_to'],
-    'Observational': ['observes', 'measures', 'samples', 'detects', 'senses', 'captures', 'quantifies'],
-    'Epistemic': ['validates', 'falsifies', 'confirms', 'corroborates', 'critiques', 'explains', 'predicts', 'estimates', 'characterizes'],
-    'Inferential': ['infers', 'deduces', 'induces', 'abduces', 'derives', 'computes', 'calculates'],
-    'Agential': ['pursues', 'selects', 'uses', 'intervenes_on', 'controls', 'monitors', 'coordinates', 'governs'],
-    'Normative': ['constrains', 'evaluates', 'complies_with', 'violates', 'justifies', 'legitimizes'],
-    'Constraint': ['limits', 'bounds', 'restricts', 'shapes', 'determines_feasibility_of'],
-    'Temporal': ['precedes', 'succeeds', 'evolves_from', 'transforms_into', 'persists_as', 'co_occurs_with'],
-    'Classification': ['classifies', 'categorizes', 'groups', 'partitions'],
-    'Implementation': ['implements', 'executes', 'instantiates', 'deploys'],
-    'Semantic': ['denotes', 'signifies', 'interprets', 'translates'],
-    'Interaction': ['interacts_with', 'exchanges_with', 'communicates_with', 'competes_with', 'cooperates_with'],
-    'Other': ['not_specified']
-};
+    // 2. Scan loaded data for observed values (supplements schema,
+    //    catches values present in data but not yet in schema)
+    data.forEach(d => {
+        if (d.category) cats.add(d.category);
+        if (d.layer) layers.add(d.layer);
+        (d.relationships || []).forEach(rel => {
+            const fam = rel.relationshipFamily;
+            const typ = rel.relationshipType;
+            if (fam) {
+                families.add(fam);
+                if (!familyToTypes[fam]) familyToTypes[fam] = new Set();
+            }
+            if (typ) types.add(typ);
+            if (fam && typ && familyToTypes[fam]) familyToTypes[fam].add(typ);
+        });
+    });
+
+    CATEGORIES = Array.from(cats).sort((a, b) => a.localeCompare(b));
+    LAYERS = Array.from(layers).sort((a, b) => a.localeCompare(b));
+    RELATIONSHIP_FAMILIES = Array.from(families).sort((a, b) => a.localeCompare(b));
+    RELATIONSHIP_TYPES = Array.from(types).sort((a, b) => a.localeCompare(b));
+
+    // Build type groups dynamically from observed family → type pairings
+    const groups = {};
+    const grouped = new Set();
+    Object.keys(familyToTypes).sort((a, b) => a.localeCompare(b)).forEach(fam => {
+        const label = friendlyLabel(fam);
+        const famTypes = Array.from(familyToTypes[fam]).sort((a, b) => a.localeCompare(b));
+        groups[label] = famTypes;
+        famTypes.forEach(t => grouped.add(t));
+    });
+    // Catch-all for types with no observed family
+    const orphans = RELATIONSHIP_TYPES.filter(t => !grouped.has(t));
+    if (orphans.length) groups['Other'] = orphans;
+    RELATIONSHIP_TYPE_GROUPS = groups;
+}
 
 /* ═══════ OXFORD COMMON ROOM — COMMUNITY PALETTE ═══════ */
 /* The Senior Common Room: muted, low-saturation scholarly tones.
@@ -4333,6 +4341,7 @@ async function loadSchema() {
         statusEl.textContent = 'Schema loaded successfully';
         statusEl.style.color = 'var(--accent-sage)';
         updateAIStatus();
+        rebuildVocabularies(); // refresh option lists from schema enums
         return true;
     } catch (e) {
         console.error('Schema load error:', e);
@@ -5394,6 +5403,7 @@ async function loadData() {
     }
     extractSuggestions();
     initGraph();
+    rebuildVocabularies(); // populate dropdowns from data + schema
 }
 
 function initGraph() {
@@ -6324,7 +6334,7 @@ function renderForm(nodeData) {
     const historicalContext = nodeData.historicalContext || { summary: '', chronology: [] };
     
     const html = `
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">Basic Information</div>
             <div class="form-row">
                 <label class="form-label">ID</label>
@@ -6346,7 +6356,7 @@ function renderForm(nodeData) {
             </div>
         </div>
         
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">Description</div>
             <div class="form-row">
                 <label class="form-label">Short Description</label>
@@ -6358,7 +6368,7 @@ function renderForm(nodeData) {
             </div>
         </div>
         
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">Functional Roles</div>
             <div class="form-row">
                 <label class="form-label">Roles <span style="opacity:0.5;font-size:0.5em">(${suggestions.functionalRoles.length} suggestions)</span></label>
@@ -6366,7 +6376,7 @@ function renderForm(nodeData) {
             </div>
         </div>
         
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">Historical Context</div>
             <div class="form-row">
                 <label class="form-label">Summary</label>
@@ -6397,14 +6407,14 @@ function renderForm(nodeData) {
             </div>
         </div>
         
-        <div class="form-section" id="specific-properties-section">
+        <div class="form-section collapsed" id="specific-properties-section">
             <div class="form-section-title">Specific Properties <span id="specific-category-hint" style="font-size:0.62rem;font-style:italic;color:var(--text-muted);font-family:var(--font-body);font-weight:400;letter-spacing:0;text-transform:none;"></span></div>
             <div id="specific-fields-container">
                 ${renderSpecificFromSchema(nodeData.category, specific)}
             </div>
         </div>
         
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">Relationships (${(nodeData.relationships || []).length})</div>
             <div id="relationships-container">
                 ${(nodeData.relationships || []).map((rel, i) => renderRelationshipItem(rel, i)).join('')}
@@ -6428,7 +6438,7 @@ function renderForm(nodeData) {
             </div>
         </div>
         
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">Metadata</div>
             <div class="form-row">
                 <label class="form-label">Tags <span style="opacity:0.5;font-size:0.5em">(${suggestions.tags.length} suggestions)</span></label>
@@ -6447,7 +6457,7 @@ function renderForm(nodeData) {
             ${suggestions.sourceReference.length ? `<datalist id="source-suggestions">${suggestions.sourceReference.map(s => `<option value="${escHTML(s)}">`).join('')}</datalist>` : ''}
         </div>
         
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">References</div>
             <div id="references-container">
                 ${(nodeData.references || []).map((ref, i) => renderReferenceItem(ref, i)).join('')}

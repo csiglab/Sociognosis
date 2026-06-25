@@ -3853,65 +3853,73 @@ function friendlyLabel(k) {
     return k.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ').replace(/^./, s => s.toUpperCase()).trim();
 }
 
-/* ═══════ CONSTANTS ═══════ */
-const CATEGORIES = [
-    'Epistemic Purpose', 'Reality', 'Observation Interface', 'Observation Encoding',
-    'Epistemic Representation Form (Epistemic Blueprint)', 'Concrete Epistemic Artifact',
-    'Epistemic Gap', 'Epistemic Agent', 'Epistemic Goal', 'Epistemic Process (Activity)',
-    'Epistemic Standard', 'Encoding Substrate', 'Epistemic Domain (Target Domain)',
-    'Epistemic Constraint', 'Epistemic Infrastructure', 'Epistemic Feedback',
-    'Epistemic Act', 'Epistemic Principle', 'Epistemic Prior (Inductive Bias)',
-    'Epistemic Strategy', 'Epistemic Framework', 'Epistemic Operator'
-];
+/* ═══════ SCHEMA-DERIVED VOCABULARIES ═══════ */
+/* All option lists below are populated at runtime from schema.json
+   (enum values) and the loaded dataset (observed values). Nothing
+   is hardcoded — the UI adapts to any schema/dataset combination. */
+let CATEGORIES = [];
+let LAYERS = [];
+let RELATIONSHIP_FAMILIES = [];
+let RELATIONSHIP_TYPES = [];
+let RELATIONSHIP_TYPE_GROUPS = {};
 
-const RELATIONSHIP_FAMILIES = [
-    'ontological', 'mereological', 'causal', 'dependency', 'representational',
-    'observational', 'epistemic', 'inferential', 'agential', 'normative',
-    'constraint', 'temporal', 'classification', 'implementation', 'semantic',
-    'interaction', 'not_specified'
-];
+/* Rebuild all vocabulary arrays from schema + data. Called after
+   loadData() and again after loadSchema() so the lists reflect
+   whichever sources are available. */
+function rebuildVocabularies() {
+    const cats = new Set();
+    const layers = new Set();
+    const families = new Set();
+    const types = new Set();
+    const familyToTypes = {}; // family -> Set<type>
 
-const RELATIONSHIP_TYPES = [
-    'instance_of', 'type_of', 'subtype_of', 'generalizes', 'specializes', 'realizes',
-    'manifests', 'emerges_from', 'supervenes_on', 'grounded_in', 'part_of', 'has_part',
-    'component_of', 'contains', 'member_of', 'aggregates', 'composes', 'causes',
-    'contributes_to', 'inhibits', 'amplifies', 'regulates', 'triggers', 'generates',
-    'produces', 'maintains', 'destabilizes', 'depends_on', 'requires', 'enables',
-    'supported_by', 'derived_from', 'conditioned_by', 'represents', 'models', 'describes',
-    'encodes', 'abstracts', 'approximates', 'simulates', 'maps_to', 'refers_to',
-    'observes', 'measures', 'samples', 'detects', 'senses', 'captures', 'quantifies',
-    'validates', 'falsifies', 'confirms', 'corroborates', 'critiques', 'explains',
-    'predicts', 'estimates', 'characterizes', 'infers', 'deduces', 'induces', 'abduces',
-    'derives', 'computes', 'calculates', 'pursues', 'selects', 'uses', 'intervenes_on',
-    'controls', 'monitors', 'coordinates', 'governs', 'constrains', 'evaluates',
-    'complies_with', 'violates', 'justifies', 'legitimizes', 'limits', 'bounds',
-    'restricts', 'shapes', 'determines_feasibility_of', 'precedes', 'succeeds',
-    'evolves_from', 'transforms_into', 'persists_as', 'co_occurs_with', 'classifies',
-    'categorizes', 'groups', 'partitions', 'implements', 'executes', 'instantiates',
-    'deploys', 'denotes', 'signifies', 'interprets', 'translates', 'interacts_with',
-    'exchanges_with', 'communicates_with', 'competes_with', 'cooperates_with', 'not_specified'
-];
+    // 1. Pull enum values from schema.json (authoritative allowed values)
+    if (aiConfig.schema && aiConfig.schema.properties) {
+        const props = aiConfig.schema.properties;
+        if (props.category && Array.isArray(props.category.enum)) {
+            props.category.enum.forEach(v => cats.add(v));
+        }
+        if (props.layer && Array.isArray(props.layer.enum)) {
+            props.layer.enum.forEach(v => layers.add(v));
+        }
+    }
 
-/* Tier 3.I: Relationship types grouped by family for the select dropdown */
-const RELATIONSHIP_TYPE_GROUPS = {
-    'Compositional': ['part_of', 'has_part', 'component_of', 'contains', 'member_of', 'aggregates', 'composes'],
-    'Ontological': ['instance_of', 'type_of', 'subtype_of', 'generalizes', 'specializes', 'realizes', 'manifests', 'emerges_from', 'supervenes_on', 'grounded_in'],
-    'Causal': ['causes', 'contributes_to', 'inhibits', 'amplifies', 'regulates', 'triggers', 'generates', 'produces', 'maintains', 'destabilizes'],
-    'Dependency': ['depends_on', 'requires', 'enables', 'supported_by', 'derived_from', 'conditioned_by'],
-    'Representational': ['represents', 'models', 'describes', 'encodes', 'abstracts', 'approximates', 'simulates', 'maps_to', 'refers_to'],
-    'Observational': ['observes', 'measures', 'samples', 'detects', 'senses', 'captures', 'quantifies'],
-    'Epistemic': ['validates', 'falsifies', 'confirms', 'corroborates', 'critiques', 'explains', 'predicts', 'estimates', 'characterizes'],
-    'Inferential': ['infers', 'deduces', 'induces', 'abduces', 'derives', 'computes', 'calculates'],
-    'Agential': ['pursues', 'selects', 'uses', 'intervenes_on', 'controls', 'monitors', 'coordinates', 'governs'],
-    'Normative': ['constrains', 'evaluates', 'complies_with', 'violates', 'justifies', 'legitimizes'],
-    'Constraint': ['limits', 'bounds', 'restricts', 'shapes', 'determines_feasibility_of'],
-    'Temporal': ['precedes', 'succeeds', 'evolves_from', 'transforms_into', 'persists_as', 'co_occurs_with'],
-    'Classification': ['classifies', 'categorizes', 'groups', 'partitions'],
-    'Implementation': ['implements', 'executes', 'instantiates', 'deploys'],
-    'Semantic': ['denotes', 'signifies', 'interprets', 'translates'],
-    'Interaction': ['interacts_with', 'exchanges_with', 'communicates_with', 'competes_with', 'cooperates_with'],
-    'Other': ['not_specified']
-};
+    // 2. Scan loaded data for observed values (supplements schema,
+    //    catches values present in data but not yet in schema)
+    data.forEach(d => {
+        if (d.category) cats.add(d.category);
+        if (d.layer) layers.add(d.layer);
+        (d.relationships || []).forEach(rel => {
+            const fam = rel.relationshipFamily;
+            const typ = rel.relationshipType;
+            if (fam) {
+                families.add(fam);
+                if (!familyToTypes[fam]) familyToTypes[fam] = new Set();
+            }
+            if (typ) types.add(typ);
+            if (fam && typ && familyToTypes[fam]) familyToTypes[fam].add(typ);
+        });
+    });
+
+    CATEGORIES = Array.from(cats).sort((a, b) => a.localeCompare(b));
+    LAYERS = Array.from(layers).sort((a, b) => a.localeCompare(b));
+    RELATIONSHIP_FAMILIES = Array.from(families).sort((a, b) => a.localeCompare(b));
+    RELATIONSHIP_TYPES = Array.from(types).sort((a, b) => a.localeCompare(b));
+
+    // Build type groups dynamically from observed family → type pairings
+    const groups = {};
+    const grouped = new Set();
+    Object.keys(familyToTypes).sort((a, b) => a.localeCompare(b)).forEach(fam => {
+        const label = friendlyLabel(fam);
+        const famTypes = Array.from(familyToTypes[fam]).sort((a, b) => a.localeCompare(b));
+        groups[label] = famTypes;
+        famTypes.forEach(t => grouped.add(t));
+    });
+    // Catch-all for types with no observed family
+    const orphans = RELATIONSHIP_TYPES.filter(t => !grouped.has(t));
+    if (orphans.length) groups['Other'] = orphans;
+    RELATIONSHIP_TYPE_GROUPS = groups;
+}
 
 /* ═══════ OXFORD COMMON ROOM — COMMUNITY PALETTE ═══════ */
 /* The Senior Common Room: muted, low-saturation scholarly tones.
@@ -3954,28 +3962,6 @@ function getCategoryColor(category) {
     return COMMUNITY_COLORS[categoryColorIndex(category)];
 }
 
-const SPECIFIC_ENUMS = {
-    purposeType: ['explanation', 'prediction', 'control', 'diagnosis', 'discovery', 'description', 'forecasting', 'intervention', 'understanding', 'other'],
-    onticLayer: ['ontic', 'synontic', 'meta_ontic'],
-    onticCategory: ['entity', 'process', 'event', 'state', 'property', 'relationship', 'mechanism', 'system', 'environment', 'space', 'time', 'information'],
-    domain: ['physical', 'biological', 'cognitive', 'social', 'economic', 'political', 'technological', 'ecological', 'mixed', 'not_specified'],
-    agentType: ['individualHuman', 'researchTeam', 'institution', 'automatedSystem', 'AI', 'other'],
-    goalType: ['identifyCausalMechanisms', 'estimateParameters', 'discoverLatentVariables', 'classifyEntities', 'predictFutureStates', 'explainObservedPhenomena', 'reduceUncertainty', 'detectAnomalies', 'estimateRisk', 'constructTaxonomies', 'inferHiddenStates', 'evaluateInterventions', 'improveForecastAccuracy', 'characterizeSystemStructure', 'determineBoundaryConditions', 'identifyGoverningLaws', 'measureQuantities', 'validateHypotheses', 'generateHypotheses', 'optimizeModelPerformance', 'other'],
-    processType: ['scientificMethod', 'bayesianUpdating', 'trainingPipeline', 'experimentalCycle', 'simulationStudy', 'literatureReview', 'modelComparison', 'dataCollection', 'other'],
-    standardType: ['logicalConsistency', 'statisticalSignificance', 'reproducibility', 'robustness', 'falsifiability', 'predictiveAccuracy', 'explanatoryPower', 'parsimony', 'other'],
-    constraintType: ['noise', 'limitedData', 'computationalComplexity', 'identifiabilityIssue', 'measurementError', 'ignorance', 'intractability', 'stochasticity', 'higherOrderStochasticity', 'chaos', 'nonlinearity', 'uncertaintyPropagation', 'observationalLimitation', 'other'],
-    infrastructureType: ['sensor', 'laboratory', 'softwareSystem', 'database', 'computationalCluster', 'publicationVenue', 'repository', 'other'],
-    feedbackType: ['predictionError', 'unexpectedObservation', 'failedIntervention', 'successfulReplication', 'sensorSaturation', 'modelDivergence', 'comparisonSnapshot', 'other'],
-    actType: ['attending', 'discriminating', 'remembering', 'anticipating', 'intervening', 'comparing', 'observing', 'encoding', 'other'],
-    priorType: ['gaussianPrior', 'simplicityPreference', 'smoothnessAssumption', 'localityAssumption', 'sparsityPrior', 'causalOrdering', 'other'],
-    frameworkName: ['logic', 'causalInference', 'bayesianReasoning', 'statisticalReasoning', 'systemsTheory', 'cybernetics', 'informationTheory', 'mechanisticModeling', 'optimizationTheory', 'gameTheory', 'controlTheory', 'reductionism', 'complexityScience', 'decisionTheory', 'other'],
-    operatorType: ['algebraicManipulation', 'statisticalInference', 'optimization', 'simulation', 'measurementProcedure', 'dataTransformation', 'graphAlgorithm', 'stateDescriptorOperator', 'other'],
-    formType: ['DirectedAcyclicGraph', 'StructuralEquation', 'PolynomialEquation', 'DifferentialEquation', 'BayesianNetwork', 'Matrix', 'Hypergraph', 'LogicalFormula', 'DecisionTree', 'NeuralNetworkArchitecture', 'other'],
-    artifactType: ['equation', 'dataset', 'model', 'graph', 'table', 'text', 'code', 'image', 'other'],
-    substrateType: ['paper', 'ink', 'electromagneticSignal', 'siliconMemory', 'biologicalTissue', 'other'],
-    domainType: ['physicalSystem', 'biologicalSystem', 'socialSystem', 'computationalSystem', 'economicSystem', 'ecologicalSystem', 'cognitiveSystem', 'other']
-};
-
 /* ═══════ STATE ═══════ */
 let data = [];
 let nodes = [];
@@ -3983,7 +3969,6 @@ let edges = [];
 let nodeMap = {};
 
 let suggestions = {
-    functionalRoles: [],
     tags: [],
     sourceReference: []
 };
@@ -4333,6 +4318,7 @@ async function loadSchema() {
         statusEl.textContent = 'Schema loaded successfully';
         statusEl.style.color = 'var(--accent-sage)';
         updateAIStatus();
+        rebuildVocabularies(); // refresh option lists from schema enums
         return true;
     } catch (e) {
         console.error('Schema load error:', e);
@@ -4409,17 +4395,17 @@ function buildSystemPrompt(forCreation = true) {
     
     if (forCreation) {
         prompt += `TASK: Create a new node as a valid JSON object following the Sociognosis schema exactly. The JSON must include all required fields:
-- id: A unique identifier following the pattern "category.name" (e.g., "reality.market")
+- id: A unique identifier following the pattern "category.name" (e.g., "actor.firm")
 - name: A human-readable name
-- category: One of the defined categories from the schema
+- tags: Array of semantic labels (top-level, not inside metadata)
+- layer: One of the sociognostic layers (Ontic, Agentic, Relational, Epistemic, Normative, Synontic, External Observer)
+- category: One of the defined categories from the schema enum
 - description: A brief description
-- longDescription: A detailed explanation
-- functionalRoles: Array of roles this entity plays
-- historicalContext: Object with summary and chronology array
-- specific: Object with category-specific fields (refer to schema $defs)
-- relationshipFamily: Optional, for the node's primary relationship family
-- relationshipType: Optional, for the node's primary relationship type
-- metadata: Object with tags array, inheritanceLevel (integer), confidenceScore (0-1), sourceReference, createdAt, auditTrail array
+- longDescription: A detailed explanation (optional but recommended)
+- chronology: Object with summary (string) and events array ({ year, event, context })
+- relationships: Array of relationship objects ({ targetNodeId, relationshipType, relationshipFamily?, description? })
+- specific: Object with category-specific attributes
+- metadata: Object with inheritanceLevel (integer), confidenceScore (0-1), sourceReference, createdAt, auditTrail array
 - references: Array of reference objects with title, optional link, and description
 
 Return ONLY valid JSON with no additional text or explanation.`;
@@ -4992,21 +4978,18 @@ function updateAPIStatusIndicator() {
 
 /* ═══════ EXTRACT SUGGESTIONS FROM DATA ═══════ */
 function extractSuggestions() {
-    const functionalRolesSet = new Set();
     const tagsSet = new Set();
     const sourceReferenceSet = new Set();
     
     data.forEach(d => {
-        (d.functionalRoles || []).forEach(v => { if (v && typeof v === 'string') functionalRolesSet.add(v); });
+        (d.tags || []).forEach(v => { if (v && typeof v === 'string') tagsSet.add(v); });
         if (d.metadata) {
-            (d.metadata.tags || []).forEach(v => { if (v && typeof v === 'string') tagsSet.add(v); });
             if (d.metadata.sourceReference && typeof d.metadata.sourceReference === 'string') {
                 sourceReferenceSet.add(d.metadata.sourceReference);
             }
         }
     });
     
-    suggestions.functionalRoles = Array.from(functionalRolesSet).sort();
     suggestions.tags = Array.from(tagsSet).sort();
     suggestions.sourceReference = Array.from(sourceReferenceSet).sort();
 }
@@ -5369,31 +5352,11 @@ async function loadData() {
         data = await res.json();
     } catch (e) {
         console.warn('Could not load data.json, using sample data');
-        data = [{
-            "id": "reality.market", "name": "Market", "category": "Reality",
-            "description": "A socially constituted institutional structure that coordinates voluntary exchange among economic agents.",
-            "longDescription": "A market is a synontic institutional configuration composed of agents, exchange protocols, property rights, contractual rules, information flows, and allocation mechanisms.",
-            "functionalRoles": ["Resource Allocation", "Price Discovery", "Information Transmission"],
-            "historicalContext": { "summary": "Markets have existed in various forms throughout human history.", "chronology": [] },
-            "specific": { "onticLayer": "synontic", "onticCategory": "entity" },
-            "relationships": [],
-            "metadata": { "tags": ["market", "institution", "exchange"], "inheritanceLevel": 2, "confidenceScore": 0.97, "sourceReference": "Sociognosis Economic Ontology", "createdAt": "2024-06-10T00:00:00Z", "auditTrail": [] },
-            "references": []
-        },
-        {
-            "id": "agent.trader", "name": "Trader", "category": "Epistemic Agent",
-            "description": "An economic agent who participates in market exchanges.",
-            "longDescription": "A trader is an individual or institution that buys and sells financial instruments in markets.",
-            "functionalRoles": ["Price Formation", "Liquidity Provision"],
-            "historicalContext": { "summary": "Traders have existed as long as markets have.", "chronology": [] },
-            "specific": { "agentType": "individualHuman", "domain": "economic" },
-            "relationships": [],
-            "metadata": { "tags": ["agent", "market", "trading"], "inheritanceLevel": 1, "confidenceScore": 0.92, "sourceReference": "Sociognosis Economic Ontology", "createdAt": "2024-06-10T00:00:00Z", "auditTrail": [] },
-            "references": []
-        }];
+        data = [];
     }
     extractSuggestions();
     initGraph();
+    rebuildVocabularies(); // populate dropdowns from data + schema
 }
 
 function initGraph() {
@@ -6021,16 +5984,16 @@ function collectCurrentFormData() {
     d.category = getSSValue('edit-category') || '';
     d.description = (document.getElementById('edit-description')?.value || '').trim();
     d.longDescription = (document.getElementById('edit-longdesc')?.value || '').trim();
-    d.functionalRoles = (typeof getArrayValues === 'function') ? getArrayValues('functionalRoles') : [];
-    d.historicalContext = {
-        summary: (document.getElementById('edit-hist-summary')?.value || '').trim(),
-        chronology: (selectedNode._data.historicalContext?.chronology || [])
+    d.tags = (typeof getArrayValues === 'function') ? getArrayValues('tags') : [];
+    d.layer = getSSValue('edit-layer') || '';
+    d.chronology = {
+        summary: (document.getElementById('edit-chron-summary')?.value || '').trim(),
+        events: (selectedNode._data.chronology?.events || [])
     };
     d.specific = (typeof collectSpecificValues === 'function') ? collectSpecificValues() : {};
     d.relationships = selectedNode._data.relationships || [];
     if (!selectedNode._data.metadata) selectedNode._data.metadata = {};
     d.metadata = {
-        tags: (typeof getArrayValues === 'function') ? getArrayValues('tags') : [],
         sourceReference: (document.getElementById('edit-source')?.value || '').trim()
     };
     d.references = selectedNode._data.references || [];
@@ -6059,10 +6022,10 @@ function computeNodeCompleteness(d) {
     push('category', d.category);
     push('description', d.description);
     push('longDescription', d.longDescription);
-    push('functionalRoles', d.functionalRoles);
-    push('historicalContext.summary', d.historicalContext?.summary);
+    push('layer', d.layer);
+    push('tags', d.tags);
+    push('chronology.summary', d.chronology?.summary);
     push('relationships', d.relationships);
-    push('metadata.tags', d.metadata?.tags);
     push('metadata.sourceReference', d.metadata?.sourceReference);
     push('references', d.references);
 
@@ -6290,7 +6253,7 @@ function validateNode(nodeData) {
     const errors = [];
     
     // Top-level required fields
-    const topRequired = aiConfig.schema?.required || ['id', 'name', 'category', 'description', 'functionalRoles', 'historicalContext', 'specific', 'relationships', 'metadata', 'references'];
+    const topRequired = aiConfig.schema?.required || ['id', 'name', 'tags', 'category', 'description', 'chronology', 'relationships', 'specific', 'metadata', 'references'];
     topRequired.forEach(field => {
         if (!nodeData[field] || (Array.isArray(nodeData[field]) && nodeData[field].length === 0)) {
             errors.push({ field, message: `${friendlyLabel(field)} is required` });
@@ -6321,10 +6284,11 @@ function renderForm(nodeData) {
     const typeOptions = RELATIONSHIP_TYPES.map(t => ({ value: t, label: t }));
     
     const specific = nodeData.specific || {};
-    const historicalContext = nodeData.historicalContext || { summary: '', chronology: [] };
+    const chronology = nodeData.chronology || { summary: '', events: [] };
+    const layerOptions = LAYERS.map(l => ({ value: l, label: l }));
     
     const html = `
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">Basic Information</div>
             <div class="form-row">
                 <label class="form-label">ID</label>
@@ -6346,7 +6310,7 @@ function renderForm(nodeData) {
             </div>
         </div>
         
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">Description</div>
             <div class="form-row">
                 <label class="form-label">Short Description</label>
@@ -6358,24 +6322,28 @@ function renderForm(nodeData) {
             </div>
         </div>
         
-        <div class="form-section">
-            <div class="form-section-title">Functional Roles</div>
+        <div class="form-section collapsed">
+            <div class="form-section-title">Layer & Tags</div>
             <div class="form-row">
-                <label class="form-label">Roles <span style="opacity:0.5;font-size:0.5em">(${suggestions.functionalRoles.length} suggestions)</span></label>
-                ${createArrayInput('functionalRoles', nodeData.functionalRoles || [], suggestions.functionalRoles)}
+                <label class="form-label">Layer</label>
+                ${createSearchableSelect('edit-layer', 'Search layer...', layerOptions, nodeData.layer || '', null, false)}
+            </div>
+            <div class="form-row">
+                <label class="form-label">Tags <span style="opacity:0.5;font-size:0.5em">(${suggestions.tags.length} suggestions)</span></label>
+                ${createArrayInput('tags', nodeData.tags || [], suggestions.tags)}
             </div>
         </div>
         
-        <div class="form-section">
-            <div class="form-section-title">Historical Context</div>
+        <div class="form-section collapsed">
+            <div class="form-section-title">Chronology</div>
             <div class="form-row">
                 <label class="form-label">Summary</label>
-                <textarea class="form-textarea" id="edit-hist-summary" placeholder="Historical summary...">${escHTML(historicalContext.summary || '')}</textarea>
+                <textarea class="form-textarea" id="edit-chron-summary" placeholder="Historical summary...">${escHTML(chronology.summary || '')}</textarea>
             </div>
             <div class="form-row">
-                <label class="form-label">Chronology <span style="opacity:0.5;font-size:0.5em">(${(historicalContext.chronology || []).length} entries)</span></label>
+                <label class="form-label">Events <span style="opacity:0.5;font-size:0.5em">(${(chronology.events || []).length} entries)</span></label>
                 <div id="chronology-container">
-                    ${(historicalContext.chronology || []).map((entry, i) => renderChronologyEntry(entry, i)).join('')}
+                    ${(chronology.events || []).map((entry, i) => renderChronologyEntry(entry, i)).join('')}
                 </div>
                 <div class="add-chronology-form" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border-subtle);">
                     <div class="form-row-inline">
@@ -6397,14 +6365,14 @@ function renderForm(nodeData) {
             </div>
         </div>
         
-        <div class="form-section" id="specific-properties-section">
+        <div class="form-section collapsed" id="specific-properties-section">
             <div class="form-section-title">Specific Properties <span id="specific-category-hint" style="font-size:0.62rem;font-style:italic;color:var(--text-muted);font-family:var(--font-body);font-weight:400;letter-spacing:0;text-transform:none;"></span></div>
             <div id="specific-fields-container">
                 ${renderSpecificFromSchema(nodeData.category, specific)}
             </div>
         </div>
         
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">Relationships (${(nodeData.relationships || []).length})</div>
             <div id="relationships-container">
                 ${(nodeData.relationships || []).map((rel, i) => renderRelationshipItem(rel, i)).join('')}
@@ -6428,12 +6396,8 @@ function renderForm(nodeData) {
             </div>
         </div>
         
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">Metadata</div>
-            <div class="form-row">
-                <label class="form-label">Tags <span style="opacity:0.5;font-size:0.5em">(${suggestions.tags.length} suggestions)</span></label>
-                ${createArrayInput('tags', (nodeData.metadata || {}).tags || [], suggestions.tags)}
-            </div>
             <div class="form-row-inline">
                 <div class="form-row">
                     <label class="form-label">Confidence Score</label>
@@ -6447,7 +6411,7 @@ function renderForm(nodeData) {
             ${suggestions.sourceReference.length ? `<datalist id="source-suggestions">${suggestions.sourceReference.map(s => `<option value="${escHTML(s)}">`).join('')}</datalist>` : ''}
         </div>
         
-        <div class="form-section">
+        <div class="form-section collapsed">
             <div class="form-section-title">References</div>
             <div id="references-container">
                 ${(nodeData.references || []).map((ref, i) => renderReferenceItem(ref, i)).join('')}
@@ -6459,12 +6423,12 @@ function renderForm(nodeData) {
     document.getElementById('panel-body').innerHTML = html;
     
     initSearchableSelect('edit-category');
+    initSearchableSelect('edit-layer');
     initSpecificFields();
     initSearchableSelect('new-rel-type');
     initSearchableSelect('new-rel-family');
     initSearchableSelect('new-rel-target');
     
-    initArrayInput('functionalRoles', suggestions.functionalRoles);
     initArrayInput('tags', suggestions.tags);
     
     // Update specific category hint
@@ -6552,10 +6516,10 @@ function addChronologyEntry() {
         return;
     }
     
-    selectedNode._data.historicalContext = selectedNode._data.historicalContext || { summary: '', chronology: [] };
-    selectedNode._data.historicalContext.chronology = selectedNode._data.historicalContext.chronology || [];
+    selectedNode._data.chronology = selectedNode._data.chronology || { summary: '', events: [] };
+    selectedNode._data.chronology.events = selectedNode._data.chronology.events || [];
     
-    selectedNode._data.historicalContext.chronology.push({
+    selectedNode._data.chronology.events.push({
         year: year || new Date().getFullYear(),
         event: event,
         context: context
@@ -6570,9 +6534,9 @@ function addChronologyEntry() {
 
 function removeChronologyEntry(idx) {
     if (!selectedNode) return;
-    if (!selectedNode._data.historicalContext || !selectedNode._data.historicalContext.chronology) return;
+    if (!selectedNode._data.chronology || !selectedNode._data.chronology.events) return;
     
-    selectedNode._data.historicalContext.chronology.splice(idx, 1);
+    selectedNode._data.chronology.events.splice(idx, 1);
     renderForm(selectedNode._data);
 }
 
@@ -6814,7 +6778,7 @@ function isNewOrEmptyNode(node) {
     return (!d.description || !d.description.trim()) &&
            (!d.longDescription || !d.longDescription.trim()) &&
            (!d.relationships || d.relationships.length === 0) &&
-           (!d.functionalRoles || d.functionalRoles.length === 0) &&
+           (!d.tags || d.tags.length === 0) &&
            (d.name === 'New Node' || !d.name);
 }
 
@@ -6861,15 +6825,15 @@ function commitFormData() {
         selectedNode._data.category = getSSValue('edit-category') || 'Reality';
         selectedNode._data.description = document.getElementById('edit-description').value;
         selectedNode._data.longDescription = document.getElementById('edit-longdesc').value;
-        selectedNode._data.functionalRoles = getArrayValues('functionalRoles');
 
-        selectedNode._data.historicalContext = selectedNode._data.historicalContext || { summary: '', chronology: [] };
-        selectedNode._data.historicalContext.summary = document.getElementById('edit-hist-summary').value;
+        selectedNode._data.chronology = selectedNode._data.chronology || { summary: '', events: [] };
+        selectedNode._data.chronology.summary = document.getElementById('edit-chron-summary').value;
 
         selectedNode._data.specific = collectSpecificValues();
 
         if (!selectedNode._data.metadata) selectedNode._data.metadata = {};
-        selectedNode._data.metadata.tags = getArrayValues('tags');
+        selectedNode._data.tags = getArrayValues('tags');
+        selectedNode._data.layer = getSSValue('edit-layer') || '';
         selectedNode._data.metadata.inheritanceLevel = parseInt(document.getElementById('edit-inheritance').value) || 0;
         selectedNode._data.metadata.confidenceScore = parseFloat(document.getElementById('edit-confidence').value) || 0.7;
         selectedNode._data.metadata.sourceReference = document.getElementById('edit-source').value;
@@ -6977,10 +6941,12 @@ function addNewNode() {
     const id = 'node.' + Date.now();
     const newNodeData = {
         id: id, name: 'New Node', category: 'Reality',
-        description: '', longDescription: '', functionalRoles: [],
-        historicalContext: { summary: '', chronology: [] },
+        description: '', longDescription: '',
+        tags: [],
+        layer: '',
+        chronology: { summary: '', events: [] },
         specific: {}, relationships: [],
-        metadata: { tags: [], inheritanceLevel: 0, confidenceScore: 0.7, sourceReference: '', createdAt: new Date().toISOString(), auditTrail: [] },
+        metadata: { inheritanceLevel: 0, confidenceScore: 0.7, sourceReference: '', createdAt: new Date().toISOString(), auditTrail: [] },
         references: []
     };
     data.push(newNodeData);
