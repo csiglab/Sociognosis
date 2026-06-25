@@ -1256,13 +1256,10 @@
 1237. Information Technology and Innovation Foundation
 1238. Electronics and Telecommunications Research Institute
 1239. Federal Reserve System
-1240. Department for Business and Trade (DBT)
 1241. Ernst & Young (EY)
 1242. ByteDance Ltd.
 1243. GIC Private Limited
 1244. SpaceX
-1245. Haas Automation
-1246. Advanced Micro-Fabrication Equipment (AMEC)
 - Wealth
 - Capita
 - Exchange
