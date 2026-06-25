@@ -18,18 +18,23 @@
 | **Short Description** | Concise summary of the concept. |
 | **Long Description** | Detailed explanatory description of the concept. |
 | **Chronology** | Historical emergence, evolution, and temporal characteristics of the concept. |
+| **Relation Set** | How does it related with other nodes?|
 | **Particular Characterization** | Category-specific attributes not covered by the generic schema. |
 | **Metadata** | Administrative and descriptive metadata such as author, creation date, status, version, tags, provenance, confidence, and maintenance information. |
 | **References** | Sources, literature, theories, frameworks, empirical evidence, and supporting documentation. |
-
 ### Which are the set layers useful for parsing of social realty?
 
-| Layer          | Description                    |
-| -------------- | ------------------------------ |
-| **Ontic**      | What exists?                   |
-| **Agentic**    | Who acts and how?              |
-| **Epistemic**  | What is known or believed?     |
-| **Normative**  | What is considered legitimate? |
+> **Synontic**: Means, symbolic - ontic - epistemic.
+
+| Layer                 | Core Question                        | Description                                                                                |
+| --------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------ |
+| **Ontic**             | What exists?                         | Actors, artifacts, resources, organizations, events, states of affairs.                    |
+| **Agentic**           | Who acts and how?                    | Agency, capabilities, goals, decision-making, action, strategy.                            |
+| **Relational**        | How are things connected?            | Networks, hierarchies, dependencies, exchanges, power relations.                           |
+| **Epistemic**         | What is known, believed, or assumed? | Knowledge, beliefs, models, information, uncertainty, ignorance.                           |
+| **Normative**         | What ought to be done?               | Norms, values, laws, legitimacy, obligations, permissions.                                 |
+| **Synontic**          | What meanings are socially shared?   | Symbols, languages, narratives, categories, collective representations, cultural meanings. |
+| **External Observer** | How is the system being described?   | Analytical framework, measurement model, observer assumptions, explanatory lens.           |
 
 ### Which are the set categories useful for parsing of social realty?
 
@@ -93,7 +98,10 @@
 | **Region**                        | Spatially bounded social area.                                      | Caribbean, Southeast Asia                     |
 | **Environment**                   | External conditions affecting actors.                               | Geopolitical Context                          |
 | **Collective Representation** | Shared cognitive construct through which a group perceives, interprets, and organizes social reality. Exists at the collective rather than individual level and provides common objects of thought, meaning, and orientation. | Nation, Money, Human Rights, The Market, The State, Citizenship                          |
-| **Convention**                | Stable and socially recognized pattern of coordination sustained by mutual expectations rather than formal enforcement. Actors follow it because they expect others to do the same.                                           | Driving on the Right Side, Business Dress Codes, Handshakes, Academic Citation Practices |
+| **Convention**  | Stable and socially recognized pattern of coordination sustained by mutual expectations rather than formal enforcement. Actors follow it because they expect others to do the same.                                         | Driving on the Right Side, Business Dress Codes, Handshakes, Academic Citation Practices                 |
+| **Dynamical**   | Temporal process describing how social entities, relations, beliefs, norms, or structures change, evolve, reproduce, diffuse, adapt, or decay over time. Focuses on mechanisms of transformation rather than static states. | Institutional Change, Cultural Diffusion, Social Mobility, Organizational Growth, Technological Adoption |
+| **Property**    | Attribute, characteristic, or quality possessed by an entity, relation, group, or system that can be used for description, classification, comparison, or explanation.                                                      | Wealth, Status, Legitimacy, Population Size, Trustworthiness, Productivity, Centrality                   |
+| **Interaction** | Event, process, or exchange through which two or more actors affect one another by transferring information, resources, influence, obligations, or other social content.                                                    | Negotiation, Trade, Communication, Voting, Conflict, Cooperation, Teaching                               |
 
 ## Implementation
 
@@ -121,4 +129,6 @@ See `../../docs/data/index/schema/notes.md`.
 
 ## References
 
+- [Ontology](https://app.notion.com/p/Ontology-138eea37a34f43ed87c16d1818629723?source=copy_link)
+- [Onticy Map](https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Guide/Map/)
 - [Social Ontology](https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Guide/)

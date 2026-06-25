@@ -1,92 +1,110 @@
 # Sociogenesis Space
 
-> These notes will enrich the context and facilitate the generation of nodes that adhere to the schema.
+> Sociognosis space is a set of nodes that  aims to identify and formalize the set of (ontic-agentic-epistemic) elements that enable an agent to effectively navigate (understanding and acting) social reality.
 
-> The **Sociognosis** aims to identify and formalize the set of epistemic elements that enable an agent to effectively navigate social reality (through understanding and action).
+## Formulation
 
-## Category
+> Which are the set of concepts that useful to describe social reality (ontic, epistemic, agentic)? Which are the main categories?
 
-**Ontology and epistemology are the right hand and left hand of knowledge construction: they are mutually constraining duals of the same epistemic act.**
+### Which model is able to store this?
 
-- **Ontology** = what *is* (constraint space of reality)
-- **Epistemology** = how it is *accessed/represented* (constraint space of knowing)
-- They are not separate domains, but **co-dependent operators on the same reality-model interface**
+| Aspect | Description |
+|----------|-------------|
+| **Id** | Unique identifier. |
+| **Name** | Canonical name of the concept. |
+| **Tags Set** | A set of semantic labels associated with the concept for categorization, navigation, filtering, and search. |
+| **Layer** | The primary sociognostic layer in which the element operates (Ontic, Agentic, Epistemic, Normative,  etc.). |
+| **Category** | The direct conceptual category of the element (Actor, Institution, Role, Resource, Belief, Goal, Norm, Event, Capability, Relationship, etc.). |
+| **Short Description** | Concise summary of the concept. |
+| **Long Description** | Detailed explanatory description of the concept. |
+| **Chronology** | Historical emergence, evolution, and temporal characteristics of the concept. |
+| **Relationship Set** | How does it related with other nodes?|
+| **Particular Characterization** | Category-specific attributes not covered by the generic schema. |
+| **Metadata** | Administrative and descriptive metadata such as author, creation date, status, version, tags, provenance, confidence, and maintenance information. |
+| **References** | Sources, literature, theories, frameworks, empirical evidence, and supporting documentation. |
 
-Scaffold Status: Indicates whether the element functions as an epistemic scaffold for the construction, guidance, validation, organization, or operation of epistemic artifacts and processes.  
+### Which are the set layers useful for parsing of social realty?
 
-- **Scaffold: :** Directly or indirectly supports, structures, constrains, guides, enables, coordinates, validates, or organizes epistemic activity. Its primary role is to assist the production, management, evaluation, communication, or use of knowledge.
-- **Non-Scaffold:** Does not perform a scaffolding function; instead serves as an object, target, output, agent, or product of epistemic activity.
+> **Synontic**: Means, symbolic - ontic - epistemic.
 
-| **Category** | **Description** | **Instance(s)** | **Scaffold Status** |
-| --- | --- | --- | --- |
-| **Epistemic Purpose** | The telos or intended epistemic objective that motivates the activity. Defines *why* knowledge is being produced. | Explanation, prediction, control, diagnosis, discovery, description, forecasting, intervention, understanding | Scaffold |
-| **Reality** | The ontological substrate comprising the actual states, structures, processes, entities, and causal dynamics that exist independently (or partially independently) of any observer’s representation. Reality constitutes the ultimate source domain from which observations are extracted, against which epistemic artifacts are validated, and whose structure constrains possible knowledge. It includes both observable and unobservable phenomena, latent mechanisms, causal architectures, and state trajectories across time. | Physical systems, biological organisms, chemical reactions, social institutions, computational systems, economic systems, ecological networks, latent variables, hidden causal mechanisms, dynamical state spaces, material processes, environmental structures. | Non-Scaffold |
-| Realty Section (Epistemic Object Set) | … | … | Non-Scaffold |
-| **Observation Interface** | The sensorimotor boundary + inscription process that transduces a Domain Snapshot into a persistent encoded artifact. Includes transduction, sampling, quantization, encoding, and storage. | CMOS sensor + ADC + JPEG + SD card; thermocouple + data logger + CSV file; human retina + V1 cortex + working memory. | Scaffold |
-| **Observation Encoding** |  |  | Scaffold |
-| **Epistemic Representation Form (Epistemic Blueprint)** | Encoding format or substrate in which artifacts are expressed; constrains manipulation and interpretation. | Directed Acyclic Graph (DAG), Structural Equation (functional notation), Polynomial Equation, … | Scaffold |
-| **Concrete Epistemic Artifact** | Structured object and **specific object** that encodes claims, constraints, or distributions over reality; the primary carrier of semantic content. | ***Zero free parameters**** – every coefficient, distribution, variable, and functional form is concretely specified. | Yes – can be evaluated as correct/incorrect against reality. | `y = 2.3x + 1.7` (fitted linear model); specific CSV file `[2.1, 3.4, 5.6]`; a particular DAG with all edges and functional forms fixed. - Propositions, numbers, datasets, differential equations, probabilistic models, Hypergraphs, property encoding, | Non-Scaffold |
-| **Domain Concrete Epistemic  Artifact Set  (DCESA)** | The complete collection of instantiated epistemic objects produced and used to describe, explain, predict, and manipulate a specific domain of reality. | … | Non-Scaffold |
-| **Epistemic Gap** | Portion of reality for which no adequate artifact, model, observation, or explanatory structure currently exists. | … | Scaffold |
-| **Epistemic Agent** | Entity that performs epistemic operations by applying tools to artifacts. | Scientist, analyst, research institution, machine learning system, automated pipeline | Non-Scaffold |
-| **Epistemic Goal Set** | The collection of specific desired epistemic outcomes that guide inquiry, observation, modeling, validation, and reasoning within a given epistemic process. Goals define the target knowledge state that an agent seeks to reach regarding a reality section. | Identify causal mechanisms; estimate parameter values; discover latent variables; classify entities; predict future states; explain observed phenomena; reduce uncertainty; detect anomalies; estimate risk; construct taxonomies; infer hidden states; evaluate interventions; improve forecast accuracy; characterize system structure; determine boundary conditions; identify governing laws; measure quantities; validate hypotheses; generate new hypotheses; optimize model performance. |  |
-| **Epistemic Process (Activity)** | Ordered sequence of tool applications over time; defines the dynamics of knowledge construction. | Scientific method, Bayesian updating loop, training pipeline, experimental cycle |  |
-| **Epistemic Standard** | Normative criteria used to evaluate validity, correctness, or acceptability of artifacts and processes. | Logical consistency, statistical significance, reproducibility, robustness, falsifiability |  |
-| **Encoding Substrate** | An encoding substrate is the medium in which information is physically instantiated. | Paper,  Ink,  Electromagnetic Signal, … |  |
-| **Epistemic Domain (Target Domain)**  | Segment of reality that the epistemic practice targets or models. | Physical systems, biological systems, social systems, computational systems |  |
-| **Epistemic Constraint** | Limitation that bounds what can be known or inferred within the system. | Noise, limited data, computational complexity, identifiability issues, measurement error, ignorance, intractability, stochasticity, higher-order stochasticity, chaos, nonlinearity, uncertainty propagation, and observational limitations. |  |
-| **Epistemic Infrastructure** | Supporting environment that enables storage, computation, measurement, and communication of artifacts. | Sensors, laboratories, software systems, databases, notebooks, scientific publications |  |
-| **Epistemic Feedback** | Signal from reality (or from another artifact) that resists or confirms prior predictions or actions; primary driver of learning and error correction. | Prediction error (residual), unexpected observation, failed intervention, successful replication, sensor saturation, model divergence, comparison between two Domain Snapshots taken at different times. |  |
-| **Epistemic Act** | Primitive, non‑decomposable operation performed by an agent: attending, discriminating, remembering, anticipating, intervening, comparing, observing (which invokes Observation Encoding). | Attending to a sensor reading, detecting a difference, recalling an observation, emitting a prediction, pressing a measurement probe, judging similarity, encoding a raw signal into a digital value. |  |
-| **Epistemic Principle** | Foundational normative, structural, or strategic rule that governs how epistemic agents should construct, validate, organize, or revise knowledge. Principles shape the selection of standards, tools, and processes by defining the underlying logic of inquiry. | Empiricism, falsifiability, parsimony (Occam’s Razor), Bayesian coherence, causal reasoning, reproducibility, predictive adequacy, reductionism, systems thinking, explanatory power, measurement invariance |  |
-| **Epistemic Prior (Inductive Bias)** | Pre-existing assumptions, expectations, structural preferences, or probability distributions that constrain hypothesis generation and inference before new evidence is incorporated. Priors determine what explanations are considered plausible and influence search trajectories through hypothesis space. | Gaussian prior,  Simplicity preference, Smoothness assumption, Locality assumption |  |
-| **Epistemic Strategy** | Adaptive, context-dependent planning logic that governs how epistemic agents allocate resources, sequence inquiry, navigate uncertainty, and select investigative pathways to achieve epistemic objectives under real-world constraints. Strategies operationalize principles into executable inquiry architectures by determining search order, decomposition methods, validation sequencing, exploration/exploitation balance, and intervention priorities. | Exploratory data analysis before formal modeling; hypothesis-first experimentation; reductionist decomposition; systems-level integrative analysis; sequential Bayesian updating; active learning; robustness-first validation; coarse-to-fine modeling; simulation-before-deployment; high-throughput screening; falsification-driven testing; divide-and-conquer investigation; iterative refinement; uncertainty minimization; adversarial stress testing; hierarchical model building. |  |
-| **Epistemic Framework** | Abstract conceptual, inferential, and formal systems that structure how epistemic agents interpret observations, organize knowledge, generate explanations, and reason about reality. Frameworks define the overarching cognitive architecture within which principles, operators, and artifacts are selected and deployed. | Logic, causal inference, Bayesian reasoning, statistical reasoning, systems theory, cybernetics, information theory, mechanistic modeling, optimization theory, game theory, control theory, reductionist frameworks, complexity science, decision theory |  |
-| **Epistemic Operator** | Formal or procedural mechanism used to construct, transform, representation form ( abstract artifact)or validate epistemic artifacts. | Algebraic manipulation, statistical inference, optimization algorithms, simulation methods, measurement procedures,  generic or abstract class of artifact or let’s called it by representational form. |  |
+| Layer                 | Core Question                        | Description                                                                                |
+| --------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------ |
+| **Ontic**             | What exists?                         | Actors, artifacts, resources, organizations, events, states of affairs.                    |
+| **Agentic**           | Who acts and how?                    | Agency, capabilities, goals, decision-making, action, strategy.                            |
+| **Relational**        | How are things connected?            | Networks, hierarchies, dependencies, exchanges, power relations.                           |
+| **Epistemic**         | What is known, believed, or assumed? | Knowledge, beliefs, models, information, uncertainty, ignorance.                           |
+| **Normative**         | What ought to be done?               | Norms, values, laws, legitimacy, obligations, permissions.                                 |
+| **Synontic**          | What meanings are socially shared?   | Symbols, languages, narratives, categories, collective representations, cultural meanings. |
+| **External Observer** | How is the system being described?   | Analytical framework, measurement model, observer assumptions, explanatory lens.           |
 
-## Reality
+### Which are the set categories useful for parsing of social realty?
 
-> (Ontology)
+| Category                          | Description                                                         | Instance(s)                                   |
+| --------------------------------- | ------------------------------------------------------------------- | --------------------------------------------- |
+| **Actor**                         | Individual or collective entity capable of action.                  | Person, Firm, State, Family                   |
+| **Role**                          | Social position occupied by an actor.                               | Manager, Citizen, Priest                      |
+| **Position**                      | Structural location within a social system.                         | Social Class Position, Bureaucratic Position  |
+| **Identity**                      | Socially recognized self-conception or classification.              | Nationality, Profession                       |
+| **Institution**                   | Stable system of rules and expectations.                            | Market, Marriage, Bureaucracy                 |
+| **Institutional Arrangement**     | Configuration of multiple institutions governing a domain.          | Parliamentary System, Welfare State           |
+| **Organization**                  | Deliberately structured collective actor.                           | Company, Ministry, University                 |
+| **Group**                         | Social aggregation lacking formal organization.                     | Tribe, Community, Clique                      |
+| **Movement**                      | Collective effort pursuing social or political change.              | Labor Movement, Environmental Movement        |
+| **Relationship**                  | Social connection between actors.                                   | Friendship, Alliance, Authority               |
+| **Network**                       | Structured set of relationships.                                    | Supply Chain, Elite Network                   |
+| **Norm**                          | Expected pattern of behavior.                                       | Reciprocity, Professional Conduct             |
+| **Rule**                          | Explicitly codified behavioral constraint.                          | Law, Regulation                               |
+| **Value**                         | Socially desirable principle or ideal.                              | Equality, Efficiency                          |
+| **Belief**                        | Accepted proposition about reality.                                 | Religious Doctrine, Economic Theory           |
+| **Knowledge**                     | Validated information used by actors.                               | Engineering Knowledge                         |
+| **Ideology**                      | Coherent system of beliefs and values.                              | Liberalism, Nationalism                       |
+| **Narrative**                     | Structured interpretation of reality.                               | National Myth, Historical Narrative           |
+| **Habitus**                       | Durable dispositions shaping perception and action.                 | Bureaucratic Habitus, Entrepreneurial Habitus |
+| **Symbol**                        | Meaning-bearing social sign.                                        | Flag, Logo                                    |
+| **Language**                      | Communication system enabling coordination.                         | Spanish, English                              |
+| **Medium**                        | Communication channel through which information flows.              | Television, Internet, Newspaper               |
+| **Resource**                      | Asset usable by actors.                                             | Capital, Land, Information                    |
+| **Capital**                       | Accumulated resource conferring advantage.                          | Economic Capital, Social Capital              |
+| **Capability**                    | Ability to perform actions.                                         | Leadership, Manufacturing                     |
+| **Technical Element**             | Artifact or technique enabling action.                              | Computer, Steam Engine                        |
+| **Infrastructure**                | Foundational enabling system.                                       | Roads, Internet                               |
+| **Goal**                          | Desired future state.                                               | Profit, Security                              |
+| **Interest**                      | Stake in an outcome.                                                | Political Interest                            |
+| **Strategy**                      | Coordinated plan of action.                                         | Industrial Policy, Market Entry Strategy      |
+| **Policy**                        | Deliberate course of action adopted by an authority.                | Industrial Policy, Tax Policy                 |
+| **Practice**                      | Recurrent pattern of action.                                        | Negotiation, Voting                           |
+| **Activity**                      | Specific social action.                                             | Trade, Teaching                               |
+| **Process**                       | Structured sequence of activities.                                  | Recruitment, Production                       |
+| **Mechanism**                     | Causal process producing social outcomes.                           | Feedback Loop, Selection Mechanism            |
+| **Event**                         | Temporally bounded occurrence.                                      | Election, Strike                              |
+| **Phenomenon**                    | Observable social pattern or occurrence.                            | Inflation, Urbanization                       |
+| **Transaction**                   | Exchange between actors.                                            | Purchase, Contract                            |
+| **Conflict**                      | Opposition of interests or goals.                                   | Labor Dispute                                 |
+| **Cooperation**                   | Coordinated pursuit of shared goals.                                | Joint Venture                                 |
+| **Power Relation**                | Capacity to influence others.                                       | Command, Influence                            |
+| **Authority**                     | Legitimated power.                                                  | Judicial Authority                            |
+| **Status**                        | Relative social standing.                                           | Prestige                                      |
+| **Incentive**                     | Mechanism shaping behavior.                                         | Wage, Tax Benefit                             |
+| **Constraint**                    | Limitation on action.                                               | Regulation, Scarcity                          |
+| **Collective Decision Mechanism** | Procedure for making collective choices.                            | Election, Voting, Consensus                   |
+| **Governance Structure**          | Arrangement through which authority and coordination are exercised. | Hierarchy, Federalism                         |
+| **Jurisdiction**                  | Bounded domain of legitimate authority.                             | Municipality, Court District                  |
+| **Polity**                        | Political community organized under a common authority.             | Nation-State, City-State                      |
+| **Regime**                        | Stable pattern of political rule.                                   | Democracy, Monarchy                           |
+| **System**                        | Integrated set of social components.                                | Economy, Political System                     |
+| **Structure**                     | Persistent arrangement of relationships.                            | Class Structure                               |
+| **Culture**                       | Shared patterns of meaning and behavior.                            | Organizational Culture                        |
+| **Social Field**                  | Arena of interaction governed by specific logics.                   | Scientific Field, Political Field             |
+| **Domain**                        | Functional sphere of social activity.                               | Education, Defense                            |
+| **Region**                        | Spatially bounded social area.                                      | Caribbean, Southeast Asia                     |
+| **Environment**                   | External conditions affecting actors.                               | Geopolitical Context                          |
+| **Collective Representation** | Shared cognitive construct through which a group perceives, interprets, and organizes social reality. Exists at the collective rather than individual level and provides common objects of thought, meaning, and orientation. | Nation, Money, Human Rights, The Market, The State, Citizenship                          |
+| **Convention**  | Stable and socially recognized pattern of coordination sustained by mutual expectations rather than formal enforcement. Actors follow it because they expect others to do the same.                                         | Driving on the Right Side, Business Dress Codes, Handshakes, Academic Citation Practices                 |
+| **Dynamical**   | Temporal process describing how social entities, relations, beliefs, norms, or structures change, evolve, reproduce, diffuse, adapt, or decay over time. Focuses on mechanisms of transformation rather than static states. | Institutional Change, Cultural Diffusion, Social Mobility, Organizational Growth, Technological Adoption |
+| **Property**    | Attribute, characteristic, or quality possessed by an entity, relation, group, or system that can be used for description, classification, comparison, or explanation.                                                      | Wealth, Status, Legitimacy, Population Size, Trustworthiness, Productivity, Centrality                   |
+| **Interaction** | Event, process, or exchange through which two or more actors affect one another by transferring information, resources, influence, obligations, or other social content.                                                    | Negotiation, Trade, Communication, Voting, Conflict, Cooperation, Teaching                               |
 
-> Use this for the specific of ontic nodes.
+## References
 
-| **Layer** | **Category** | **Type** | **Description** | **Instance(s)** | **Tag(s)** |
-| --- | --- | --- | --- | --- | --- |
-| **Ontic** | **Existential** | Substantive | Self-identical existents with bounded persistence | Hydrogen atom; Redwood tree; Blockchain node | `matter` `object` `agent` `bearer-of-properties` |
-|  |  | Processual | Dynamic occurrences extended in time | Photosynthesis; Tectonic drift; Radioactive decay | `becoming` `event` `flux` `transformation` |
-|  |  | Entity | Conceptual or ontological units treated as “things” in modeling | Person; Corporation; Planet | `object` `unit` `system-component` |
-|  |  | Mechanism | Structures or interactions that generate or regulate processes | Enzyme complex; Gear train; Feedback loop | `mechanism` `causal-structure` `function` |
-|  | **Dynamical** |  |  |  |  |
-|  |  | Event | Discrete, delimited change or occurrence marking a transition between states. | Collision; Birth; System crash; Market shock | `event` `transition` `punctual` `change` |
-|  |  | Process | Temporally extended, **causally connected** sequence of events generating a state-trajectory. | Erosion; Learning; Metabolism; Capital accumulation | `process` `trajectory` `causal-sequence` `temporal-extension` |
-|  |  | Stochastic | Dynamics governed by probabilistic laws rather than deterministic evolution; outcomes defined over distributions. | Brownian motion; Mutation; Packet loss; Default risk | `probabilistic` `random-variable` `distribution` `uncertainty` |
-|  |  | **Event Stream** | A very general construct to capture the generated **‘Manifestations’** by a given piece of reality (system, process, etc).  |  |  |
-|  |  | **Mixture Event Stream** | A **superposition or composition of multiple event-generating processes**, where the observed stream is generated by a latent mixture (e.g., competing or interacting sources). | … | `mixture` `superposition` `latent-source` `aggregation` |
-|  |  | Phenomena | A **higher-order property of a state-trajectory**, i.e. a pattern or regularity predicated over a sequence of states generated by one or more processes. | Inflation, Diffusion, Skill Decay | `pattern` `regularity` `macro-effect` `trajectory-level` |
-|  |  | Epiphenomena 💨 | Secondary or byproduct phenomena that arise from primary processes or structures but **do not influence those processes themselves**. They are consequences, not causes. | Heat from computation; Exhaust noise; UI lag shimmer | `byproduct` `non-causal` `derivative` |
-|  | **Agency** | **Agent** |  |  |  |
-|  |  | **Intention (Goal)** |  |  |  |
-|  | Substance 🧱 |  | Entities that exist independently and underpin properties or processes. |  |  |
-|  |  |  |  |  |  |
-| **Synontic** | **Structural** | Self-organizing | Emergent order from local interactions | Termite mounds; Neural networks; Supply chains | `emergence` `pattern` `organization` `collective` |
-|  | **Structural** | Institutional | Stabilized constraints on behavior | Legal systems; Grammar; Market protocols | `convention` `norm` `stabilization` `scaffold` |
-|  |  | Rhizome | … | … | … |
-|  | **Emergence** | .. | .. | .. | … |
-|  | **Relation** | Causal | Productive dependencies between existents | Force transmission; Gene regulation; Influence networks | `causation` `production` `determination` `flow` |
-|  | **Relation** | Significant | Meaning-laden connections via interpretation | Semiotic chains; Cultural associations; Semantic web | `meaning` `reference` `aboutness` `intentionality` |
-|  | **Protocol** | Coordination | Rules enabling collective alignment | Language syntax; TCP/IP; Diplomatic etiquette | `alignment` `communication` `interface` `standard` |
-|  | **Affordance** | Action-potential | Environmental features soliciting engagement | Door-handle graspability; Display clickability; Trail following | `invitation` `engagement` `solicitation` `pragmatic` |
-|  | Space 📏 | The framework of coexistence and positional structure among entities. |  |  |  |
-|  | Time ⏳ | The ordering of events and transformations along a temporal dimension. |  |  |  |
-|  | Environment 🌿 |  | External influences and conditions that affect a system or field without being part of it. |  |  |
-|  | **Substrate** |  |  |  |  |
-|  | Property |  |  |  |  |
-|  | Aspect |  |  |  |  |
-|  | Variable Aspect |  |  |  |  |
-|  | **State** | Configurational | Temporal arrangement of components | Crystal lattice; Biological homeostasis; Thermodynamic equilibrium | `arrangement` `condition` `momentary` `snapshot` |
-| Meta Ontic |  |  |  |  |  |
-|  |  | Information |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-
-## ...
+- [Social Ontology](https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Guide/)
+- [Onticy Map](https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Guide/Map/)
