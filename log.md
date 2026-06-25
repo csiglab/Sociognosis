@@ -1,4 +1,4 @@
-# Working Log
+# Decision Log
 
-- Add firm `https://www.knowmade.com/`.
-- Test visualizations of social actor types using embeddings and clustering. See https://github.com/dbremont/algorithms/blob/main/om/embedding.ipynb.
+- We have chosen to maintain separate representations for the `product, firm, and technique` space - than the general `sociogenesis space`. Putting everythig on the space  of the lements - to parse social reality will collapse the different uses of both.
+- ...
