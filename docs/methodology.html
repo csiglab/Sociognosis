@@ -47,8 +47,8 @@
       --skeleton-to: #e2e8f0;
       --footer-bg: #0B1A2B;
       --footer-fg: #E8EDF3;
-      --footer-muted: #6B8299;
-      --footer-dim: #4A6075;
+      --footer-muted: #7691B0;
+      --footer-dim: #86A0BC;
       --footer-border: rgba(107, 130, 153, 0.2);
       --dropdown-shadow: rgba(0, 0, 0, 0.12);
       --card-shadow: rgba(0, 0, 0, 0.06);
@@ -348,6 +348,28 @@
 
     .anchor-offset { scroll-margin-top: 100px; }
 
+    /* Skip Link */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--accent);
+      color: #FFFFFF;
+      padding: 8px 16px;
+      z-index: 1000;
+      text-decoration: none;
+      border-radius: 0 0 6px 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: top 150ms ease-out;
+    }
+    .skip-link:focus {
+      top: 0;
+      color: #FFFFFF;
+      outline: 2px solid var(--fg);
+      outline-offset: 2px;
+    }
+
     .tag-pill {
       display: inline-block;
       font-family: 'JetBrains Mono', monospace;
@@ -386,16 +408,19 @@
 </head>
 <body>
 
+  <!-- Skip to Main Content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   <!-- Navigation Bar -->
   <nav class="nav-bar">
     <div class="nav-content">
       <a href="index.html" class="nav-brand">
-        <img src="img/logo.png" alt="Logo" onerror="this.style.display='none'">
+        <img src="img/logo.png" alt="" onerror="this.style.display='none'">
         <h1>Sociognosis</h1>
       </a>
       <div class="flex items-center gap-6">
         <a href="index.html" class="nav-link hidden sm:block hover:text-fg transition-colors">Introduction</a>
-        <span class="nav-link hidden sm:block" style="color: var(--fg);">Methodology</span>
+        <span class="nav-link hidden sm:block" aria-current="page" style="color: var(--fg);">Methodology</span>
         <a href="docs.html" class="nav-link hidden sm:block hover:text-fg transition-colors">Docs</a>
       </div>
     </div>
@@ -417,7 +442,7 @@
     </div>
   </div>
 
-  <div class="main-content">
+  <main class="main-content" id="main-content">
 
     <!-- Hero Section -->
     <header class="docs-hero px-6">
@@ -477,7 +502,7 @@
           <div class="docs-card">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/>
                 </svg>
               </div>
@@ -491,7 +516,7 @@
           <div class="docs-card">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M3.75 3v11.25h16.5M3.75 13.5l4.5-4.5 3 3 4.5-6"/>
                 </svg>
               </div>
@@ -505,7 +530,7 @@
           <div class="docs-card">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
                 </svg>
               </div>
@@ -519,7 +544,7 @@
           <div class="docs-card">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/>
                 </svg>
               </div>
@@ -548,7 +573,7 @@
           <a href="index/index.html" class="docs-card block no-underline">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <circle cx="5" cy="6" r="3"/>
                   <circle cx="19" cy="6" r="3"/>
                   <circle cx="12" cy="18" r="3"/>
@@ -574,7 +599,7 @@
           <div class="docs-card">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <rect x="3" y="3" width="7" height="7"/>
                   <rect x="14" y="3" width="7" height="7"/>
                   <rect x="14" y="14" width="7" height="7"/>
@@ -596,7 +621,7 @@
           <div class="docs-card">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"/>
                 </svg>
               </div>
@@ -615,7 +640,7 @@
           <div class="docs-card">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
                 </svg>
               </div>
@@ -782,7 +807,7 @@
           <div class="docs-card">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
                 </svg>
               </div>
@@ -796,7 +821,7 @@
           <div class="docs-card">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/>
                 </svg>
               </div>
@@ -810,7 +835,7 @@
           <div class="docs-card">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
                 </svg>
               </div>
@@ -824,7 +849,7 @@
           <div class="docs-card">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
                 </svg>
               </div>
@@ -853,7 +878,7 @@
           <a href="https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Noetic/Actor/" target="_blank" rel="noopener noreferrer" class="docs-card block no-underline">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
                 </svg>
               </div>
@@ -868,7 +893,7 @@
           <a href="https://www.bremontix.xyz/lab/ar/Locus-Instrumentorum/Toolset/Representation/" target="_blank" rel="noopener noreferrer" class="docs-card block no-underline">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M2.25 18.75h19.5a.75.75 0 00.75-.75V6a.75.75 0 00-.75-.75H2.25a.75.75 0 00-.75.75v12c0 .414.336.75.75.75z"/>
                 </svg>
               </div>
@@ -883,7 +908,7 @@
           <a href="https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Guide/" target="_blank" rel="noopener noreferrer" class="docs-card block no-underline">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"/>
                 </svg>
               </div>
@@ -898,7 +923,7 @@
           <a href="https://app.notion.com/p/Section-of-Reality-Template-334c0f5171ec804b8115c177dbc245a8?source=copy_link" target="_blank" rel="noopener noreferrer" class="docs-card block no-underline">
             <div class="docs-card-header">
               <div class="docs-card-icon">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                   <path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
                 </svg>
               </div>
@@ -914,7 +939,7 @@
       </section>
 
     </div>
-  </div>
+  </main>
 
   <!-- Footer -->
   <footer class="site-footer mt-12 py-16 md:py-20 px-6">
