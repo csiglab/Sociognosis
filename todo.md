@@ -1297,3 +1297,6 @@
 
 [ ] Government Debt (in National Currency) as Pseudo-Debt   (Debt  ->  Mechanism; Goal - Tool to Managemnt the Monetary System) -> Monetary System Debt Tool -> Cuasideuda -> Quasi-debt -> Quasiobligation
 [ ] Government Debt (in Foreign Currency)   (Debt) (Obligation)
+
+[] Misogenia
+[] Malandria

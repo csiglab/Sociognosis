@@ -10,10 +10,12 @@ Goals:
 
 Sub Projects:
 
-- Index
+- Main: Sociognosis Space
+    - Space Explorer
+    - Node Editor
 - Product Space
-- Firm Space
-- Literary Space
+    - Space Explorer
+    - Node Editor
 
 ## Data Sync
 
