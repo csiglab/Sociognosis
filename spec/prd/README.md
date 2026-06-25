@@ -2,41 +2,43 @@
 
 > A space composed of nodes and relationships that renders the production sphere intelligible, including techniques, products (raw materials, intermediate goods, final goods, and services), and firms.
 
+> This is a coarse-grained description of production and its underlying elements, including technology. For more detailed information—such as technical artifacts, engineering principles, techniques, and implementation details—see `Tecnica`.
+
 ## Formulation
 
-> Which are the set of concepts that useful to describe technical practice? Which are the main categories?
-
-> Technical practice can be characterized as the structured process by which an agent transforms, constructs, operates, and maintains material or informational artifacts to bring about desired states in the world.
-
-> This note seeks to systematize a philosophy of technique and operation that can serve as a conceptual foundation for organizing the ideas used to explain operation and praxis across diverse fields and tasks.
+> Which are the set of concepts that useful to describe prodduction? Which are the main categories?
 
 ### Which model is able to store this?
 
-| Aspect                           | Description                                                                                                                                     |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Id**                     | Identifier                                                                        |
-| **Name** | ... |
-| **Layer**                        | The primary technical layer in which the element operates (Problem, Capability, Execution, Artifact, Governance, Evolution).                    |
-| **Category**                     | The direct conceptual category of the element (Technique, Agent, Constraint, Requirement, Blueprint, etc.).                                     |
-| **Short Description**            | Concise summary of the element.                                                                                                                 |
-| **Long Description**             | Detailed explanatory description of the element.                                                                                                |
-| **Type Hierarchy Level**               | The number of ancestor classes.                                                                      |
-| **Interface Specification**      | External-facing contract describing purpose, function, inputs, outputs, and interaction surfaces.                                               |
-| **Operation**                    | Description of how the element behaves during execution or use.                                                                                 |
-| **Functional Role Set**          | The set of functions, responsibilities, or effects the element performs within a larger system.                                                 |
-| **Implementation Specification** | Internal realization of the element, including structure, architecture, composition, and operational mechanisms.                                |
-| **Scope Specification**          | Conditions under which the element applies, including domain, operating environment, applicability boundaries, and performance characteristics. |
-| **Limitation Set**               | Physical, logical, economic, organizational, regulatory, or environmental constraints limiting the element.                                     |
-| **Lifecycle**                    | How the element is created, configured, deployed, operated, maintained, evolved, and retired.                                                   |
-| **Failure Mode Specification**   | Ways in which the element can malfunction, degrade, violate specifications, or cease fulfilling its intended function.                          |
-| **Resource Use**                 | Matter, energy, information, labor, time, capital, or infrastructure consumed by the element.                                                   |
-| **Relationship Set**             | Structured set of relations connecting the element to other technical elements.                                                                 |
-| **Evolution (History)**          | Historical development, versions, predecessors, successors, and major changes over time.                                                        |
-| **Particular Characterization**  | Category-specific attributes not covered by the generic schema.                                                                                 |
-| **Metadata**                     | Administrative and descriptive metadata such as author, creation date, status, version, tags, provenance, confidence, etc.                      |
-| **References**                   | Sources, standards, specifications, literature, documentation, and supporting evidence.                                                         |
+| **Aspect**                             | **Description**                                                                                                                                                                                                            |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Id**                                 | Globally unique identifier for the element.                                                                                                                                                                                |
+| **Name**                               | Canonical name of the element.                                                                                                                                                                                             |
+| **Layer**                              | The ontological layer to which the element belongs (e.g., Reality, Technical, Production, Economic, Social).                                                                                                               |
+| **Category**                           | The direct conceptual category of the element (e.g., Technique, Technical Agent, Product, Production Process, Technical Constraint).                                                                                       |
+| **Tag Set**                            | Collection of keywords, classifications, or labels used for indexing, filtering, and discovery.                                                                                                                            |
+| **Short Description**                  | Concise summary of the element.                                                                                                                                                                                            |
+| **Long Description**                   | Comprehensive explanation of the element, including its purpose, meaning, and significance.                                                                                                                                |
+| **Relationship Set**                   | Structured collection of semantic relationships linking the element to other ontology elements (e.g., *depends on*, *implements*, *produces*, *consumes*, *part of*, *specializes*, *uses*).                               |
+| **Chronology**                         | Historical development of the element, including origin, major revisions, predecessors, successors, and significant milestones.                                                                                            |
+| **Category-Specific Characterization** | Attributes specific to the element's category that are not covered by the generic schema. For example, a Product may include dimensions and weight, while a Technique may include prerequisites and required competencies. |
+| **Metadata**                           | Administrative and descriptive information such as author, creation date, last modification date, version, lifecycle status, provenance, confidence level, and licensing information.                                      |
+| **References**                         | Bibliographic references, standards, specifications, technical documentation, academic literature, and other supporting sources.                                                                                           |
+
+### Which are the set layers useful for parsing the production dimension of social realty?
+
+| **Layer**            | **Description**                                                                                                                                                                                          |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Reality Layer**    | The physical, chemical, biological, informational, and social reality that production operates upon and transforms. It defines the constraints, affordances, and phenomena that production must respect. |
+| **Problem Layer**    | The collection of production needs, requirements, objectives, and constraints that motivate production activities and define what must be achieved.                                                      |
+| **Technical Layer**  | The body of technical knowledge used to realize production, including techniques, principles, architectures, specifications, standards, blueprints, and technical capabilities.                          |
+| **Production Layer** | The operational domain in which resources, agents, facilities, equipment, and production processes are coordinated to transform inputs into outputs.                                                     |
+| **Product Layer**    | The domain of production outputs, including raw materials, intermediate goods, final goods, services, by-products, and waste.                                                                            |
+| **Economic Layer**   | The organizational and market structures surrounding production, including firms, industries, supply chains, sectors, ownership, and value creation.                                                     |
 
 ### Which are the set categories useful for parsing the production dimension of social realty?
+
+> The particular of the products should used the 'HS (Harmonized System)' for classificatión.
 
 | **Category** | **Description** | **Instance(s)** |
 | --- | --- | --- |
@@ -52,8 +54,6 @@
 | **Technical Constraint** | Any bound on achievable action imposed by physical law, material properties, resource availability, or social regulation. | Tensile strength limit, noise floor, power budget, time deadline, regulatory ban, scarce rare‑earth element, network latency floor, computational complexity, thermal hotspot, toxicity threshold, human ergonomic limit. |
 | **Technical Infrastructure** | The ambient capital—material, energetic, informational, institutional—that makes sustained technical practice possible. | Power grid, water supply, internet backbone, factory floor, tool chain, version control repository, laboratory bench, standards body, certification authority, supply chain. |
 | **Technical Feedback** | Signal that indicates the real‑world effect of a technical act, enabling adjustment, optimization, and error correction. | Stress‑strain gauge reading, build log error message, user complaint, wear debris in lubricant, temperature rise, latency spike, crash report, A/B test result, pass/fail quality inspection. |
-| **Technical Act** | Primitive, non‑decomposable operation that a technical agent performs on reality (or on an artifact). | Cutting, welding, bolting, writing a line of code, compiling, deploying, measuring torque, pressing a button, casting a vote in a control system, issuing an API call, flipping a switch. |
-| **Technical Principle** | Foundational design law, operating axiom, or reliability rule that governs how technical agents should structure interventions and artifacts to ensure safety, efficiency, robustness, and functionality. | Least privilege, defense in depth, fail‑safe, idempotency, separation of concerns, KISS, YAGNI, tolerance for use, design for manufacturability, loose coupling, energy‑minimization, ergonomic adjustability, redundancy, graceful degradation. |
 | **Technical Strategy** | Context‑sensitive, resource‑aware regime of planning and decision‑making that organizes the sequence, decomposition, and prioritization of technical work under real‑world constraints. | Waterfall, Agile, spiral, prototyping‑first, concurrent engineering, design‑build‑test‑iterate, modular incremental deployment, brownfield vs greenfield, security‑by‑design, lean production, just‑in‑time, preventive maintenance scheduling, blue‑green deployment. |
 | **Technical Framework** | The overarching problem‑structuring and solution‑generation logic within which technical agents interpret requirements, decompose complexity, and synthesize artifacts. | Systems engineering, design thinking, TRIZ, axiomatic design, root cause analysis, failure modes and effects analysis (FMEA), control theory, operations research, generative design, cyber‑physical systems, mechatronics. |
 | **Technical Mechanism** | Formal, procedural, or physical mechanism used to transform, assemble, verify, or maintain technical artifacts. Operators are the “verbs” of technical practice. | Milling (subtractive), injection moulding (formative), soldering (joining), refactoring (code transformation), integration testing, heat‑treating, etching, calibration, patching, container orchestration, concrete pouring. |
@@ -78,3 +78,61 @@
 | **Security** | The domain of technical principles, constraints, and processes concerned with protecting an artifact or system from unauthorized access, use, disclosure, disruption, modification, or destruction. It manages adversarial constraints within the operational environment. | Role-based access control (RBAC), AES-256 encryption at rest, network firewall rule sets, code obfuscation, physical perimeter fencing, multi-factor authentication (MFA), input sanitization against SQLi, hardware security modules (HSMs). |
 | **Resource** | The consumable or non-consumable inputs—matter, energy, information, time, or capital—that are required, transformed, or consumed by a Technical Agent or Process to produce, operate, or maintain an artifact. | Gallium arsenide substrate, megawatt-hours of electricity, API rate limits, engineer labor-hours, venture capital funding, silicon wafers, gigabytes of RAM, clean water for industrial cooling, developer seat licenses. |
 | **Technical Obsolescence** | The state wherein an artifact is no longer technically viable, economically justifiable, or socially supported compared to available alternatives, regardless of its current functional state. | The state wherein an artifact is no longer technically viable, economically justifiable, or socially supported compared to available alternatives, regardless of its current functional state. |
+| **Production System**    | An organized socio-technical system that coordinates resources, agents, equipment, facilities, processes, and control mechanisms to transform inputs into products or services. It encompasses the complete operational environment required to sustain production. | Toyota Production System, TSMC semiconductor manufacturing system, Amazon fulfillment network, integrated steel mill, pharmaceutical manufacturing plant.                                         |
+| **Production Process**   | A structured sequence of production activities and operations that transforms raw materials, components, energy, and information into intermediate or final products. It defines the workflow through which value is created.                                       | Automobile assembly, semiconductor fabrication, software build pipeline, oil refining, bread production, vaccine manufacturing.                                                                   |
+| **Production Activity**  | A logically identifiable stage within a Production Process that groups related Production Operations toward a specific production objective. Activities represent meaningful units of work but are themselves composed of multiple operations.                      | Material preparation, component assembly, surface finishing, quality inspection, packaging, equipment setup.                                                                                      |
+| **Production Operation** | The smallest executable unit of production work that directly transforms, transports, measures, assembles, or verifies materials, components, or products. Operations are atomic actions performed by production agents or equipment.                               | Drilling a hole, tightening a bolt, welding a joint, executing a CNC tool pass, scanning a barcode, applying paint, printing a PCB layer.                                                         |
+| **Production Facility**  | A physical site or built environment that houses and supports production activities by providing the necessary infrastructure, equipment, utilities, and workspace.                                                                                                 | Factory, refinery, foundry, shipyard, warehouse, laboratory, mine, farm, power plant.                                                                                                             |
+| **Production Line**      | A specialized arrangement of workstations, equipment, and material flows organized to repeatedly manufacture a particular family of products through a predefined sequence of operations.                                                                           | Automotive assembly line, SMT PCB assembly line, beverage bottling line, semiconductor wafer fabrication line, aircraft final assembly line.                                                      |
+| **Task**                 | A discrete unit of assigned work performed by a human or automated agent within a Production Activity. Tasks specify responsibilities and execution objectives but may consist of one or more Production Operations.                                                | Install gearbox, inspect weld quality, calibrate sensor, replenish inventory, configure CNC machine, review build log.                                                                            |
+| **Resource**             | Any consumable or reusable asset required to execute production processes, including materials, energy, information, labor, equipment, capital, and time. Resources enable production but are consumed, allocated, or utilized during execution.                    | Steel plate, electricity, compressed air, engineer labor-hours, CNC machine, production budget, factory floor space, cooling water, software license.                                             |
+| **Product**              | A tangible good, digital artifact, or service intentionally produced by a Production System to satisfy technical, commercial, or societal needs. Products constitute the primary outputs of production processes.                                                   | Smartphone, aircraft engine, SaaS application, medical device, consulting service, steel beam, packaged food, operating system.                                                                   |
+| **Product Group**        | A collection of closely related products sharing common functions, technologies, production processes, or market applications. Product Groups provide an intermediate level of classification between individual products and industries.                           | Passenger vehicles, dairy products, industrial robots, consumer electronics, antibiotics, office software, machine tools.                                                                         |
+| **Industry**             | An economic domain consisting of organizations engaged in producing similar products or services using related technologies, production capabilities, and value chains.                                                                                             | Semiconductor industry, automotive industry, pharmaceutical industry, steel industry, software industry, aerospace industry.                                                                      |
+| **Industrial Group**     | A diversified collection of firms operating across multiple related or unrelated industries under common ownership, governance, or strategic coordination.                                                                                                          | Samsung Group, Tata Group, Siemens AG, Mitsubishi Group, Bremontix Empreseria.                                                                                                                    |
+| **Sector**               | A broad classification of economic activity grouping multiple related industries according to their principal productive function.                                                                                                                                  | Manufacturing, Agriculture, Mining, Construction, Information Technology, Healthcare, Transportation.                                                                                             |
+| **Major Sector**         | The highest-level classification of economic production representing the primary stages of economic activity within an economy.                                                                                                                                     | Primary Sector (resource extraction), Secondary Sector (manufacturing), Tertiary Sector (services), Quaternary Sector (knowledge services), Quinary Sector (strategic leadership and governance). |
+| **Production Capability** | The demonstrated ability of a Production System to consistently manufacture a class of products within specified quality, throughput, cost, and technical constraints. | Precision machining capability, high-volume semiconductor fabrication capability, sterile pharmaceutical production capability, mass customization capability. |
+| **Production Capacity**   | The maximum sustainable quantity of products or services that a Production System can produce during a specified period under normal operating conditions.             | 50,000 vehicles/year, 300 wafers/day, 10 million API requests/day, 2 GW of electricity generation capacity.                                                    |
+
+## Relationship Set
+
+| **Link Type**         | **Description**                                                                                                 |
+| --------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Is A**              | Indicates taxonomic specialization or inheritance. The source is a more specific form of the target.            |
+| **Instance Of**       | Indicates that an entity is an instance of a class or category.                                                 |
+| **Part Of**           | Indicates that the source is a constituent or component of the target.                                          |
+| **Has Part**          | Indicates that the target contains the source as one of its components.                                         |
+| **Depends On**        | Indicates that the source requires the target for its existence, operation, or validity.                        |
+| **Uses**              | Indicates that the source consumes or employs the target during execution or operation.                         |
+| **Produces**          | Indicates that the source generates or creates the target.                                                      |
+| **Consumes**          | Indicates that the source requires or depletes the target as an input.                                          |
+| **Transforms**        | Indicates that the source converts one entity into another.                                                     |
+| **Implements**        | Indicates that the source realizes, executes, or embodies the target specification, interface, or concept.      |
+| **Specifies**         | Indicates that the source formally defines the properties or behavior of the target.                            |
+| **Constrains**        | Indicates that the source limits or restricts the behavior, structure, or operation of the target.              |
+| **Controls**          | Indicates that the source directs, regulates, or governs the target.                                            |
+| **Measures**          | Indicates that the source observes or quantifies the state or properties of the target.                         |
+| **Verifies**          | Indicates that the source evaluates whether the target satisfies defined requirements or specifications.        |
+| **Maintains**         | Indicates that the source preserves or restores the operational state of the target.                            |
+| **Repairs**           | Indicates that the source restores the target after failure or degradation.                                     |
+| **Enables**           | Indicates that the source makes the target possible or achievable.                                              |
+| **Supports**          | Indicates that the source assists or facilitates the target without being strictly required.                    |
+| **Influences**        | Indicates that the source affects the behavior or properties of the target without determining them completely. |
+| **Communicates With** | Indicates that information is exchanged between the source and target.                                          |
+| **Interacts With**    | Indicates that the source and target participate in mutual action or exchange.                                  |
+| **Located In**        | Indicates the physical or logical location of the source.                                                       |
+| **Owned By**          | Indicates ownership or legal possession.                                                                        |
+| **Managed By**        | Indicates operational or administrative responsibility.                                                         |
+| **Created By**        | Indicates the agent or process responsible for creating the target.                                             |
+| **Derived From**      | Indicates that the source originates from or is based on the target.                                            |
+| **Precedes**          | Indicates temporal or logical ordering before another element.                                                  |
+| **Succeeds**          | Indicates temporal or logical ordering after another element.                                                   |
+| **Replaces**          | Indicates that the source supersedes the target.                                                                |
+| **Equivalent To**     | Indicates semantic equivalence between two entities.                                                            |
+| **Associated With**   | Indicates a meaningful but otherwise unspecified relationship.                                                  |
+
+## References
+
+- [Laboratorium Productivum et Mercatorum (Produciologia)](https://www.bremontix.xyz/lab/pro/)
+- [Tecnica](https://www.bremontix.xyz/toolbox/tecnica/)
