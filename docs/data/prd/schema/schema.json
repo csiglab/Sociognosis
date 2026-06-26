@@ -1,96 +1,129 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.org/product-space-node.schema.json",
-  "title": "Product Space Node Schema",
-  "description": "Schema for representing the product space, production processes, and enabling capabilities including techniques, infrastructure, constraints, and market structures.",
+  "title": "Production Space Node Schema",
+  "description": "Schema for representing the production space, production processes, and enabling capabilities including techniques, infrastructure, constraints, and market structures. Mirrors the storage model defined in docs/data/prd/schema/notes.",
   "type": "object",
   "required": [
     "id",
     "name",
+    "tags",
+    "layer",
     "category",
-    "inheritanceLevel",
     "description",
-    "functionalRoles",
-    "domainScope",
-    "historicalContext",
-    "specific",
+    "chronology",
     "relationships",
+    "specific",
     "metadata",
     "references"
   ],
   "properties": {
     "id": {
-      "type": "string"
+      "type": "string",
+      "description": "Globally unique identifier for the element."
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "Canonical name of the element."
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tag Set — collection of keywords, classifications, or labels used for indexing, filtering, and discovery.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "layer": {
+      "type": "string",
+      "description": "The ontological layer to which the element belongs.",
+      "enum": [
+        "Reality",
+        "Problem",
+        "Technical",
+        "Production",
+        "Product",
+        "Economic"
+      ]
     },
     "category": {
       "type": "string",
+      "description": "The direct conceptual category of the element.",
       "enum": [
-        "Product",
-        "ProductCategory",
-        "ProductionProcess",
-        "ProductionSystem",
+        "Reality",
+        "Technical Domain",
+        "Technical System",
+        "Action Interface & Actuation",
+        "Concrete Technical Artifact",
+        "Technical Blueprint",
+        "Technical Agent",
+        "Technical Activity",
+        "Technical Standard",
+        "Technical Constraint",
+        "Technical Infrastructure",
+        "Technical Feedback",
+        "Technical Strategy",
+        "Technical Framework",
+        "Technical Mechanism",
+        "Production Technical Object",
+        "Constitutive Technical Object",
         "Technique",
-        "Capability",
+        "Technical Problem",
+        "Technical Requirement",
+        "Operative Technique",
+        "Constitutive Technique",
+        "Technical Purpose",
+        "Technical Architecture",
+        "Technical Specification",
+        "Technical Evolution",
+        "Technical Labor",
+        "Technical Institution",
+        "Technical Research",
+        "Technical Competence",
+        "Technical Failure",
+        "Verification",
+        "Maintenance",
+        "Security",
         "Resource",
-        "Infrastructure",
-        "Constraint",
-        "Market",
-        "ValueChainStage",
-        "ProductionFunction",
-        "Specification",
-        "Standard",
-        "Institution",
-        "Strategy",
-        "Problem",
-        "Failure",
-        "Evolution",
-        "Research"
+        "Technical Obsolescence",
+        "Production System",
+        "Production Process",
+        "Production Activity",
+        "Production Operation",
+        "Production Facility",
+        "Production Line",
+        "Task",
+        "Product",
+        "Product Group",
+        "Industry",
+        "Industrial Group",
+        "Sector",
+        "Major Sector",
+        "Production Capability",
+        "Production Capacity"
       ]
     },
-    "inheritanceLevel": {
-      "type": "integer",
-      "minimum": 0
-    },
     "description": {
-      "type": "string"
+      "type": "string",
+      "description": "Short description — concise summary of the element."
     },
     "longDescription": {
-      "type": "string"
+      "type": "string",
+      "description": "Long description — comprehensive explanation of the element, including its purpose, meaning, and significance."
     },
-    "functionalRoles": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "domainScope": {
-      "type": "array",
-      "description": "Economic, industrial, or production domains where the node operates",
-      "items": {
-        "type": "string"
-      }
-    },
-    "historicalContext": {
+    "chronology": {
       "type": "object",
-      "required": [
-        "summary",
-        "chronology"
-      ],
+      "description": "Chronology — historical development of the element, including origin, major revisions, predecessors, successors, and significant milestones.",
       "properties": {
         "summary": {
           "type": "string"
         },
-        "chronology": {
+        "events": {
           "type": "array",
           "items": {
             "type": "object",
             "required": [
               "year",
-              "event",
-              "context"
+              "event"
             ],
             "properties": {
               "year": {
@@ -107,95 +140,100 @@
         }
       }
     },
-    "specific": {
-      "type": "object",
-      "description": "Category-specific structured extension fields"
-    },
     "relationships": {
       "type": "array",
+      "description": "Relationship Set — structured collection of semantic relationships linking the element to other ontology elements.",
       "items": {
         "type": "object",
         "required": [
-          "relationshipType",
           "targetNodeId",
-          "description"
+          "relationshipType"
         ],
         "properties": {
+          "targetNodeId": {
+            "type": "string",
+            "description": "ID of the related node."
+          },
           "relationshipFamily": {
             "type": "string",
-            "enum": [
-              "FUNCTIONAL",
-              "STRUCTURAL",
-              "CAPABILITY_DEPENDENCY",
-              "VALUE_CHAIN",
-              "MARKET_RELATION",
-              "GOVERNANCE",
-              "TEMPORAL_EVOLUTION",
-              "COMPOSITIONAL",
-              "CLASSIFICATION"
-            ]
+            "description": "The family/category of the relationship (e.g., Functional, Structural, Capability Dependency, Value Chain, Market Relation, Governance, Temporal Evolution, Compositional, Classification)."
           },
           "relationshipType": {
             "type": "string",
+            "description": "The specific link type.",
             "enum": [
-              "PRODUCES",
-              "CONSUMES",
-              "ENABLES",
-              "REQUIRES",
-              "DEPENDS_ON",
-              "PART_OF",
-              "TRANSFORMS_INTO",
-              "SPECIALIZES",
-              "GENERALIZES",
-              "COMPLIES_WITH",
-              "CONSTRAINED_BY",
-              "COMPETES_WITH",
-              "SUBSTITUTES_FOR",
-              "COMPLEMENTS",
-              "ORCHESTRATED_BY",
-              "EVOLVES_FROM",
-              "SUPERSEDES"
+              "Is A",
+              "Instance Of",
+              "Part Of",
+              "Has Part",
+              "Depends On",
+              "Uses",
+              "Produces",
+              "Consumes",
+              "Transforms",
+              "Implements",
+              "Specifies",
+              "Constrains",
+              "Controls",
+              "Measures",
+              "Verifies",
+              "Maintains",
+              "Repairs",
+              "Enables",
+              "Supports",
+              "Influences",
+              "Communicates With",
+              "Interacts With",
+              "Located In",
+              "Owned By",
+              "Managed By",
+              "Created By",
+              "Derived From",
+              "Precedes",
+              "Succeeds",
+              "Replaces",
+              "Equivalent To",
+              "Associated With"
             ]
           },
-          "targetNodeId": {
-            "type": "string"
-          },
           "description": {
-            "type": "string"
+            "type": "string",
+            "description": "Explanation of why this relationship is relevant."
           }
         }
       }
     },
+    "specific": {
+      "type": "object",
+      "description": "Category-Specific Characterization — attributes specific to the element's category that are not covered by the generic schema."
+    },
     "metadata": {
       "type": "object",
-      "required": [
-        "tags",
-        "confidenceScore",
-        "sourceReference",
-        "createdAt",
-        "auditTrail"
-      ],
+      "description": "Metadata — administrative and descriptive information such as author, creation date, last modification date, version, lifecycle status, provenance, confidence level, and licensing information.",
       "properties": {
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+        "inheritanceLevel": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Taxonomic inheritance level of the element within its category."
         },
         "confidenceScore": {
           "type": "number",
           "minimum": 0,
-          "maximum": 1
+          "maximum": 1,
+          "description": "Confidence level of the element's characterization."
         },
         "sourceReference": {
-          "type": "string"
+          "type": "string",
+          "description": "Provenance or primary source of the element's data."
         },
         "createdAt": {
           "type": "string",
-          "format": "date-time"
+          "format": "date-time",
+          "description": "Creation date of the element record."
         },
         "auditTrail": {
           "type": "array",
+          "description": "Review and modification history.",
           "items": {
             "type": "object",
             "required": [
@@ -217,6 +255,7 @@
     },
     "references": {
       "type": "array",
+      "description": "References — bibliographic references, standards, specifications, technical documentation, academic literature, and other supporting sources.",
       "items": {
         "type": "object",
         "required": [
@@ -228,7 +267,10 @@
             "type": "string"
           },
           "link": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uri"
           },
           "description": {
@@ -259,7 +301,7 @@
       "if": {
         "properties": {
           "category": {
-            "const": "ProductionProcess"
+            "const": "Production Process"
           }
         }
       },
@@ -291,14 +333,14 @@
       "if": {
         "properties": {
           "category": {
-            "const": "Capability"
+            "const": "Production Capability"
           }
         }
       },
       "then": {
         "properties": {
           "specific": {
-            "$ref": "#/$defs/CapabilitySpecific"
+            "$ref": "#/$defs/ProductionCapabilitySpecific"
           }
         }
       }
@@ -381,7 +423,7 @@
         }
       }
     },
-    "CapabilitySpecific": {
+    "ProductionCapabilitySpecific": {
       "type": "object",
       "required": [
         "capabilityType",
@@ -401,5 +443,5 @@
       }
     }
   },
-  "additionalProperties": false
+  "additionalProperties": true
 }

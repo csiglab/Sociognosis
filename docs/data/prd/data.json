@@ -2,23 +2,24 @@
   {
     "id": "N1",
     "name": "Smartphone",
-    "category": "Product",
-    "inheritanceLevel": 0,
-    "description": "Portable multifunctional computing and communication device.",
-    "longDescription": "A smartphone integrates telecommunication, computing, sensing, and application execution into a handheld device, enabling digital communication, media consumption, and productivity applications.",
-    "functionalRoles": [
+    "tags": [
+      "electronics",
+      "mobile",
+      "consumer tech",
       "communication device",
       "computing platform",
-      "sensor hub"
-    ],
-    "domainScope": [
+      "sensor hub",
       "consumer electronics",
       "telecommunications",
       "digital services"
     ],
-    "historicalContext": {
+    "layer": "Product",
+    "category": "Product",
+    "description": "Portable multifunctional computing and communication device.",
+    "longDescription": "A smartphone integrates telecommunication, computing, sensing, and application execution into a handheld device, enabling digital communication, media consumption, and productivity applications.",
+    "chronology": {
       "summary": "Emerged from convergence of mobile phones and PDAs.",
-      "chronology": [
+      "events": [
         {
           "year": 2007,
           "event": "Modern smartphone paradigm established",
@@ -26,25 +27,21 @@
         }
       ]
     },
+    "relationships": [
+      {
+        "relationshipFamily": "VALUE_CHAIN",
+        "relationshipType": "Consumes",
+        "targetNodeId": "N2",
+        "description": "Relies on battery assembly process for energy storage systems."
+      }
+    ],
     "specific": {
       "materiality": "electronic device with semiconductor components",
       "useCase": "personal communication and computing",
       "lifeCycleStage": "consumption"
     },
-    "relationships": [
-      {
-        "relationshipFamily": "VALUE_CHAIN",
-        "relationshipType": "CONSUMES",
-        "targetNodeId": "N2",
-        "description": "Relies on battery assembly process for energy storage systems."
-      }
-    ],
     "metadata": {
-      "tags": [
-        "electronics",
-        "mobile",
-        "consumer tech"
-      ],
+      "inheritanceLevel": 0,
       "confidenceScore": 0.95,
       "sourceReference": "industrial systems synthesis",
       "createdAt": "2026-06-06T10:00:00Z",
@@ -66,21 +63,22 @@
   {
     "id": "N2",
     "name": "Lithium Battery Assembly",
-    "category": "ProductionProcess",
-    "inheritanceLevel": 1,
-    "description": "Manufacturing process for assembling lithium-ion battery cells.",
-    "longDescription": "A multi-stage electrochemical assembly process involving electrode preparation, cell stacking, electrolyte filling, and sealing under controlled conditions.",
-    "functionalRoles": [
+    "tags": [
+      "battery",
+      "manufacturing",
+      "energy",
       "energy storage production",
-      "component fabrication"
-    ],
-    "domainScope": [
+      "component fabrication",
       "battery manufacturing",
       "electronics supply chain"
     ],
-    "historicalContext": {
+    "layer": "Production",
+    "category": "Production Process",
+    "description": "Manufacturing process for assembling lithium-ion battery cells.",
+    "longDescription": "A multi-stage electrochemical assembly process involving electrode preparation, cell stacking, electrolyte filling, and sealing under controlled conditions.",
+    "chronology": {
       "summary": "Evolved with demand for portable electronics and EVs.",
-      "chronology": [
+      "events": [
         {
           "year": 1991,
           "event": "Commercial lithium-ion batteries introduced",
@@ -88,6 +86,14 @@
         }
       ]
     },
+    "relationships": [
+      {
+        "relationshipFamily": "FUNCTIONAL",
+        "relationshipType": "Transforms",
+        "targetNodeId": "N1",
+        "description": "Provides energy storage components for smartphones."
+      }
+    ],
     "specific": {
       "inputs": [
         "lithium compounds",
@@ -100,20 +106,8 @@
       ],
       "transformationLogic": "electrochemical energy storage assembly under controlled environment"
     },
-    "relationships": [
-      {
-        "relationshipFamily": "FUNCTIONAL",
-        "relationshipType": "TRANSFORMS_INTO",
-        "targetNodeId": "N1",
-        "description": "Provides energy storage components for smartphones."
-      }
-    ],
     "metadata": {
-      "tags": [
-        "battery",
-        "manufacturing",
-        "energy"
-      ],
+      "inheritanceLevel": 1,
       "confidenceScore": 0.9,
       "sourceReference": "industrial battery engineering literature",
       "createdAt": "2026-06-06T10:05:00Z",
@@ -135,21 +129,21 @@
   {
     "id": "N3",
     "name": "Surface Mount Technology (SMT)",
-    "category": "Technique",
-    "inheritanceLevel": 2,
-    "description": "Technique for mounting electronic components directly onto PCB surfaces.",
-    "longDescription": "SMT is a highly automated electronics assembly technique enabling miniaturization and high-density circuit design through pick-and-place machines and reflow soldering.",
-    "functionalRoles": [
+    "tags": [
+      "electronics",
+      "manufacturing technique",
       "electronics assembly",
-      "miniaturization enablement"
-    ],
-    "domainScope": [
+      "miniaturization enablement",
       "electronics manufacturing",
       "PCB production"
     ],
-    "historicalContext": {
+    "layer": "Technical",
+    "category": "Technique",
+    "description": "Technique for mounting electronic components directly onto PCB surfaces.",
+    "longDescription": "SMT is a highly automated electronics assembly technique enabling miniaturization and high-density circuit design through pick-and-place machines and reflow soldering.",
+    "chronology": {
       "summary": "Replaced through-hole assembly in modern electronics.",
-      "chronology": [
+      "events": [
         {
           "year": 1980,
           "event": "SMT adoption begins in industry",
@@ -157,24 +151,21 @@
         }
       ]
     },
+    "relationships": [
+      {
+        "relationshipFamily": "CAPABILITY_DEPENDENCY",
+        "relationshipType": "Enables",
+        "targetNodeId": "N2",
+        "description": "Enables automated battery electronics assembly."
+      }
+    ],
     "specific": {
       "knowledgeType": "manufacturing engineering knowledge",
       "codificationLevel": "explicit",
       "transferMechanism": "training manuals and machine programming"
     },
-    "relationships": [
-      {
-        "relationshipFamily": "CAPABILITY_DEPENDENCY",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "N2",
-        "description": "Enables automated battery electronics assembly."
-      }
-    ],
     "metadata": {
-      "tags": [
-        "electronics",
-        "manufacturing technique"
-      ],
+      "inheritanceLevel": 2,
       "confidenceScore": 0.92,
       "sourceReference": "electronics manufacturing standards",
       "createdAt": "2026-06-06T10:10:00Z",
@@ -196,22 +187,23 @@
   {
     "id": "N4",
     "name": "Precision Manufacturing Capability",
-    "category": "Capability",
-    "inheritanceLevel": 2,
-    "description": "Organizational capability to manufacture high-tolerance components.",
-    "longDescription": "Represents the ability of a production system to achieve micron-level tolerances in fabrication processes using advanced machinery and quality control systems.",
-    "functionalRoles": [
+    "tags": [
+      "precision",
+      "manufacturing",
+      "capability",
       "quality assurance",
-      "high-precision fabrication"
-    ],
-    "domainScope": [
+      "high-precision fabrication",
       "advanced manufacturing",
       "aerospace",
       "electronics"
     ],
-    "historicalContext": {
+    "layer": "Production",
+    "category": "Production Capability",
+    "description": "Organizational capability to manufacture high-tolerance components.",
+    "longDescription": "Represents the ability of a production system to achieve micron-level tolerances in fabrication processes using advanced machinery and quality control systems.",
+    "chronology": {
       "summary": "Developed alongside CNC machining and semiconductor fabrication.",
-      "chronology": [
+      "events": [
         {
           "year": 1970,
           "event": "CNC machining adoption",
@@ -219,25 +211,21 @@
         }
       ]
     },
+    "relationships": [
+      {
+        "relationshipFamily": "CAPABILITY_DEPENDENCY",
+        "relationshipType": "Enables",
+        "targetNodeId": "N3",
+        "description": "Supports SMT component placement precision."
+      }
+    ],
     "specific": {
       "capabilityType": "manufacturing precision",
       "proficiencyLevel": "high",
       "measurability": "defect rate per million units"
     },
-    "relationships": [
-      {
-        "relationshipFamily": "CAPABILITY_DEPENDENCY",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "N3",
-        "description": "Supports SMT component placement precision."
-      }
-    ],
     "metadata": {
-      "tags": [
-        "precision",
-        "manufacturing",
-        "capability"
-      ],
+      "inheritanceLevel": 2,
       "confidenceScore": 0.93,
       "sourceReference": "industrial engineering frameworks",
       "createdAt": "2026-06-06T10:15:00Z",
@@ -259,21 +247,22 @@
   {
     "id": "N5",
     "name": "Semiconductor Fab Plant",
-    "category": "Infrastructure",
-    "inheritanceLevel": 3,
-    "description": "Industrial facility for manufacturing semiconductor chips.",
-    "longDescription": "A semiconductor fabrication plant is a highly controlled industrial environment used to manufacture integrated circuits using photolithography and chemical processing.",
-    "functionalRoles": [
+    "tags": [
+      "semiconductor",
+      "infrastructure",
+      "fab",
       "chip production",
-      "advanced fabrication environment"
-    ],
-    "domainScope": [
+      "advanced fabrication environment",
       "semiconductors",
       "electronics manufacturing"
     ],
-    "historicalContext": {
+    "layer": "Technical",
+    "category": "Technical Infrastructure",
+    "description": "Industrial facility for manufacturing semiconductor chips.",
+    "longDescription": "A semiconductor fabrication plant is a highly controlled industrial environment used to manufacture integrated circuits using photolithography and chemical processing.",
+    "chronology": {
       "summary": "Evolved with the rise of integrated circuits.",
-      "chronology": [
+      "events": [
         {
           "year": 1960,
           "event": "First semiconductor fabs established",
@@ -281,21 +270,17 @@
         }
       ]
     },
-    "specific": {},
     "relationships": [
       {
         "relationshipFamily": "STRUCTURAL",
-        "relationshipType": "ENABLES",
+        "relationshipType": "Enables",
         "targetNodeId": "N3",
         "description": "Provides infrastructure for SMT-enabled electronics assembly."
       }
     ],
+    "specific": {},
     "metadata": {
-      "tags": [
-        "semiconductor",
-        "infrastructure",
-        "fab"
-      ],
+      "inheritanceLevel": 3,
       "confidenceScore": 0.96,
       "sourceReference": "semiconductor industry reports",
       "createdAt": "2026-06-06T10:20:00Z",
@@ -317,22 +302,23 @@
   {
     "id": "N6",
     "name": "Global Smartphone Market",
-    "category": "Market",
-    "inheritanceLevel": 1,
-    "description": "Global economic market for smartphones.",
-    "longDescription": "Represents global supply-demand dynamics, pricing structures, competition, and consumer adoption patterns for smartphones.",
-    "functionalRoles": [
+    "tags": [
+      "market",
+      "smartphones",
+      "economics",
       "price formation",
       "demand aggregation",
-      "competition structure"
-    ],
-    "domainScope": [
+      "competition structure",
       "consumer electronics",
       "global trade"
     ],
-    "historicalContext": {
+    "layer": "Economic",
+    "category": "Industry",
+    "description": "Global economic market for smartphones.",
+    "longDescription": "Represents global supply-demand dynamics, pricing structures, competition, and consumer adoption patterns for smartphones.",
+    "chronology": {
       "summary": "Rapid expansion after smartphone adoption in 2000s.",
-      "chronology": [
+      "events": [
         {
           "year": 2010,
           "event": "Mass smartphone adoption",
@@ -340,21 +326,17 @@
         }
       ]
     },
-    "specific": {},
     "relationships": [
       {
         "relationshipFamily": "MARKET_RELATION",
-        "relationshipType": "COMPETES_WITH",
+        "relationshipType": "Interacts With",
         "targetNodeId": "N1",
         "description": "Defines competitive environment for smartphone products."
       }
     ],
+    "specific": {},
     "metadata": {
-      "tags": [
-        "market",
-        "smartphones",
-        "economics"
-      ],
+      "inheritanceLevel": 1,
       "confidenceScore": 0.9,
       "sourceReference": "market analytics synthesis",
       "createdAt": "2026-06-06T10:25:00Z",
@@ -376,21 +358,22 @@
   {
     "id": "N7",
     "name": "Electronics Assembly Stage",
-    "category": "ValueChainStage",
-    "inheritanceLevel": 1,
-    "description": "Stage in the value chain where electronic components are assembled.",
-    "longDescription": "This stage includes PCB assembly, component integration, and system testing prior to product distribution.",
-    "functionalRoles": [
+    "tags": [
+      "value chain",
+      "assembly",
+      "electronics",
       "assembly coordination",
-      "system integration"
-    ],
-    "domainScope": [
+      "system integration",
       "manufacturing value chain",
       "electronics"
     ],
-    "historicalContext": {
+    "layer": "Production",
+    "category": "Production Activity",
+    "description": "Stage in the value chain where electronic components are assembled.",
+    "longDescription": "This stage includes PCB assembly, component integration, and system testing prior to product distribution.",
+    "chronology": {
       "summary": "Standardized in modern electronics manufacturing pipelines.",
-      "chronology": [
+      "events": [
         {
           "year": 1995,
           "event": "Global outsourcing of assembly",
@@ -398,21 +381,17 @@
         }
       ]
     },
-    "specific": {},
     "relationships": [
       {
         "relationshipFamily": "VALUE_CHAIN",
-        "relationshipType": "PART_OF",
+        "relationshipType": "Part Of",
         "targetNodeId": "N2",
         "description": "Includes battery assembly as a subprocess."
       }
     ],
+    "specific": {},
     "metadata": {
-      "tags": [
-        "value chain",
-        "assembly",
-        "electronics"
-      ],
+      "inheritanceLevel": 1,
       "confidenceScore": 0.88,
       "sourceReference": "supply chain literature",
       "createdAt": "2026-06-06T10:30:00Z",
@@ -434,22 +413,23 @@
   {
     "id": "N8",
     "name": "Rare Earth Supply Constraint",
-    "category": "Constraint",
-    "inheritanceLevel": 2,
-    "description": "Constraint arising from limited availability of rare earth materials.",
-    "longDescription": "Represents supply-side limitations affecting production of electronics due to geopolitical concentration of rare earth element mining and refining.",
-    "functionalRoles": [
+    "tags": [
+      "resources",
+      "constraint",
+      "supply chain",
       "supply limitation",
-      "production bottleneck"
-    ],
-    "domainScope": [
+      "production bottleneck",
       "mining",
       "electronics supply chain",
       "geopolitics"
     ],
-    "historicalContext": {
+    "layer": "Technical",
+    "category": "Technical Constraint",
+    "description": "Constraint arising from limited availability of rare earth materials.",
+    "longDescription": "Represents supply-side limitations affecting production of electronics due to geopolitical concentration of rare earth element mining and refining.",
+    "chronology": {
       "summary": "Increasing relevance due to geopolitical supply concentration.",
-      "chronology": [
+      "events": [
         {
           "year": 2010,
           "event": "Rare earth export restrictions",
@@ -457,21 +437,17 @@
         }
       ]
     },
-    "specific": {},
     "relationships": [
       {
         "relationshipFamily": "STRUCTURAL",
-        "relationshipType": "CONSTRAINED_BY",
+        "relationshipType": "Constrains",
         "targetNodeId": "N2",
         "description": "Limits availability of materials for battery production."
       }
     ],
+    "specific": {},
     "metadata": {
-      "tags": [
-        "resources",
-        "constraint",
-        "supply chain"
-      ],
+      "inheritanceLevel": 2,
       "confidenceScore": 0.91,
       "sourceReference": "resource economics literature",
       "createdAt": "2026-06-06T10:35:00Z",
@@ -493,21 +469,22 @@
   {
     "id": "N9",
     "name": "ISO Quality Standards Body",
-    "category": "Institution",
-    "inheritanceLevel": 2,
-    "description": "Institution responsible for defining international quality standards.",
-    "longDescription": "Represents formal standardization bodies such as ISO that define quality, safety, and interoperability standards for global industries.",
-    "functionalRoles": [
+    "tags": [
+      "standards",
+      "institution",
+      "compliance",
       "standardization",
-      "regulatory coordination"
-    ],
-    "domainScope": [
+      "regulatory coordination",
       "global manufacturing",
       "compliance systems"
     ],
-    "historicalContext": {
+    "layer": "Technical",
+    "category": "Technical Institution",
+    "description": "Institution responsible for defining international quality standards.",
+    "longDescription": "Represents formal standardization bodies such as ISO that define quality, safety, and interoperability standards for global industries.",
+    "chronology": {
       "summary": "Established to harmonize international industrial standards.",
-      "chronology": [
+      "events": [
         {
           "year": 1947,
           "event": "ISO founded",
@@ -515,21 +492,17 @@
         }
       ]
     },
-    "specific": {},
     "relationships": [
       {
         "relationshipFamily": "GOVERNANCE",
-        "relationshipType": "COMPLIES_WITH",
+        "relationshipType": "Associated With",
         "targetNodeId": "N3",
         "description": "SMT processes comply with ISO manufacturing standards."
       }
     ],
+    "specific": {},
     "metadata": {
-      "tags": [
-        "standards",
-        "institution",
-        "compliance"
-      ],
+      "inheritanceLevel": 2,
       "confidenceScore": 0.94,
       "sourceReference": "standards documentation",
       "createdAt": "2026-06-06T10:40:00Z",
@@ -551,21 +524,22 @@
   {
     "id": "N10",
     "name": "Just-in-Time Manufacturing Strategy",
-    "category": "Strategy",
-    "inheritanceLevel": 3,
-    "description": "Production strategy focused on minimizing inventory and optimizing flow.",
-    "longDescription": "Just-in-time manufacturing reduces waste by synchronizing production with demand, minimizing inventory holding costs and improving responsiveness.",
-    "functionalRoles": [
+    "tags": [
+      "strategy",
+      "manufacturing",
+      "supply chain",
       "inventory minimization",
-      "production optimization"
-    ],
-    "domainScope": [
+      "production optimization",
       "manufacturing systems",
       "supply chain management"
     ],
-    "historicalContext": {
+    "layer": "Technical",
+    "category": "Technical Strategy",
+    "description": "Production strategy focused on minimizing inventory and optimizing flow.",
+    "longDescription": "Just-in-time manufacturing reduces waste by synchronizing production with demand, minimizing inventory holding costs and improving responsiveness.",
+    "chronology": {
       "summary": "Developed in Japanese automotive industry.",
-      "chronology": [
+      "events": [
         {
           "year": 1970,
           "event": "Toyota Production System expansion",
@@ -573,21 +547,17 @@
         }
       ]
     },
-    "specific": {},
     "relationships": [
       {
         "relationshipFamily": "FUNCTIONAL",
-        "relationshipType": "ORCHESTRATED_BY",
+        "relationshipType": "Managed By",
         "targetNodeId": "N7",
         "description": "Implemented within electronics assembly stages."
       }
     ],
+    "specific": {},
     "metadata": {
-      "tags": [
-        "strategy",
-        "manufacturing",
-        "supply chain"
-      ],
+      "inheritanceLevel": 3,
       "confidenceScore": 0.92,
       "sourceReference": "operations management literature",
       "createdAt": "2026-06-06T10:45:00Z",
@@ -609,268 +579,368 @@
   {
     "id": "p001",
     "name": "Silicon Wafers",
-    "category": "Product",
-    "inheritanceLevel": 2,
-    "description": "Thin slices of semiconductor material used as the substrate for integrated circuits.",
-    "longDescription": "Base substrate in semiconductor manufacturing enabling integrated circuit fabrication via lithographic processes.",
-    "functionalRoles": [
+    "tags": [
       "substrate",
-      "semiconductor base material"
-    ],
-    "domainScope": [
+      "semiconductor base material",
       "Semiconductors",
       "Microelectronics"
     ],
-    "historicalContext": "Core enabling material in post-1970s semiconductor industrialization.",
-    "specific": true,
+    "layer": "Product",
+    "category": "Product",
+    "description": "Thin slices of semiconductor material used as the substrate for integrated circuits.",
+    "longDescription": "Base substrate in semiconductor manufacturing enabling integrated circuit fabrication via lithographic processes.",
+    "chronology": {
+      "summary": "Core enabling material in post-1970s semiconductor industrialization.",
+      "events": []
+    },
     "relationships": [],
+    "specific": {
+      "materiality": "monocrystalline silicon semiconductor material",
+      "useCase": "substrate for integrated circuit fabrication",
+      "lifeCycleStage": "production"
+    },
     "metadata": {
+      "inheritanceLevel": 2,
       "source": "IEEE Standards",
       "hsCode": "2804.61"
     },
     "references": [
-      "IEEE Standards",
-      "Semiconductor Manufacturing Processes"
+      {
+        "title": "IEEE Standards",
+        "description": ""
+      },
+      {
+        "title": "Semiconductor Manufacturing Processes",
+        "description": ""
+      }
     ]
   },
   {
     "id": "p002",
     "name": "Integrated Circuits",
-    "category": "Product",
-    "inheritanceLevel": 3,
-    "description": "Electronic circuits integrated onto semiconductor substrates.",
-    "longDescription": "Miniaturized circuits embedding transistors and interconnects on silicon wafers enabling computation and signal processing.",
-    "functionalRoles": [
+    "tags": [
       "computation unit",
-      "signal processing"
-    ],
-    "domainScope": [
+      "signal processing",
       "Microelectronics",
       "Computing"
     ],
-    "historicalContext": "Central artifact of the microelectronics revolution beginning in the 1960s.",
-    "specific": true,
+    "layer": "Product",
+    "category": "Product",
+    "description": "Electronic circuits integrated onto semiconductor substrates.",
+    "longDescription": "Miniaturized circuits embedding transistors and interconnects on silicon wafers enabling computation and signal processing.",
+    "chronology": {
+      "summary": "Central artifact of the microelectronics revolution beginning in the 1960s.",
+      "events": []
+    },
     "relationships": [],
+    "specific": {
+      "materiality": "semiconductor integrated circuit on silicon substrate",
+      "useCase": "computation and signal processing",
+      "lifeCycleStage": "production"
+    },
     "metadata": {
+      "inheritanceLevel": 3,
       "source": "IEEE Standards",
       "hsCode": "8542.31"
     },
     "references": [
-      "IEEE Standards",
-      "IC Fabrication Literature"
+      {
+        "title": "IEEE Standards",
+        "description": ""
+      },
+      {
+        "title": "IC Fabrication Literature",
+        "description": ""
+      }
     ]
   },
   {
     "id": "p003",
     "name": "Printed Circuit Boards",
-    "category": "Product",
-    "inheritanceLevel": 2,
-    "description": "Boards that mechanically support and electrically connect electronic components.",
-    "longDescription": "Layered fiberglass and copper structures providing interconnect architecture for electronic systems.",
-    "functionalRoles": [
+    "tags": [
       "electrical interconnect",
-      "mechanical support"
-    ],
-    "domainScope": [
+      "mechanical support",
       "Electronics Manufacturing"
     ],
-    "historicalContext": "Standardized in mid-20th century electronics manufacturing.",
-    "specific": true,
+    "layer": "Product",
+    "category": "Product",
+    "description": "Boards that mechanically support and electrically connect electronic components.",
+    "longDescription": "Layered fiberglass and copper structures providing interconnect architecture for electronic systems.",
+    "chronology": {
+      "summary": "Standardized in mid-20th century electronics manufacturing.",
+      "events": []
+    },
     "relationships": [],
+    "specific": {
+      "materiality": "fiberglass and copper laminate composite",
+      "useCase": "electrical interconnect and mechanical support for electronic components",
+      "lifeCycleStage": "production"
+    },
     "metadata": {
+      "inheritanceLevel": 2,
       "source": "IPC Standards",
       "hsCode": "8534.00"
     },
     "references": [
-      "IPC Standards"
+      {
+        "title": "IPC Standards",
+        "description": ""
+      }
     ]
   },
   {
     "id": "p004",
     "name": "Microprocessors",
-    "category": "Product",
-    "inheritanceLevel": 4,
-    "description": "Single-chip central processing units for computing systems.",
-    "longDescription": "Integrated computational engines combining ALU, control unit, and registers on a single semiconductor die.",
-    "functionalRoles": [
+    "tags": [
       "computation",
-      "control logic execution"
-    ],
-    "domainScope": [
+      "control logic execution",
       "Computing",
       "Microelectronics"
     ],
-    "historicalContext": "Emerged in the 1970s as scaling of integrated circuits enabled CPU-on-chip designs.",
-    "specific": true,
+    "layer": "Product",
+    "category": "Product",
+    "description": "Single-chip central processing units for computing systems.",
+    "longDescription": "Integrated computational engines combining ALU, control unit, and registers on a single semiconductor die.",
+    "chronology": {
+      "summary": "Emerged in the 1970s as scaling of integrated circuits enabled CPU-on-chip designs.",
+      "events": []
+    },
     "relationships": [],
+    "specific": {
+      "materiality": "semiconductor integrated circuit on silicon die",
+      "useCase": "central processing unit for computing systems",
+      "lifeCycleStage": "production"
+    },
     "metadata": {
+      "inheritanceLevel": 4,
       "source": "TechSpecs",
       "hsCode": "8542.31"
     },
     "references": [
-      "Computer Architecture Standards"
+      {
+        "title": "Computer Architecture Standards",
+        "description": ""
+      }
     ]
   },
   {
     "id": "p005",
     "name": "Memory Modules",
-    "category": "Product",
-    "inheritanceLevel": 3,
-    "description": "Circuit boards containing memory chips for data storage.",
-    "longDescription": "Volatile and non-volatile memory assemblies used in computing systems for temporary and persistent data storage.",
-    "functionalRoles": [
+    "tags": [
       "data storage",
-      "memory buffering"
-    ],
-    "domainScope": [
+      "memory buffering",
       "Computing"
     ],
-    "historicalContext": "Evolved alongside microprocessor-based computing systems.",
-    "specific": true,
+    "layer": "Product",
+    "category": "Product",
+    "description": "Circuit boards containing memory chips for data storage.",
+    "longDescription": "Volatile and non-volatile memory assemblies used in computing systems for temporary and persistent data storage.",
+    "chronology": {
+      "summary": "Evolved alongside microprocessor-based computing systems.",
+      "events": []
+    },
     "relationships": [],
+    "specific": {
+      "materiality": "printed circuit board populated with memory chips",
+      "useCase": "data storage in computing systems",
+      "lifeCycleStage": "production"
+    },
     "metadata": {
+      "inheritanceLevel": 3,
       "source": "TechSpecs",
       "hsCode": "8542.32"
     },
     "references": [
-      "Computer Hardware Standards"
+      {
+        "title": "Computer Hardware Standards",
+        "description": ""
+      }
     ]
   },
   {
     "id": "p006",
     "name": "Capacitors",
-    "category": "Product",
-    "inheritanceLevel": 2,
-    "description": "Passive components that store electrical energy in an electric field.",
-    "longDescription": "Electronic components that store and release electrical energy, used in filtering and signal stabilization.",
-    "functionalRoles": [
+    "tags": [
       "energy storage",
-      "signal smoothing"
-    ],
-    "domainScope": [
+      "signal smoothing",
       "Electronics"
     ],
-    "historicalContext": "Fundamental component since early electrical engineering.",
-    "specific": true,
+    "layer": "Product",
+    "category": "Product",
+    "description": "Passive components that store electrical energy in an electric field.",
+    "longDescription": "Electronic components that store and release electrical energy, used in filtering and signal stabilization.",
+    "chronology": {
+      "summary": "Fundamental component since early electrical engineering.",
+      "events": []
+    },
     "relationships": [],
+    "specific": {
+      "materiality": "passive electronic component (dielectric and conductive plates)",
+      "useCase": "electrical energy storage, filtering, and signal stabilization",
+      "lifeCycleStage": "production"
+    },
     "metadata": {
+      "inheritanceLevel": 2,
       "source": "EIA",
       "hsCode": "8532.21"
     },
     "references": [
-      "Electronic Components Handbook"
+      {
+        "title": "Electronic Components Handbook",
+        "description": ""
+      }
     ]
   },
   {
     "id": "p007",
     "name": "Resistors",
-    "category": "Product",
-    "inheritanceLevel": 2,
-    "description": "Components that implement electrical resistance in circuits.",
-    "longDescription": "Passive electronic components used to control current flow and divide voltage in electrical systems.",
-    "functionalRoles": [
+    "tags": [
       "current limitation",
-      "voltage division"
-    ],
-    "domainScope": [
+      "voltage division",
       "Electronics"
     ],
-    "historicalContext": "Foundational component in analog and digital electronics.",
-    "specific": true,
+    "layer": "Product",
+    "category": "Product",
+    "description": "Components that implement electrical resistance in circuits.",
+    "longDescription": "Passive electronic components used to control current flow and divide voltage in electrical systems.",
+    "chronology": {
+      "summary": "Foundational component in analog and digital electronics.",
+      "events": []
+    },
     "relationships": [],
+    "specific": {
+      "materiality": "passive electronic component (resistive element)",
+      "useCase": "current limitation and voltage division",
+      "lifeCycleStage": "production"
+    },
     "metadata": {
+      "inheritanceLevel": 2,
       "source": "EIA",
       "hsCode": "8533.21"
     },
     "references": [
-      "Electrical Engineering Standards"
+      {
+        "title": "Electrical Engineering Standards",
+        "description": ""
+      }
     ]
   },
   {
     "id": "p008",
     "name": "Smartphones",
-    "category": "Product",
-    "inheritanceLevel": 5,
-    "description": "Portable devices combining mobile communication and computing.",
-    "longDescription": "Integrated consumer electronics platform combining telecommunications, computation, sensors, and software ecosystems.",
-    "functionalRoles": [
+    "tags": [
       "communication",
       "mobile computing",
-      "sensor interface"
-    ],
-    "domainScope": [
+      "sensor interface",
       "Consumer Electronics",
       "Telecommunications"
     ],
-    "historicalContext": "Converged device category emerging post-2007 smartphone revolution.",
-    "specific": true,
+    "layer": "Product",
+    "category": "Product",
+    "description": "Portable devices combining mobile communication and computing.",
+    "longDescription": "Integrated consumer electronics platform combining telecommunications, computation, sensors, and software ecosystems.",
+    "chronology": {
+      "summary": "Converged device category emerging post-2007 smartphone revolution.",
+      "events": []
+    },
     "relationships": [],
+    "specific": {
+      "materiality": "integrated consumer electronics device with semiconductor components",
+      "useCase": "mobile communication and computing",
+      "lifeCycleStage": "consumption"
+    },
     "metadata": {
+      "inheritanceLevel": 5,
       "source": "GSMA",
       "hsCode": "8517.12"
     },
     "references": [
-      "Mobile Systems Architecture"
+      {
+        "title": "Mobile Systems Architecture",
+        "description": ""
+      }
     ]
   },
   {
     "id": "p009",
     "name": "Laptops",
-    "category": "Product",
-    "inheritanceLevel": 5,
-    "description": "Portable personal computers with clamshell form factor.",
-    "longDescription": "General-purpose computing devices integrating CPU, memory, storage, and I/O systems into a portable architecture.",
-    "functionalRoles": [
+    "tags": [
       "general computing",
-      "productivity platform"
-    ],
-    "domainScope": [
+      "productivity platform",
       "Computing"
     ],
-    "historicalContext": "Mainstream personal computing platform since the 1990s.",
-    "specific": true,
+    "layer": "Product",
+    "category": "Product",
+    "description": "Portable personal computers with clamshell form factor.",
+    "longDescription": "General-purpose computing devices integrating CPU, memory, storage, and I/O systems into a portable architecture.",
+    "chronology": {
+      "summary": "Mainstream personal computing platform since the 1990s.",
+      "events": []
+    },
     "relationships": [],
+    "specific": {
+      "materiality": "integrated portable computing device with semiconductor components",
+      "useCase": "general-purpose personal computing",
+      "lifeCycleStage": "consumption"
+    },
     "metadata": {
+      "inheritanceLevel": 5,
       "source": "TechSpecs",
       "hsCode": "8471.30"
     },
     "references": [
-      "PC Architecture Standards"
+      {
+        "title": "PC Architecture Standards",
+        "description": ""
+      }
     ]
   },
   {
     "id": "p010",
     "name": "Tablets",
-    "category": "Product",
-    "inheritanceLevel": 5,
-    "description": "Touchscreen mobile computing devices.",
-    "longDescription": "Flat mobile computing platforms optimized for touch interaction and lightweight computing tasks.",
-    "functionalRoles": [
+    "tags": [
       "mobile computing",
-      "content consumption"
-    ],
-    "domainScope": [
+      "content consumption",
       "Consumer Electronics"
     ],
-    "historicalContext": "Popularized after 2010 as a new mobile computing form factor.",
-    "specific": true,
+    "layer": "Product",
+    "category": "Product",
+    "description": "Touchscreen mobile computing devices.",
+    "longDescription": "Flat mobile computing platforms optimized for touch interaction and lightweight computing tasks.",
+    "chronology": {
+      "summary": "Popularized after 2010 as a new mobile computing form factor.",
+      "events": []
+    },
     "relationships": [],
+    "specific": {
+      "materiality": "integrated touchscreen mobile computing device",
+      "useCase": "touch-based mobile computing and content consumption",
+      "lifeCycleStage": "consumption"
+    },
     "metadata": {
+      "inheritanceLevel": 5,
       "source": "TechSpecs",
       "hsCode": "8471.30"
     },
     "references": [
-      "Mobile Device Standards"
+      {
+        "title": "Mobile Device Standards",
+        "description": ""
+      }
     ]
   },
   {
     "id": "resource_land",
     "name": "Land",
-    "category": "Resource",
-    "inheritanceLevel": 0,
-    "description": "A finite physical resource consisting of terrestrial surface area and associated geographic attributes that can be used for production, habitation, infrastructure, extraction, conservation, and economic activities.",
-    "longDescription": "Land is a foundational factor of production providing physical space and location-specific characteristics that enable economic activity. Its value derives from natural attributes, accessibility, legal rights, infrastructure connectivity, environmental conditions, and proximity to markets. Land serves as the substrate upon which agriculture, industry, housing, transportation systems, energy infrastructure, and natural resource extraction are organized.",
-    "functionalRoles": [
+    "tags": [
+      "land",
+      "resource",
+      "factor-of-production",
+      "real-estate",
+      "agriculture",
+      "infrastructure",
+      "economic-geography",
+      "natural-resource",
       "Factor of production",
       "Physical production substrate",
       "Location provider",
@@ -878,9 +948,7 @@
       "Resource extraction platform",
       "Infrastructure host",
       "Agricultural production base",
-      "Settlement foundation"
-    ],
-    "domainScope": [
+      "Settlement foundation",
       "Agriculture",
       "Mining",
       "Construction",
@@ -892,9 +960,13 @@
       "Forestry",
       "Environmental Management"
     ],
-    "historicalContext": {
+    "layer": "Reality",
+    "category": "Resource",
+    "description": "A finite physical resource consisting of terrestrial surface area and associated geographic attributes that can be used for production, habitation, infrastructure, extraction, conservation, and economic activities.",
+    "longDescription": "Land is a foundational factor of production providing physical space and location-specific characteristics that enable economic activity. Its value derives from natural attributes, accessibility, legal rights, infrastructure connectivity, environmental conditions, and proximity to markets. Land serves as the substrate upon which agriculture, industry, housing, transportation systems, energy infrastructure, and natural resource extraction are organized.",
+    "chronology": {
       "summary": "Land has historically been one of the primary factors of production and a central determinant of economic power, political authority, and wealth creation.",
-      "chronology": [
+      "events": [
         {
           "year": -10000,
           "event": "Agricultural Land Use",
@@ -917,6 +989,38 @@
         }
       ]
     },
+    "relationships": [
+      {
+        "relationshipFamily": "FUNCTIONAL",
+        "relationshipType": "Enables",
+        "targetNodeId": "production_agriculture",
+        "description": "Provides the physical base required for agricultural production."
+      },
+      {
+        "relationshipFamily": "FUNCTIONAL",
+        "relationshipType": "Enables",
+        "targetNodeId": "production_mining",
+        "description": "Provides access to subsurface mineral resources."
+      },
+      {
+        "relationshipFamily": "CAPABILITY_DEPENDENCY",
+        "relationshipType": "Depends On",
+        "targetNodeId": "institution_property_rights",
+        "description": "Economic utilization typically depends upon legally defined property rights."
+      },
+      {
+        "relationshipFamily": "STRUCTURAL",
+        "relationshipType": "Supports",
+        "targetNodeId": "infrastructure_transportation",
+        "description": "Land value and productivity are enhanced by transportation infrastructure."
+      },
+      {
+        "relationshipFamily": "VALUE_CHAIN",
+        "relationshipType": "Enables",
+        "targetNodeId": "resource_water",
+        "description": "Often functions jointly with water resources in productive activities."
+      }
+    ],
     "specific": {
       "resourceType": "Natural Resource",
       "renewability": "Finite",
@@ -939,49 +1043,8 @@
         "Infrastructure Land"
       ]
     },
-    "relationships": [
-      {
-        "relationshipFamily": "FUNCTIONAL",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "production_agriculture",
-        "description": "Provides the physical base required for agricultural production."
-      },
-      {
-        "relationshipFamily": "FUNCTIONAL",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "production_mining",
-        "description": "Provides access to subsurface mineral resources."
-      },
-      {
-        "relationshipFamily": "CAPABILITY_DEPENDENCY",
-        "relationshipType": "REQUIRES",
-        "targetNodeId": "institution_property_rights",
-        "description": "Economic utilization typically depends upon legally defined property rights."
-      },
-      {
-        "relationshipFamily": "STRUCTURAL",
-        "relationshipType": "COMPLEMENTS",
-        "targetNodeId": "infrastructure_transportation",
-        "description": "Land value and productivity are enhanced by transportation infrastructure."
-      },
-      {
-        "relationshipFamily": "VALUE_CHAIN",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "resource_water",
-        "description": "Often functions jointly with water resources in productive activities."
-      }
-    ],
     "metadata": {
-      "tags": [
-        "land",
-        "resource",
-        "factor-of-production",
-        "real-estate",
-        "agriculture",
-        "infrastructure",
-        "economic-geography",
-        "natural-resource"
-      ],
+      "inheritanceLevel": 0,
       "confidenceScore": 0.98,
       "sourceReference": "Classical Economics, Economic Geography, Resource Economics",
       "createdAt": "2026-06-08T00:00:00Z",
@@ -1010,11 +1073,14 @@
   {
     "id": "market_land",
     "name": "Land Market",
-    "category": "Market",
-    "inheritanceLevel": 0,
-    "description": "A market system through which rights over land are allocated, exchanged, leased, valued, and transferred among economic actors.",
-    "longDescription": "The land market is an institutional and economic mechanism governing the exchange of land-related rights. It encompasses transactions involving ownership, leasing, development rights, mineral rights, and other legally recognized claims over land. Because land is immobile, heterogeneous, and location-specific, the land market is typically composed of numerous specialized submarkets differentiated by geography, land use, legal regime, and economic function.",
-    "functionalRoles": [
+    "tags": [
+      "land",
+      "market",
+      "factor-market",
+      "real-estate",
+      "property-rights",
+      "resource-allocation",
+      "economic-geography",
       "Allocation of land resources",
       "Price discovery for land rights",
       "Transfer of ownership",
@@ -1022,9 +1088,7 @@
       "Capital formation",
       "Investment channel",
       "Resource coordination",
-      "Spatial allocation of economic activity"
-    ],
-    "domainScope": [
+      "Spatial allocation of economic activity",
       "Agriculture",
       "Real Estate",
       "Urban Development",
@@ -1035,9 +1099,13 @@
       "Forestry",
       "Environmental Management"
     ],
-    "historicalContext": {
+    "layer": "Economic",
+    "category": "Industry",
+    "description": "A market system through which rights over land are allocated, exchanged, leased, valued, and transferred among economic actors.",
+    "longDescription": "The land market is an institutional and economic mechanism governing the exchange of land-related rights. It encompasses transactions involving ownership, leasing, development rights, mineral rights, and other legally recognized claims over land. Because land is immobile, heterogeneous, and location-specific, the land market is typically composed of numerous specialized submarkets differentiated by geography, land use, legal regime, and economic function.",
+    "chronology": {
       "summary": "Land markets emerged alongside formal property rights systems and evolved into complex institutional mechanisms for allocating access to land and land-based economic opportunities.",
-      "chronology": [
+      "events": [
         {
           "year": -3000,
           "event": "Early Property Systems",
@@ -1060,6 +1128,50 @@
         }
       ]
     },
+    "relationships": [
+      {
+        "relationshipFamily": "MARKET_RELATION",
+        "relationshipType": "Consumes",
+        "targetNodeId": "resource_land",
+        "description": "Allocates and exchanges rights associated with land resources."
+      },
+      {
+        "relationshipFamily": "GOVERNANCE",
+        "relationshipType": "Depends On",
+        "targetNodeId": "institution_property_rights",
+        "description": "Requires legally defined property rights and enforcement mechanisms."
+      },
+      {
+        "relationshipFamily": "COMPOSITIONAL",
+        "relationshipType": "Enables",
+        "targetNodeId": "market_agricultural_land",
+        "description": "Serves as a parent category for agricultural land markets."
+      },
+      {
+        "relationshipFamily": "COMPOSITIONAL",
+        "relationshipType": "Enables",
+        "targetNodeId": "market_industrial_land",
+        "description": "Serves as a parent category for industrial land markets."
+      },
+      {
+        "relationshipFamily": "COMPOSITIONAL",
+        "relationshipType": "Enables",
+        "targetNodeId": "market_residential_land",
+        "description": "Serves as a parent category for residential land markets."
+      },
+      {
+        "relationshipFamily": "COMPOSITIONAL",
+        "relationshipType": "Enables",
+        "targetNodeId": "market_commercial_land",
+        "description": "Serves as a parent category for commercial land markets."
+      },
+      {
+        "relationshipFamily": "STRUCTURAL",
+        "relationshipType": "Supports",
+        "targetNodeId": "infrastructure_transportation",
+        "description": "Land values and market activity are strongly influenced by transportation infrastructure."
+      }
+    ],
     "specific": {
       "tradedObject": "Land rights",
       "marketType": "Factor Market",
@@ -1087,60 +1199,8 @@
         "Market Demand"
       ]
     },
-    "relationships": [
-      {
-        "relationshipFamily": "MARKET_RELATION",
-        "relationshipType": "CONSUMES",
-        "targetNodeId": "resource_land",
-        "description": "Allocates and exchanges rights associated with land resources."
-      },
-      {
-        "relationshipFamily": "GOVERNANCE",
-        "relationshipType": "DEPENDS_ON",
-        "targetNodeId": "institution_property_rights",
-        "description": "Requires legally defined property rights and enforcement mechanisms."
-      },
-      {
-        "relationshipFamily": "COMPOSITIONAL",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "market_agricultural_land",
-        "description": "Serves as a parent category for agricultural land markets."
-      },
-      {
-        "relationshipFamily": "COMPOSITIONAL",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "market_industrial_land",
-        "description": "Serves as a parent category for industrial land markets."
-      },
-      {
-        "relationshipFamily": "COMPOSITIONAL",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "market_residential_land",
-        "description": "Serves as a parent category for residential land markets."
-      },
-      {
-        "relationshipFamily": "COMPOSITIONAL",
-        "relationshipType": "ENABLES",
-        "targetNodeId": "market_commercial_land",
-        "description": "Serves as a parent category for commercial land markets."
-      },
-      {
-        "relationshipFamily": "STRUCTURAL",
-        "relationshipType": "COMPLEMENTS",
-        "targetNodeId": "infrastructure_transportation",
-        "description": "Land values and market activity are strongly influenced by transportation infrastructure."
-      }
-    ],
     "metadata": {
-      "tags": [
-        "land",
-        "market",
-        "factor-market",
-        "real-estate",
-        "property-rights",
-        "resource-allocation",
-        "economic-geography"
-      ],
+      "inheritanceLevel": 0,
       "confidenceScore": 0.98,
       "sourceReference": "Urban Economics, Real Estate Economics, Economic Geography, Institutional Economics",
       "createdAt": "2026-06-08T00:00:00Z",
@@ -1167,175 +1227,183 @@
     ]
   },
   {
-  "id": "market_agricultural_land",
-  "name": "Agricultural Land Market",
-  "category": "Market",
-  "inheritanceLevel": 1,
-  "description": "Market for the allocation, sale, lease, and valuation of land used primarily for agricultural production.",
-  "functionalRoles": [
-    "Allocate farmland",
-    "Support agricultural investment",
-    "Enable agricultural production"
-  ],
-  "domainScope": [
-    "Agriculture",
-    "Food Production",
-    "Livestock"
-  ],
-  "historicalContext": {
-    "summary": "Agricultural land markets emerged with formalized property rights and commercial agriculture.",
-    "chronology": []
+    "id": "market_agricultural_land",
+    "name": "Agricultural Land Market",
+    "tags": [
+      "land",
+      "agriculture",
+      "market",
+      "Allocate farmland",
+      "Support agricultural investment",
+      "Enable agricultural production",
+      "Agriculture",
+      "Food Production",
+      "Livestock"
+    ],
+    "layer": "Economic",
+    "category": "Industry",
+    "description": "Market for the allocation, sale, lease, and valuation of land used primarily for agricultural production.",
+    "longDescription": "Specialized segment of the land market through which rights over agricultural land are allocated, exchanged, leased, and valued.",
+    "chronology": {
+      "summary": "Agricultural land markets emerged with formalized property rights and commercial agriculture.",
+      "events": []
+    },
+    "relationships": [
+      {
+        "relationshipFamily": "CLASSIFICATION",
+        "relationshipType": "Is A",
+        "targetNodeId": "market_land",
+        "description": "Specialized segment of the land market."
+      }
+    ],
+    "specific": {},
+    "metadata": {
+      "inheritanceLevel": 1,
+      "confidenceScore": 0.99,
+      "sourceReference": "Ontology Design",
+      "createdAt": "2026-06-08T00:00:00Z",
+      "auditTrail": []
+    },
+    "references": [
+      {
+        "title": "Agricultural Economics",
+        "description": "Analysis of agricultural land allocation and valuation."
+      }
+    ]
   },
-  "specific": {},
-  "relationships": [
-    {
-      "relationshipFamily": "CLASSIFICATION",
-      "relationshipType": "SPECIALIZES",
-      "targetNodeId": "market_land",
-      "description": "Specialized segment of the land market."
-    }
-  ],
-  "metadata": {
-    "tags": ["land", "agriculture", "market"],
-    "confidenceScore": 0.99,
-    "sourceReference": "Ontology Design",
-    "createdAt": "2026-06-08T00:00:00Z",
-    "auditTrail": []
+  {
+    "id": "market_residential_land",
+    "name": "Residential Land Market",
+    "tags": [
+      "land",
+      "housing",
+      "market",
+      "Allocate residential land",
+      "Enable housing development",
+      "Support urban growth",
+      "Housing",
+      "Urban Development",
+      "Real Estate"
+    ],
+    "layer": "Economic",
+    "category": "Industry",
+    "description": "Market for land used for housing and residential development.",
+    "longDescription": "Specialized segment of the land market through which rights over residential land are allocated, exchanged, leased, and valued.",
+    "chronology": {
+      "summary": "Residential land markets developed alongside urbanization.",
+      "events": []
+    },
+    "relationships": [
+      {
+        "relationshipFamily": "CLASSIFICATION",
+        "relationshipType": "Is A",
+        "targetNodeId": "market_land",
+        "description": "Specialized segment of the land market."
+      }
+    ],
+    "specific": {},
+    "metadata": {
+      "inheritanceLevel": 1,
+      "confidenceScore": 0.99,
+      "sourceReference": "Ontology Design",
+      "createdAt": "2026-06-08T00:00:00Z",
+      "auditTrail": []
+    },
+    "references": [
+      {
+        "title": "Urban Economics",
+        "description": "Study of residential land markets."
+      }
+    ]
   },
-  "references": [
-    {
-      "title": "Agricultural Economics",
-      "description": "Analysis of agricultural land allocation and valuation."
-    }
-  ]
-},
-{
-  "id": "market_residential_land",
-  "name": "Residential Land Market",
-  "category": "Market",
-  "inheritanceLevel": 1,
-  "description": "Market for land used for housing and residential development.",
-  "functionalRoles": [
-    "Allocate residential land",
-    "Enable housing development",
-    "Support urban growth"
-  ],
-  "domainScope": [
-    "Housing",
-    "Urban Development",
-    "Real Estate"
-  ],
-  "historicalContext": {
-    "summary": "Residential land markets developed alongside urbanization.",
-    "chronology": []
+  {
+    "id": "market_commercial_land",
+    "name": "Commercial Land Market",
+    "tags": [
+      "land",
+      "commercial",
+      "market",
+      "Allocate commercial sites",
+      "Enable business activity",
+      "Support service-sector development",
+      "Retail",
+      "Office Services",
+      "Commercial Real Estate"
+    ],
+    "layer": "Economic",
+    "category": "Industry",
+    "description": "Market for land supporting retail, office, and commercial service activities.",
+    "longDescription": "Specialized segment of the land market through which rights over commercial land are allocated, exchanged, leased, and valued.",
+    "chronology": {
+      "summary": "Commercial land markets emerged with urban commerce and business districts.",
+      "events": []
+    },
+    "relationships": [
+      {
+        "relationshipFamily": "CLASSIFICATION",
+        "relationshipType": "Is A",
+        "targetNodeId": "market_land",
+        "description": "Specialized segment of the land market."
+      }
+    ],
+    "specific": {},
+    "metadata": {
+      "inheritanceLevel": 1,
+      "confidenceScore": 0.99,
+      "sourceReference": "Ontology Design",
+      "createdAt": "2026-06-08T00:00:00Z",
+      "auditTrail": []
+    },
+    "references": [
+      {
+        "title": "Real Estate Economics",
+        "description": "Commercial property and land allocation."
+      }
+    ]
   },
-  "specific": {},
-  "relationships": [
-    {
-      "relationshipFamily": "CLASSIFICATION",
-      "relationshipType": "SPECIALIZES",
-      "targetNodeId": "market_land",
-      "description": "Specialized segment of the land market."
-    }
-  ],
-  "metadata": {
-    "tags": ["land", "housing", "market"],
-    "confidenceScore": 0.99,
-    "sourceReference": "Ontology Design",
-    "createdAt": "2026-06-08T00:00:00Z",
-    "auditTrail": []
-  },
-  "references": [
-    {
-      "title": "Urban Economics",
-      "description": "Study of residential land markets."
-    }
-  ]
-},
-{
-  "id": "market_commercial_land",
-  "name": "Commercial Land Market",
-  "category": "Market",
-  "inheritanceLevel": 1,
-  "description": "Market for land supporting retail, office, and commercial service activities.",
-  "functionalRoles": [
-    "Allocate commercial sites",
-    "Enable business activity",
-    "Support service-sector development"
-  ],
-  "domainScope": [
-    "Retail",
-    "Office Services",
-    "Commercial Real Estate"
-  ],
-  "historicalContext": {
-    "summary": "Commercial land markets emerged with urban commerce and business districts.",
-    "chronology": []
-  },
-  "specific": {},
-  "relationships": [
-    {
-      "relationshipFamily": "CLASSIFICATION",
-      "relationshipType": "SPECIALIZES",
-      "targetNodeId": "market_land",
-      "description": "Specialized segment of the land market."
-    }
-  ],
-  "metadata": {
-    "tags": ["land", "commercial", "market"],
-    "confidenceScore": 0.99,
-    "sourceReference": "Ontology Design",
-    "createdAt": "2026-06-08T00:00:00Z",
-    "auditTrail": []
-  },
-  "references": [
-    {
-      "title": "Real Estate Economics",
-      "description": "Commercial property and land allocation."
-    }
-  ]
-},
-{
-  "id": "market_industrial_land",
-  "name": "Industrial Land Market",
-  "category": "Market",
-  "inheritanceLevel": 1,
-  "description": "Market for land used in manufacturing, logistics, warehousing, and industrial production.",
-  "functionalRoles": [
-    "Allocate industrial sites",
-    "Enable manufacturing investment",
-    "Support industrialization"
-  ],
-  "domainScope": [
-    "Manufacturing",
-    "Logistics",
-    "Industrial Production"
-  ],
-  "historicalContext": {
-    "summary": "Industrial land markets expanded during industrialization.",
-    "chronology": []
-  },
-  "specific": {},
-  "relationships": [
-    {
-      "relationshipFamily": "CLASSIFICATION",
-      "relationshipType": "SPECIALIZES",
-      "targetNodeId": "market_land",
-      "description": "Specialized segment of the land market."
-    }
-  ],
-  "metadata": {
-    "tags": ["land", "industrial", "market"],
-    "confidenceScore": 0.99,
-    "sourceReference": "Ontology Design",
-    "createdAt": "2026-06-08T00:00:00Z",
-    "auditTrail": []
-  },
-  "references": [
-    {
-      "title": "Industrial Economics",
-      "description": "Industrial location and land allocation."
-    }
-  ]
-}
+  {
+    "id": "market_industrial_land",
+    "name": "Industrial Land Market",
+    "tags": [
+      "land",
+      "industrial",
+      "market",
+      "Allocate industrial sites",
+      "Enable manufacturing investment",
+      "Support industrialization",
+      "Manufacturing",
+      "Logistics",
+      "Industrial Production"
+    ],
+    "layer": "Economic",
+    "category": "Industry",
+    "description": "Market for land used in manufacturing, logistics, warehousing, and industrial production.",
+    "longDescription": "Specialized segment of the land market through which rights over industrial land are allocated, exchanged, leased, and valued.",
+    "chronology": {
+      "summary": "Industrial land markets expanded during industrialization.",
+      "events": []
+    },
+    "relationships": [
+      {
+        "relationshipFamily": "CLASSIFICATION",
+        "relationshipType": "Is A",
+        "targetNodeId": "market_land",
+        "description": "Specialized segment of the land market."
+      }
+    ],
+    "specific": {},
+    "metadata": {
+      "inheritanceLevel": 1,
+      "confidenceScore": 0.99,
+      "sourceReference": "Ontology Design",
+      "createdAt": "2026-06-08T00:00:00Z",
+      "auditTrail": []
+    },
+    "references": [
+      {
+        "title": "Industrial Economics",
+        "description": "Industrial location and land allocation."
+      }
+    ]
+  }
 ]
