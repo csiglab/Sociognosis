@@ -196,6 +196,183 @@
             right: 20px;
         }
 
+        /* Stats button — sits left of fit-view */
+        #stats-btn {
+            bottom: 20px;
+            right: 66px;
+        }
+
+        /* ═══════ STATS MODAL ═══════ */
+        .stats-overlay {
+            position: fixed; inset: 0;
+            background: rgba(11, 14, 20, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 600;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s ease;
+        }
+        .stats-overlay.open { opacity: 1; pointer-events: auto; }
+
+        .stats-modal {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -48%) scale(.96);
+            width: min(640px, 92vw);
+            max-height: 82vh;
+            background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-void) 100%);
+            border: 1px solid var(--border-medium);
+            border-left: 2px solid var(--accent-copper);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg), -12px 0 32px -16px rgba(201,149,108,0.45);
+            z-index: 610;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .3s ease, transform .3s cubic-bezier(.22,1,.36,1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .stats-modal.open {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .stats-header {
+            padding: 22px 24px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            position: relative;
+            flex-shrink: 0;
+        }
+        .stats-eyebrow {
+            font-family: var(--font-display);
+            font-size: .7rem; font-style: italic;
+            color: rgba(201,149,108,.75);
+            letter-spacing: .06em;
+            display: block; margin-bottom: 4px;
+        }
+        .stats-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem; font-style: italic; font-weight: 300;
+            color: var(--text-primary);
+        }
+        .stats-close {
+            position: absolute; top: 18px; right: 18px;
+            background: none; border: none;
+            color: var(--text-muted); font-size: 22px;
+            width: 28px; height: 28px;
+            cursor: pointer; border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            transition: all .2s; line-height: 1;
+        }
+        .stats-close:hover { color: var(--accent-rose); background: rgba(196,125,138,.08); }
+
+        .stats-body { flex: 1; overflow-y: auto; padding: 18px 24px 28px; }
+        .stats-body::-webkit-scrollbar { width: 6px; }
+        .stats-body::-webkit-scrollbar-thumb { background: rgba(201,149,108,.16); border-radius: 3px; }
+
+        .stats-section-title {
+            font-family: var(--font-display);
+            font-size: .82rem; font-style: italic;
+            color: var(--text-primary);
+            margin: 18px 0 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .stats-section-title:first-child { margin-top: 0; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+        .stats-grid-2 { grid-template-columns: 1fr 1fr; }
+
+        .stats-card {
+            background: rgba(0,0,0,.15);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            display: flex; flex-direction: column; gap: 3px;
+        }
+        .stats-card-value {
+            font-family: var(--font-mono); font-size: 1rem;
+            color: var(--accent-copper-light); font-weight: 500;
+        }
+        .stats-card-label {
+            font-family: var(--font-mono); font-size: .5rem;
+            color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .06em;
+        }
+        .stats-card-label em {
+            font-style: italic; color: var(--accent-sage); text-transform: none;
+        }
+
+        .stats-histogram {
+            width: 100%; height: 80px;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            background: rgba(0,0,0,.15);
+        }
+
+        .stats-table-head, .stats-table-row {
+            display: grid;
+            grid-template-columns: 28px 1fr 120px 40px;
+            gap: 8px; align-items: center; font-size: .68rem;
+        }
+        .stats-table-head {
+            font-family: var(--font-mono); font-size: .5rem;
+            color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .08em;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 2px;
+        }
+        .stats-table-row {
+            padding: 5px 6px; border-radius: var(--radius-sm);
+            cursor: pointer; transition: background .15s;
+            border: 1px solid transparent;
+        }
+        .stats-table-row:hover { background: rgba(201,149,108,.06); border-color: rgba(201,149,108,.12); }
+        .st-rank { font-family: var(--font-mono); color: var(--text-muted); font-size: .58rem; }
+        .st-name { font-family: var(--font-display); font-style: italic; color: var(--text-primary); font-size: .72rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .st-cat { display: flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: .5rem; color: var(--text-muted); }
+        .st-cat-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .st-deg { font-family: var(--font-mono); color: var(--accent-copper); font-size: .58rem; text-align: right; }
+
+        .stats-bar-row {
+            display: grid;
+            grid-template-columns: 100px 1fr 36px;
+            gap: 8px; align-items: center;
+            margin-bottom: 3px; font-size: .58rem;
+        }
+        .sb-label { font-family: var(--font-mono); color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .sb-track { height: 10px; background: rgba(0,0,0,.2); border-radius: 2px; overflow: hidden; }
+        .sb-fill { display: block; height: 100%; border-radius: 2px; opacity: .7; }
+        .sb-count { font-family: var(--font-mono); color: var(--accent-copper-light); text-align: right; }
+
+        .stats-edge-split {
+            display: flex; justify-content: space-between;
+            margin-top: 12px; padding: 8px 12px;
+            background: rgba(0,0,0,.15);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono); font-size: .56rem; color: var(--text-secondary);
+        }
+        .stats-edge-split b { color: var(--accent-copper-light); }
+
+        .stats-subhead {
+            font-family: var(--font-mono); font-size: .52rem;
+            color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: .08em;
+            margin: 14px 0 6px;
+        }
+        .stats-comp-list { display: flex; flex-wrap: wrap; gap: 4px; }
+        .stats-comp-chip {
+            font-family: var(--font-mono); font-size: .56rem;
+            color: var(--text-secondary);
+            background: rgba(0,0,0,.2);
+            border: 1px solid var(--border-subtle);
+            border-radius: 3px; padding: 2px 7px;
+        }
+
         aside.toolbox {
             background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-void) 100%);
             border-right: 1px solid var(--border-medium);
@@ -1131,6 +1308,14 @@
                 <path d="M8 21H5a2 2 0 0 1-2-2v-3" />
             </svg>
         </button>
+        <button class="canvas-control" id="stats-btn" title="Graph statistics (S)" aria-label="Graph statistics">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="20" x2="4" y2="14" />
+                <line x1="10" y1="20" x2="10" y2="8" />
+                <line x1="16" y1="20" x2="16" y2="11" />
+                <line x1="20" y1="20" x2="20" y2="4" />
+            </svg>
+        </button>
         <canvas id="graph-canvas"></canvas>
 
         <div id="tooltip">
@@ -1172,6 +1357,17 @@
     <div id="loading-overlay">
         <div class="loader-dots"><span></span><span></span><span></span></div>
         <div class="loader-text" id="loader-msg">Initializing graph</div>
+    </div>
+
+    <!-- Stats modal -->
+    <div class="stats-overlay" id="stats-overlay"></div>
+    <div class="stats-modal" id="stats-modal" role="dialog" aria-label="Graph statistics">
+        <div class="stats-header">
+            <span class="stats-eyebrow">Analytics</span>
+            <h3 class="stats-title">Space Statistics</h3>
+            <button class="stats-close" id="stats-close" aria-label="Close statistics">&times;</button>
+        </div>
+        <div class="stats-body" id="stats-body"></div>
     </div>
 
     <script>
@@ -1948,6 +2144,7 @@
             computeMetrics();
             edgeWeights = null;
             silhouetteDirty = true;
+            recomputeStatsIfOpen();
         }
 
         /* ═══════ CATEGORY LEGEND ═══════ */
@@ -2124,6 +2321,312 @@
                     document.getElementById('search-clear').classList.remove('visible');
                 });
             });
+        }
+
+        /* ═══════ STATS MODAL — Pareto graph analytics ═══════ */
+        var statsOpen = false;
+        var cachedStats = null;
+
+        /* Build undirected adjacency from visible nodes/edges. */
+        function buildAdjacency() {
+            var adj = {};
+            nodes.forEach(function (n) { if (n.visible) adj[n.id] = []; });
+            gE.forEach(function (e) {
+                if (!e.visible) return;
+                if (!adj[e.source] || !adj[e.target]) return;
+                adj[e.source].push(e.target);
+                adj[e.target].push(e.source);
+            });
+            return adj;
+        }
+
+        /* Compute all stats from the current visible graph. */
+        function computeStats() {
+            var visN = nodes.filter(function (n) { return n.visible; });
+            var visIds = visN.map(function (n) { return n.id; });
+            var nN = visN.length;
+            var adj = buildAdjacency();
+            var visE = gE.filter(function (e) { return e.visible; });
+            var nE = visE.length;
+
+            /* Degrees */
+            var degs = visIds.map(function (id) { return (adj[id] || []).length; });
+            var maxDeg = degs.length ? Math.max.apply(null, degs) : 0;
+            var sumDeg = degs.reduce(function (a, b) { return a + b; }, 0);
+            var avgDeg = nN ? sumDeg / nN : 0;
+            var isolates = degs.filter(function (d) { return d === 0; }).length;
+
+            /* Missing targets */
+            var missing = 0;
+            gE.forEach(function (e) { if (!nM[e.source] || !nM[e.target]) missing++; });
+
+            var density = nN > 1 ? (2 * nE) / (nN * (nN - 1)) : 0;
+
+            /* Top hubs */
+            var hubs = visN.map(function (n) {
+                return { id: n.id, name: n.name, category: n.category, degree: (adj[n.id] || []).length };
+            }).sort(function (a, b) { return b.degree - a.degree; }).slice(0, 10);
+
+            /* Degree histogram (12 bins) */
+            var histBins = 12;
+            var histogram = new Array(histBins).fill(0);
+            if (maxDeg > 0) {
+                degs.forEach(function (d) {
+                    var b = Math.min(histBins - 1, Math.floor((d / maxDeg) * histBins));
+                    histogram[b]++;
+                });
+            }
+
+            /* Connected components (iterative BFS) */
+            var visited = {}, comps = [];
+            visIds.forEach(function (start) {
+                if (visited[start]) return;
+                var stack = [start], comp = [];
+                visited[start] = true;
+                while (stack.length) {
+                    var cur = stack.pop();
+                    comp.push(cur);
+                    (adj[cur] || []).forEach(function (nb) {
+                        if (!visited[nb]) { visited[nb] = true; stack.push(nb); }
+                    });
+                }
+                comps.push(comp);
+            });
+            comps.sort(function (a, b) { return b.length - a.length; });
+
+            /* Global clustering coefficient (avg local triangle density) */
+            var nbSets = {};
+            visIds.forEach(function (id) { nbSets[id] = new Set(adj[id] || []); });
+            var ccSum = 0, ccCount = 0;
+            visIds.forEach(function (id) {
+                var nb = adj[id] || [];
+                var k = nb.length;
+                if (k < 2) return;
+                var links = 0;
+                for (var i = 0; i < nb.length; i++) {
+                    for (var j = i + 1; j < nb.length; j++) {
+                        if (nbSets[nb[i]] && nbSets[nb[i]].has(nb[j])) links++;
+                    }
+                }
+                ccSum += (2 * links) / (k * (k - 1));
+                ccCount++;
+            });
+            var clustering = ccCount ? ccSum / ccCount : 0;
+
+            /* Articulation points (bridge nodes) — iterative Tarjan */
+            var disc = {}, low = {}, par = {}, t = 0;
+            var isArt = {}, rootChildren = {};
+            visIds.forEach(function (start) {
+                if (disc[start] !== undefined) return;
+                disc[start] = low[start] = t++;
+                par[start] = -1;
+                rootChildren[start] = 0;
+                var st = [{ u: start, it: 0 }];
+                while (st.length) {
+                    var top = st[st.length - 1];
+                    var u = top.u;
+                    var nbs = adj[u] || [];
+                    if (top.it < nbs.length) {
+                        var v = nbs[top.it];
+                        top.it++;
+                        if (disc[v] === undefined) {
+                            disc[v] = low[v] = t++;
+                            par[v] = u;
+                            if (par[u] === -1) rootChildren[u]++;
+                            st.push({ u: v, it: 0 });
+                        } else if (v !== par[u]) {
+                            low[u] = Math.min(low[u], disc[v]);
+                        }
+                    } else {
+                        st.pop();
+                        if (st.length) {
+                            var pu = st[st.length - 1].u;
+                            low[pu] = Math.min(low[pu], low[u]);
+                            if (par[pu] !== -1 && low[u] >= disc[pu]) isArt[pu] = true;
+                        }
+                    }
+                }
+                if (rootChildren[start] > 1) isArt[start] = true;
+            });
+            var bridgeNodes = Object.keys(isArt).map(function (id) {
+                var n = nM[id];
+                return { id: id, name: n ? n.name : id, category: n ? n.category : '', degree: (adj[id] || []).length };
+            }).sort(function (a, b) { return b.degree - a.degree; }).slice(0, 10);
+
+            /* Category breakdown */
+            var catCounts = {};
+            visN.forEach(function (n) { catCounts[n.category] = (catCounts[n.category] || 0) + 1; });
+            var catList = Object.keys(catCounts).map(function (c) { return { cat: c, count: catCounts[c] }; })
+                .sort(function (a, b) { return b.count - a.count; });
+
+            /* Within vs cross-category edges + categorical assortativity (Newman) */
+            var within = 0, cross = 0;
+            var catOf = {};
+            visN.forEach(function (n) { catOf[n.id] = n.category; });
+            var eMat = {}, aSums = {};
+            visE.forEach(function (e) {
+                var ca = catOf[e.source], cb = catOf[e.target];
+                if (ca === cb) within++; else cross++;
+                var k1 = ca < cb ? ca + '|' + cb : cb + '|' + ca;
+                eMat[k1] = (eMat[k1] || 0) + 1;
+                aSums[ca] = (aSums[ca] || 0) + 1;
+                aSums[cb] = (aSums[cb] || 0) + 1;
+            });
+            var trace = 0;
+            Object.keys(aSums).forEach(function (c) { trace += (eMat[c + '|' + c] || 0); });
+            var totalEnds = 2 * nE;
+            var sumSq = 0;
+            Object.keys(aSums).forEach(function (c) { var f = aSums[c] / totalEnds; sumSq += f * f; });
+            var denom = 1 - sumSq;
+            var assort = (nE && Math.abs(denom) > 1e-9) ? (trace / nE - sumSq) / denom : 0;
+
+            return {
+                nN: nN, nE: nE, totalN: nodes.length, totalE: gE.length,
+                density: density, avgDeg: avgDeg, maxDeg: maxDeg, isolates: isolates, missing: missing,
+                nComp: comps.length, largestComp: comps.length ? comps[0].length : 0,
+                compSizes: comps.map(function (c) { return c.length; }).slice(0, 10),
+                histogram: histogram, histMax: Math.max.apply(null, [1].concat(histogram)),
+                hubs: hubs, bridgeNodes: bridgeNodes,
+                clustering: clustering, assort: assort,
+                catList: catList, within: within, cross: cross
+            };
+        }
+
+        function fmt(n, d) { d = d === undefined ? 2 : d; return Number(n).toFixed(d); }
+
+        function sectionTitle(t) { return '<div class="stats-section-title">' + t + '</div>'; }
+        function statCard(label, value, hint) {
+            return '<div class="stats-card"><span class="stats-card-value">' + value + '</span>' +
+                '<span class="stats-card-label">' + label + (hint ? ' <em>' + hint + '</em>' : '') + '</span></div>';
+        }
+
+        function drawHistogram(s) {
+            var cv = document.getElementById('stats-hist-canvas');
+            if (!cv) return;
+            var c = cv.getContext('2d');
+            var w = cv.width, h = cv.height;
+            c.clearRect(0, 0, w, h);
+            var bins = s.histogram;
+            var n = bins.length;
+            var max = s.histMax;
+            var bw = w / n;
+            for (var i = 0; i < n; i++) {
+                var bh = max ? (bins[i] / max) * (h - 4) : 0;
+                c.fillStyle = hexToRGBA('#c9956c', 0.3 + 0.5 * (i / n));
+                c.fillRect(i * bw + 1, h - bh, bw - 2, bh);
+            }
+        }
+
+        function renderStats() {
+            var s = cachedStats;
+            if (!s) return;
+            var html = '';
+
+            /* Overview */
+            html += sectionTitle('Overview');
+            html += '<div class="stats-grid">';
+            html += statCard('Nodes', s.nN + (s.totalN ? ' / ' + s.totalN : ''), '');
+            html += statCard('Edges', s.nE + (s.totalE ? ' / ' + s.totalE : ''), '');
+            html += statCard('Density', fmt(s.density, 3), '');
+            html += statCard('Avg Degree', fmt(s.avgDeg, 1), '');
+            html += statCard('Max Degree', s.maxDeg, '');
+            html += statCard('Isolates', s.isolates, '');
+            html += statCard('Missing Edges', s.missing, '');
+            html += statCard('Components', s.nComp, '');
+            html += statCard('Largest', s.largestComp + (s.nN ? ' (' + fmt(100 * s.largestComp / s.nN, 0) + '%)' : ''), '');
+            html += '</div>';
+
+            /* Degree distribution */
+            html += sectionTitle('Degree Distribution');
+            html += '<canvas class="stats-histogram" id="stats-hist-canvas" width="400" height="80"></canvas>';
+            if (s.hubs.length) {
+                html += '<div class="stats-table-head"><span>#</span><span>Name</span><span>Category</span><span>Deg</span></div>';
+                s.hubs.forEach(function (h, i) {
+                    html += '<div class="stats-table-row" data-node="' + escDP(h.id) + '">';
+                    html += '<span class="st-rank">' + (i + 1) + '</span>';
+                    html += '<span class="st-name">' + escDP(h.name) + '</span>';
+                    html += '<span class="st-cat"><span class="st-cat-dot" style="background:' + getCategoryColor(h.category) + '"></span>' + escDP(h.category) + '</span>';
+                    html += '<span class="st-deg">' + h.degree + '</span>';
+                    html += '</div>';
+                });
+            }
+
+            /* Category breakdown */
+            html += sectionTitle('Category Breakdown');
+            var topCats = s.catList.slice(0, 15);
+            var otherCats = s.catList.slice(15);
+            var maxCat = topCats.length ? topCats[0].count : 1;
+            topCats.forEach(function (c) {
+                var pct = maxCat ? (c.count / maxCat * 100) : 0;
+                html += '<div class="stats-bar-row">';
+                html += '<span class="sb-label">' + escDP(c.cat) + '</span>';
+                html += '<span class="sb-track"><span class="sb-fill" style="width:' + pct + '%; background:' + getCategoryColor(c.cat) + '"></span></span>';
+                html += '<span class="sb-count">' + c.count + '</span>';
+                html += '</div>';
+            });
+            if (otherCats.length) {
+                var otherSum = otherCats.reduce(function (a, b) { return a + b.count; }, 0);
+                html += '<div class="stats-bar-row"><span class="sb-label">Other (' + otherCats.length + ')</span><span class="sb-track"></span><span class="sb-count">' + otherSum + '</span></div>';
+            }
+            var withinPct = s.nE ? Math.round(100 * s.within / s.nE) : 0;
+            html += '<div class="stats-edge-split"><span>Within-cat: <b>' + s.within + '</b> (' + withinPct + '%)</span><span>Cross-cat: <b>' + s.cross + '</b> (' + (100 - withinPct) + '%)</span></div>';
+
+            /* Structural topology */
+            html += sectionTitle('Structural Topology');
+            html += '<div class="stats-grid stats-grid-2">';
+            var ccHint = s.clustering > 0.3 ? 'cliquish' : (s.clustering < 0.1 ? 'sparse' : 'moderate');
+            var assortHint = s.assort > 0.1 ? 'siloed' : (s.assort < -0.05 ? 'mixed' : 'neutral');
+            html += statCard('Clustering Coeff.', fmt(s.clustering, 3), ccHint);
+            html += statCard('Categorical Assort.', fmt(s.assort, 3), assortHint);
+            html += '</div>';
+            html += '<div class="stats-subhead">Component sizes (top ' + s.compSizes.length + ')</div>';
+            html += '<div class="stats-comp-list">' + s.compSizes.map(function (sz) { return '<span class="stats-comp-chip">' + sz + '</span>'; }).join('') + '</div>';
+            if (s.bridgeNodes.length) {
+                html += '<div class="stats-subhead">Bridge Nodes (articulation points)</div>';
+                html += '<div class="stats-table-head"><span></span><span>Name</span><span>Category</span><span>Deg</span></div>';
+                s.bridgeNodes.forEach(function (b) {
+                    html += '<div class="stats-table-row" data-node="' + escDP(b.id) + '">';
+                    html += '<span class="st-rank">&#9875;</span>';
+                    html += '<span class="st-name">' + escDP(b.name) + '</span>';
+                    html += '<span class="st-cat"><span class="st-cat-dot" style="background:' + getCategoryColor(b.category) + '"></span>' + escDP(b.category) + '</span>';
+                    html += '<span class="st-deg">' + b.degree + '</span>';
+                    html += '</div>';
+                });
+            } else {
+                html += '<div class="stats-subhead">No bridge nodes &mdash; graph is well-connected or fully fragmented</div>';
+            }
+
+            document.getElementById('stats-body').innerHTML = html;
+            drawHistogram(s);
+
+            /* Wire click-to-fly on hub/bridge rows */
+            document.querySelectorAll('#stats-body .stats-table-row[data-node]').forEach(function (el) {
+                el.addEventListener('click', function () {
+                    var nd = nM[el.dataset.node];
+                    if (nd) { selN = nd; pTN(nd); updateFocusIndicator(); closeStats(); }
+                });
+            });
+        }
+
+        function openStats() {
+            if (!dLoaded) return;
+            statsOpen = true;
+            cachedStats = computeStats();
+            document.getElementById('stats-overlay').classList.add('open');
+            document.getElementById('stats-modal').classList.add('open');
+            renderStats();
+        }
+
+        function closeStats() {
+            statsOpen = false;
+            document.getElementById('stats-overlay').classList.remove('open');
+            document.getElementById('stats-modal').classList.remove('open');
+        }
+
+        function recomputeStatsIfOpen() {
+            if (!statsOpen) return;
+            cachedStats = computeStats();
+            renderStats();
         }
 
         /* ═══════ DETAIL PANEL — read-only renderer ═══════ */
@@ -2517,6 +3020,44 @@
             fitCamera(false);
         });
 
+        /* Stats button — open the graph statistics modal. */
+        document.getElementById('stats-btn').addEventListener('click', function () {
+            openStats();
+        });
+
+        /* Close stats on close button or backdrop click. */
+        document.getElementById('stats-close').addEventListener('click', closeStats);
+        document.getElementById('stats-overlay').addEventListener('click', closeStats);
+
+        /* Keyboard shortcuts: S to toggle stats, Esc to close overlays. */
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                /* Priority chain: close the topmost open overlay first. */
+                if (statsOpen) { closeStats(); return; }
+                var dd = document.getElementById('search-dropdown');
+                if (dd && dd.classList.contains('open')) {
+                    dd.classList.remove('open');
+                    document.getElementById('search-input').value = '';
+                    document.getElementById('search-clear').classList.remove('visible');
+                    return;
+                }
+                if (document.body.classList.contains('detail-open')) { clearFocus(); return; }
+                if (!document.body.classList.contains('sidebar-collapsed')) {
+                    document.body.classList.add('sidebar-collapsed');
+                    setTimeout(resize, 550);
+                    return;
+                }
+                return;
+            }
+            if (!dLoaded) return;
+            if (e.key.toLowerCase() !== 's') return;
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            var el = document.activeElement;
+            if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
+            e.preventDefault();
+            if (statsOpen) closeStats(); else openStats();
+        });
+
         /* Keyboard shortcut: F to fit view (ignored while typing in form fields). */
         document.addEventListener('keydown', function (e) {
             if (!dLoaded) return;
@@ -2565,7 +3106,7 @@
 
         var loaderMsg = document.getElementById('loader-msg');
         loaderMsg.textContent = 'Loading epistemic space';
-        fetch('../data/index/data.json')
+        fetch('../data/idx/data.json')
             .then(function (r) {
                 if (!r.ok) throw new Error('HTTP ' + r.status);
                 return r.json();

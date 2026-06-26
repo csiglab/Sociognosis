@@ -1571,7 +1571,7 @@
         
         var loaderMsg=document.getElementById('loader-msg');
         loaderMsg.textContent='Loading epistemic space';
-        fetch('../data/index/data.json')
+        fetch('../data/idx/data.json')
             .then(function(r){
                 if(!r.ok)throw new Error('HTTP '+r.status);
                 return r.json();

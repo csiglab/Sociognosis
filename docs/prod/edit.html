@@ -3565,7 +3565,7 @@ select:focus-visible {
                     <div class="settings-title">Schema Configuration</div>
                     <div class="settings-row">
                         <label class="settings-label">Schema Path</label>
-                        <input type="text" class="settings-input" id="schema-path" placeholder="../data/index/schema/schema.json">
+                        <input type="text" class="settings-input" id="schema-path" placeholder="../data/idx/schema/schema.json">
                     </div>
                     <div class="settings-row" style="display:flex;gap:10px;">
                         <button class="btn btn-sm" id="load-schema-btn">Load Schema</button>
@@ -3577,7 +3577,7 @@ select:focus-visible {
                     <div class="settings-title">Global Context</div>
                     <div class="settings-row">
                         <label class="settings-label">Context URL</label>
-                        <input type="text" class="settings-input" id="global-context-url" value="../data/index/schema/notes" placeholder="../data/index/schema/notes">
+                        <input type="text" class="settings-input" id="global-context-url" value="../data/idx/schema/notes" placeholder="../data/idx/schema/notes">
                     </div>
                     <div class="settings-row" style="display:flex;gap:10px;">
                         <button class="btn btn-sm" id="load-context-btn">Load Context</button>
@@ -4318,9 +4318,9 @@ let aiConfig = {
     endpoint: 'https://api.deepseek.com/v1/chat/completions',
     token: loadPersistedToken(),
     model: 'deepseek-v4-flash',
-    schemaPath: '../data/index/schema/schema.json',
+    schemaPath: '../data/idx/schema/schema.json',
     schema: null,
-    contextUrl: '../data/index/schema/notes',
+    contextUrl: '../data/idx/schema/notes',
     globalContext: ''
 };
 
@@ -5373,7 +5373,7 @@ function screenToWorld(sx, sy) { return { x: (sx - cam.x) / cam.z, y: (sy - cam.
 /* ═══════ DATA LOADING ═══════ */
 async function loadData() {
     try {
-        const res = await fetch('../data/index/data.json');
+        const res = await fetch('../data/idx/data.json');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         data = await res.json();
     } catch (e) {

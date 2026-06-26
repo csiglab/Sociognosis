@@ -739,7 +739,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-          <a href="index/index.html" class="docs-card block no-underline">
+          <a href="idx/index.html" class="docs-card block no-underline">
             <div class="docs-card-header">
               <div class="docs-card-icon">
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -828,7 +828,7 @@
         <p class="section-label">05 — Data Model</p>
         <h2 class="section-title">Node Schema</h2>
         <p class="text-muted leading-relaxed mb-4">
-          The Sociognosis Index is built on a JSON Schema (<code class="font-mono text-xs px-1.5 py-0.5 rounded" style="background: var(--tag-bg); color: var(--accent);">data/index/schema/schema.json</code>) that defines the structure of each node in the epistemic graph.
+          The Sociognosis Index is built on a JSON Schema (<code class="font-mono text-xs px-1.5 py-0.5 rounded" style="background: var(--tag-bg); color: var(--accent);">data/idx/schema/schema.json</code>) that defines the structure of each node in the epistemic graph.
         </p>
 
         <div class="callout">
@@ -891,7 +891,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
 
-          <a href="index/index.html" class="docs-card block no-underline">
+          <a href="idx/index.html" class="docs-card block no-underline">
             <div class="docs-card-header">
               <div class="docs-card-icon">
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -918,7 +918,7 @@
             </ul>
           </a>
 
-          <a href="index/edit.html" class="docs-card block no-underline">
+          <a href="idx/edit.html" class="docs-card block no-underline">
             <div class="docs-card-header">
               <div class="docs-card-icon">
                 <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
@@ -954,15 +954,15 @@
             </thead>
             <tbody>
               <tr>
-                <td><code class="font-mono text-xs">data/index/schema/schema.json</code></td>
+                <td><code class="font-mono text-xs">data/idx/schema/schema.json</code></td>
                 <td>JSON Schema defining node structure and category-specific extensions</td>
               </tr>
               <tr>
-                <td><code class="font-mono text-xs">data/index/schema/notes</code></td>
+                <td><code class="font-mono text-xs">data/idx/schema/notes</code></td>
                 <td>Contextual notes enriching schema generation and category definitions</td>
               </tr>
               <tr>
-                <td><code class="font-mono text-xs">data/index/data.json</code></td>
+                <td><code class="font-mono text-xs">data/idx/data.json</code></td>
                 <td>The instantiated index data—nodes and edges of the epistemic graph</td>
               </tr>
               <tr>
@@ -1094,7 +1094,7 @@
         </p>
 
         <div class="callout">
-          <strong>Scope:</strong> These risks apply to the static site served from <code class="font-mono text-xs">docs/</code>—principally the Space Explorer (<code class="font-mono text-xs">index/index.html</code>), the Node Editor (<code class="font-mono text-xs">index/edit.html</code>), and the placeholder page (<code class="font-mono text-xs">pending.html</code>). No server-side backend is present; all processing occurs in the browser.
+          <strong>Scope:</strong> These risks apply to the static site served from <code class="font-mono text-xs">docs/</code>—principally the Space Explorer (<code class="font-mono text-xs">idx/index.html</code>), the Node Editor (<code class="font-mono text-xs">idx/edit.html</code>), and the placeholder page (<code class="font-mono text-xs">pending.html</code>). No server-side backend is present; all processing occurs in the browser.
         </div>
 
         <div class="overflow-x-auto docs-card mt-6" style="padding: 0;">
@@ -1120,28 +1120,28 @@
                 <td>2</td>
                 <td><strong>Cross-Site Scripting (XSS)</strong></td>
                 <td><span class="tag-pill">High</span></td>
-                <td><code class="font-mono text-xs">index/index.html</code></td>
+                <td><code class="font-mono text-xs">idx/index.html</code></td>
                 <td>Node <code class="font-mono text-xs">name</code>, <code class="font-mono text-xs">category</code>, and <code class="font-mono text-xs">shortName</code> from <code class="font-mono text-xs">data.json</code> are injected into <code class="font-mono text-xs">innerHTML</code> without escaping (search results, category legend). Additionally, <code class="font-mono text-xs">err.message</code> is rendered unescaped on load failure. Any HTML in the data file executes in the user's browser.</td>
               </tr>
               <tr>
                 <td>3</td>
                 <td><strong>Cross-Site Scripting (XSS)</strong></td>
                 <td><span class="tag-pill">High</span></td>
-                <td><code class="font-mono text-xs">index/edit.html</code></td>
+                <td><code class="font-mono text-xs">idx/edit.html</code></td>
                 <td>In suggested-relation rendering, <code class="font-mono text-xs">targetNode.name</code>, <code class="font-mono text-xs">targetNode.id</code>, and <code class="font-mono text-xs">rel.targetNodeId</code> are output without <code class="font-mono text-xs">escHTML()</code>. The <code class="font-mono text-xs">data-id</code> attribute on search results is likewise unescaped. An <code class="font-mono text-xs">escHTML()</code> helper exists but is not applied consistently.</td>
               </tr>
               <tr>
                 <td>4</td>
                 <td><strong>API Token Exposure</strong></td>
                 <td><span class="tag-pill">High</span></td>
-                <td><code class="font-mono text-xs">index/edit.html</code></td>
+                <td><code class="font-mono text-xs">idx/edit.html</code></td>
                 <td>The DeepSeek API token can be persisted to <code class="font-mono text-xs">localStorage</code>. Combined with the XSS vulnerabilities above, any injected script can read <code class="font-mono text-xs">localStorage.getItem('sociognosis-api-token')</code> and exfiltrate it. The UI warns about <code class="font-mono text-xs">localStorage</code> accessibility, but the XSS holes make this actively exploitable.</td>
               </tr>
               <tr>
                 <td>5</td>
                 <td><strong>Prompt Injection → XSS Chain</strong></td>
                 <td><span class="tag-pill">High</span></td>
-                <td><code class="font-mono text-xs">index/edit.html</code></td>
+                <td><code class="font-mono text-xs">idx/edit.html</code></td>
                 <td>AI responses are parsed via <code class="font-mono text-xs">JSON.parse</code> and merged into the node graph (<code class="font-mono text-xs">Object.assign(selectedNode._data, improvedNodeData)</code>). A crafted node description can induce the model to emit malicious field values, which then flow into the unescaped render paths (risks #2–#3), achieving script execution without directly editing <code class="font-mono text-xs">data.json</code>.</td>
               </tr>
               <tr>
@@ -1238,7 +1238,7 @@
             <a href="index.html" class="footer-link">Introduction</a>
             <a href="methodology.html" class="footer-link">Methodology</a>
             <a href="docs.html" class="footer-link">Documentation</a>
-            <a href="index/index.html" class="footer-link">Space Explorer</a>
+            <a href="idx/index.html" class="footer-link">Space Explorer</a>
           </nav>
         </div>
 
