@@ -2,39 +2,6 @@
 
 [ ] How it's revenew recogniized using accounting?
 
-[ ] Free Economic Zone
-[ ] Shadow Government
-[ ] Digital Community
-[ ] Landowner Association
-[ ] Consumer Co-op
-[ ] International Standards Body
-[ ] Ideological Sect
-[ ] Whistleblower Platform
-[ ] Arms Manufacturer
-[ ] Electoral Commission
-[ ] Pirate Organization
-[ ] Space Agency
-[ ] Interpol
-[ ] Insider Network
-[ ] Sovereign Council
-[ ] Public Intellectual
-[ ] Food Security Org
-[ ] Global Insurance Pool
-[ ] Vigilante Group
-[ ] Information Ministry
-[ ] Hereditary Chiefdom
-[ ] Ecoterrorism Group
-[ ] Shipping Conglomerate
-[ ] Telecom Monopoly
-[ ] Sports Federation
-[ ] Cultural Heritage Org
-[ ] Nuclear Regulatory Body
-[ ] Agribusiness Giant
-[ ] Disaster Relief Agency
-[ ] Social Credit System
-[ ] Political Action Committee
-[ ] Autonomous Collective
-
 101. Tax Haven
 103. Public Health Authority
 104. Pension Fund
@@ -1171,8 +1138,6 @@
 1235. Institute of Photonic Sciences
 1236. VTT Technical Research Centre of Finland
 1237. Information Technology and Innovation Foundation
-1238. Electronics and Telecommunications Research Institute
-1239. Federal Reserve System
 
 
 - Wealth
@@ -1191,19 +1156,24 @@
 - Labor
 - Meat Cattle Industry Research
 - Technology and Innovation Exhibition Center
-[ ] Energy Industry
+
 [ ] Does the term token economy makes sense?
+
 [ ] Productivity
+
 [ ] What underlying epistemic artifact informs the idea that a nation producing potatoes can be just as rich as a nation producing potato chips?
+
 [ ] Market
+
 [ ] GDP
 
 [ ] How to think about debt in the national currency?
+
 [ ] [Taptools](https://www.taptools.io/)
 
 [ ] Government Debt (in National Currency) as Pseudo-Debt   (Debt  ->  Mechanism; Goal - Tool to Managemnt the Monetary System) -> Monetary System Debt Tool -> Cuasideuda -> Quasi-debt -> Quasiobligation
-[ ] Government Debt (in Foreign Currency)   (Debt) (Obligation)
 
+[ ] Government Debt (in Foreign Currency)   (Debt) (Obligation)
 
 ## Production 
 
