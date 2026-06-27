@@ -1,34 +1,8 @@
-[ ] Our social ontolgy (is a copy of epistemica) - i am working on fix it - see spec - index.
-  - All of the datset needs migration - conversion to a new structure.
-   - ...
-[ ] ...
-[ ] Continue working on a parsing methology for the production sphere of reality.
-
 [ ] We should allow for deletions.
 
-[ ] Should create a diffeernt sub project for the product - technical space? How to think about this?
-
 [ ] How do commercial entities structure and operate the sale of high-value products such as specialized bicycles? Does they buy it to the producer? How is interaction between consumer and producers structured?
-[ ] What is the ownwership structure of a stock market?
-[ ] How to reason about Real State?
-[ ] How to reason about retail? What is the deep role of retail?
-[ ] What is the nature of commerce?
-[ ] Why can specialized  retail can exists, like lulemon?
+
 [ ] How it's revenew recogniized using accounting?
-[ ] Integrate the Technical Space into this project and construct a graph-based representation linking products to their underlying techniques.
-[ ] Develop a methodological framework and accompanying guides for decomposing products into their constituent techniques, capabilities, and production processes.
-[ ] Improve the Schema to Support Production Sector - Categories.
-
-[ ] Chemical Industries Association
-[ ] North East of England Process Industry Cluster.
-[ ] ...
-
-[ ] Meat Cattle Production
-[ ] Add the Technical Category of `Market Research`
-[ ] Market Consolidation
-[ ] Market Competition
-[ ] Market Research
-[ ] Profit Marging
 
 [ ] Intergovernmental Org
 [ ] Multinational Corporation
@@ -1298,5 +1272,8 @@
 [ ] Government Debt (in National Currency) as Pseudo-Debt   (Debt  ->  Mechanism; Goal - Tool to Managemnt the Monetary System) -> Monetary System Debt Tool -> Cuasideuda -> Quasi-debt -> Quasiobligation
 [ ] Government Debt (in Foreign Currency)   (Debt) (Obligation)
 
-[] Misogenia
-[] Malandria
+
+
+## Production 
+
+[ ] How to reason about retail? What is the deep role of retail?
