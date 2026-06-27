@@ -2,38 +2,6 @@
 
 [ ] How it's revenew recogniized using accounting?
 
-[ ] Toyota: History, Deversification, etc.
-[ ] Ernst & Young (EY)
-
-[ ] Separatist Movement
-[ ] Religious Order
-[ ] Tech Giant
-[ ] Social Media Platform
-[ ] Rating Agency
-[ ] Development Bank
-[ ] News Paper
-[ ] Urban Gang
-[ ] Cartel
-[ ] Mercenary Group
-[ ] International Federation
-[ ] Charitable Foundation
-[ ] Municipality
-
-[ ] Global Governance Institution
-[ ] Venture Capital Firm
-[ ] Audit Institution
-[ ] Energy Cartel
-[ ] Academic Consortium
-[ ] Constitutional Monarchy
-[ ] Self-Defense Force
-[ ] Treaty Alliance
-[ ] Occupational Syndicate
-[ ] Human Rights Org
-[ ] Surveillance Apparatus
-[ ] Media Conglomerate
-[ ] Refugee Camp
-[ ] Pharmaceutical Alliance
-[ ] Peacekeeping Force
 [ ] Free Economic Zone
 [ ] Shadow Government
 [ ] Digital Community
@@ -53,7 +21,6 @@
 [ ] Food Security Org
 [ ] Global Insurance Pool
 [ ] Vigilante Group
-[ ] Labor Union Federation
 [ ] Information Ministry
 [ ] Hereditary Chiefdom
 [ ] Ecoterrorism Group
@@ -67,8 +34,6 @@
 [ ] Social Credit System
 [ ] Political Action Committee
 [ ] Autonomous Collective
-[ ] Algorithmic Trading Bot
-[ ] Slum Network
 
 101. Tax Haven
 103. Public Health Authority
@@ -1238,7 +1203,6 @@
 
 [ ] Government Debt (in National Currency) as Pseudo-Debt   (Debt  ->  Mechanism; Goal - Tool to Managemnt the Monetary System) -> Monetary System Debt Tool -> Cuasideuda -> Quasi-debt -> Quasiobligation
 [ ] Government Debt (in Foreign Currency)   (Debt) (Obligation)
-
 
 
 ## Production 
