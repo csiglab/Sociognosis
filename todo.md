@@ -1,25 +1,39 @@
 [ ] We should allow for deletions.
 
-[ ] How do commercial entities structure and operate the sale of high-value products such as specialized bicycles? Does they buy it to the producer? How is interaction between consumer and producers structured?
-
 [ ] How it's revenew recogniized using accounting?
 
 [ ] Intergovernmental Org
+
 [ ] Multinational Corporation
+
 [ ] Non-Governmental Org
+
 [ ] Terrorist Network
+
 [ ] Supranational Union
+
 [ ] Autonomous Region
+
 [ ] Financial Institution
+
 [ ] Religious Entity
+
 [ ] Advocacy Network
+
 [ ] Private Military Co.
+
 [ ] Criminal Syndicate
+
 [ ] Indigenous Governance
+
 [ ] Special Admin Region
+
 [ ] Government-In-Exile
+
 [ ] Occupied Territory
+
 [ ] Federal Province
+
 [ ] Trust Territory
 
 [ ] Export Credit Agency
