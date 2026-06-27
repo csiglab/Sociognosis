@@ -27,6 +27,10 @@ ga docs
 gc docs -m "feat: udpate data"
 ```
 
+## Notes
+
+ - **Sociognosis** Space will support market analysis — not the direct analysis of production processes or technology.
+
 ## References
 
 - [Actor](https://www.bremontix.xyz/lab/ar/Locus-Social-Realitatis/Onto/Noetic/Actor/)
