@@ -3,17 +3,8 @@
 [ ] How it's revenew recogniized using accounting?
 
 [ ] Toyota: History, Deversification, etc.
+[ ] Ernst & Young (EY)
 
-[ ] Trade Union
-[ ] Industry Lobby
-[ ] Think Tank
-[ ] Intelligence Agency
-[ ] Cyber-Hacktivist Group
-[ ] Decentralized Autonomous Org
-[ ] Cryptocurrency Exchange
-[ ] International Court
-[ ] Diaspora Network
-[ ] Paramilitary Force
 [ ] Separatist Movement
 [ ] Religious Order
 [ ] Tech Giant
@@ -27,7 +18,7 @@
 [ ] International Federation
 [ ] Charitable Foundation
 [ ] Municipality
-[ ] Ethnic Association
+
 [ ] Global Governance Institution
 [ ] Venture Capital Firm
 [ ] Audit Institution
@@ -1217,10 +1208,8 @@
 1237. Information Technology and Innovation Foundation
 1238. Electronics and Telecommunications Research Institute
 1239. Federal Reserve System
-1241. Ernst & Young (EY)
-1242. ByteDance Ltd.
-1243. GIC Private Limited
-1244. SpaceX
+
+
 - Wealth
 - Capita
 - Exchange
