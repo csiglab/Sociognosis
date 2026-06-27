@@ -2,41 +2,8 @@
 
 [ ] How it's revenew recogniized using accounting?
 
-[ ] Intergovernmental Org
+[ ] Toyota: History, Deversification, etc.
 
-[ ] Multinational Corporation
-
-[ ] Non-Governmental Org
-
-[ ] Terrorist Network
-
-[ ] Supranational Union
-
-[ ] Autonomous Region
-
-[ ] Financial Institution
-
-[ ] Religious Entity
-
-[ ] Advocacy Network
-
-[ ] Private Military Co.
-
-[ ] Criminal Syndicate
-
-[ ] Indigenous Governance
-
-[ ] Special Admin Region
-
-[ ] Government-In-Exile
-
-[ ] Occupied Territory
-
-[ ] Federal Province
-
-[ ] Trust Territory
-
-[ ] Export Credit Agency
 [ ] Trade Union
 [ ] Industry Lobby
 [ ] Think Tank
@@ -1268,18 +1235,15 @@
 - Rent
 - Productiviy
 - Labor
-- Toyota: History, Deversification, etc.
 - Meat Cattle Industry Research
 - Technology and Innovation Exhibition Center
-[ ] Sumitomo Group
 [ ] Energy Industry
 [ ] Does the term token economy makes sense?
 [ ] Productivity
 [ ] What underlying epistemic artifact informs the idea that a nation producing potatoes can be just as rich as a nation producing potato chips?
 [ ] Market
 [ ] GDP
-[ ] Grupo Luksic
-[ ] Financial Techniques (Relative Strengh Index)
+
 [ ] How to think about debt in the national currency?
 [ ] [Taptools](https://www.taptools.io/)
 
