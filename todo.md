@@ -1,38 +1,7 @@
 [ ] We should allow for deletions.
 
 [ ] How it's revenew recogniized using accounting?
-\
-105. Exiled Opposition
-106. Wildlife Trafficker
-107. Transnational Church
-108. Family Dynasty
-109. Data Broker
-110. Immigration Detention Center
-111. Climate Advocacy Group
-112. Propaganda Outlet
-113. Open Source Community
-114. Genocide Perpetrator
-115. Warlord Territory
-116. Micronation
-117. Venture Capital Firm
-118. Internet Service Provider
-119. Veterans Association
-120. Tax Haven Jurisdiction
-121. City-State
-122. Arbitration Tribunal
-123. Street Gang
-124. Tourism Board
-125. Meteorological Agency
-126. Sovereign Citizen Group
-127. Automated Trading System
-128. Disaster Relief Org
-129. Insurance Consortium
-130. Tribal Council
-131. Hacktivist Collective
-132. Public Housing Authority
-133. Railway Operator
-134. Census Bureau
-135. Organ Trafficking Ring
+
 136. Flag of Convenience
 137. E-Commerce Platform
 138. Water Management District
@@ -184,7 +153,6 @@
 284. Archaeological Institute
 285. Marine Protection Area
 286. Inter-Parliamentary Union
-287. Open Source Community
 288. Biobank
 289. Counter-Terrorism Unit
 290. Ethnic Association
@@ -1123,18 +1091,6 @@
 1223. Fraunhofer Institute for Systems and Innovation Research
 1224. National Institute for Nanotechnology
 1225. National Graduate Institute for Policy Studies
-1226. Norman B. Keevil Institute of Mining Engineering
-1227. Peterson Institute for International Economics
-1228. Centro Brasileiro de Relações Internacionais
-1229. Max Planck Institute for Sustainable Materials
-1230. Paul Scherrer Institute
-1231. Pew Research Center
-1232. Max Planck Institute for Mathematics
-1233. Groningen Growth and Development Center
-1234. Santa Fe Institute
-1235. Institute of Photonic Sciences
-1236. VTT Technical Research Centre of Finland
-
 
 - Wealth
 - Capita
