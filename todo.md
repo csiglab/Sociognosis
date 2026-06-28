@@ -2,100 +2,6 @@
 
 [ ] How it's revenew recogniized using accounting?
 
-142. Credit Union
-143. Transit Authority
-144. Fact-Checking Org
-145. Patriotic Society
-146. Space Debris Monitor
-147. Drug Trafficking Org
-148. Offshore Financial Center
-149. Citizen Militia
-150. Statistical Institute
-151. Human Rights Commission
-152. Energy Exchange
-153. Maritime Court
-154. Cyber Mercenary
-155. Uncontacted Tribe
-156. Virtual World Platform
-157. Refugee Council
-158. Interim Government
-159. Intellectual Society
-160. Wildlife Trafficker
-161. Market Index
-162. Food Safety Agency
-163. Nuclear Storage Facility
-164. Renewable Energy Coop
-165. Export Credit Agency
-166. Diplomatic Mission
-167. Consulate
-168. High Commission
-169. Election Observer
-170. Anti-Corruption Bureau
-171. Competition Regulator
-172. Data Protection Authority
-173. Financial Ombudsman
-174. Clearing House
-175. Payment Processor
-176. Gaming Commission
-177. State Lottery
-178. Liquor Control Board
-179. Pension Fund
-180. Health Maintenance Org
-181. University System
-182. Prison Administration
-183. Coast Guard
-184. National Guard
-185. Gendarmerie
-186. Secret Service
-187. Special Operations Unit
-188. Explosive Ordnance Disposal
-189. Fire Department
-190. Emergency Management Agency
-191. Civil Defense Corps
-192. Search and Rescue Team
-193. Mountain Rescue
-194. Lifeguard Service
-195. Volunteer Corps
-196. Red Cross Society
-197. Red Crescent Society
-198. Scouting Association
-199. Rotary International
-200. Lions Clubs
-201. Chamber of Commerce
-202. Industry Trade Group
-203. Public Employment Service
-204. Workers' Council
-205. Consumer Advocacy Group
-206. Tenants Union
-207. Squatters Movement
-208. Homeless Shelter
-209. Food Bank
-210. Disability Rights Org
-211. Women's Rights Org
-212. LGBTQ+ Advocacy Group
-213. Civil Rights Movement
-214. Neighborhood Watch
-215. Online Forum
-216. International Olympic Comm
-217. World Health Org
-218. University Endowment
-219. Sovereign Military Order
-220. Botnet Network
-221. Municipality
-222. Deep Sea Mining Corp
-223. Space Law Commission
-224. Gaming Guild
-225. Cultural Heritage Site
-226. Secessionist Movement
-227. Private Prison
-228. Medical Ethics Board
-229. Music Licensing Body
-230. Cryptocurrency Exchange
-231. Orphan Drug Developer
-232. Spyware Vendor
-233. Refugee State
-234. Genocide Memorial Org
-235. Freedom of Info Agency
 236. National Park Service
 237. Chemical Safety Board
 238. Art Syndicate
@@ -288,7 +194,6 @@
 426. Maritime Court
 427. Child Soldier Network
 428. Diaspora Government
-429. Cyber Mercenary
 430. Feudal Lordship
 431. Disaster Mortuary Team
 432. Deep State
@@ -1079,12 +984,6 @@
 1217. Forschungszentrum Jülich
 1218. Fraunhofer Society
 1219. Fraunhofer Institute for Manufacturing Technology and Advanced Materials
-1220. Prussian Academy of Sciences
-1221. Kaiser Wilhelm Society
-1222. Fraunhofer Institute for Material and Beam Technology
-1223. Fraunhofer Institute for Systems and Innovation Research
-1224. National Institute for Nanotechnology
-1225. National Graduate Institute for Policy Studies
 
 - Wealth
 - Capita
