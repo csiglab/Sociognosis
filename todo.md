@@ -2,45 +2,6 @@
 
 [ ] How it's revenew recogniized using accounting?
 
-383. Logistics Firm
-384. Courier Service
-385. Diplomatic Courier
-386. Honorary Consul
-387. Trade Mission
-388. Cultural Mission
-389. Scientific Mission
-390. Aid Mission
-391. Observer Mission
-392. Peace Mission
-393. Combat Mission
-394. Training Mission
-395. Advisory Team
-396. Transition Team
-397. Crisis Management Team
-398. Negotiation Team
-399. Arbitration Panel
-400. Export Control Agency
-401. Import Licensing Bureau
-402. State Oil Company
-403. State Airline
-404. State Broadcaster
-405. State Railway
-406. State Power Utility
-407. State Water Utility
-408. National Mint
-409. Printing Office
-410. National Laboratory
-411. Public Works Dept
-412. Motor Vehicle Dept
-413. Land Registry
-414. Vital Statistics Office
-415. Wildlife Service
-416. Global Health Institute
-417. Airline Alliance
-418. Pirate Haven
-419. Rural Electric Coop
-420. Data Center Operator
-421. Neutral Zone
 422. Vigilante Militia
 423. Gene Editing Firm
 424. Political Dynasty
