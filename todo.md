@@ -1,10 +1,7 @@
 [ ] We should allow for deletions.
 
 [ ] How it's revenew recogniized using accounting?
-
-101. Tax Haven
-103. Public Health Authority
-104. Pension Fund
+\
 105. Exiled Opposition
 106. Wildlife Trafficker
 107. Transnational Church
@@ -1137,7 +1134,6 @@
 1234. Santa Fe Institute
 1235. Institute of Photonic Sciences
 1236. VTT Technical Research Centre of Finland
-1237. Information Technology and Innovation Foundation
 
 
 - Wealth
