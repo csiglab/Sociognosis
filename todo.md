@@ -2,81 +2,6 @@
 
 [ ] How it's revenew recogniized using accounting?
 
-308. Cybersecurity Agency
-309. Public Pension System
-310. Censorship Resistance Net
-311. Food Security Council
-312. Armed Drone Operator
-313. Wildlife Reserve
-314. National ID Registry
-315. World Trade Org
-316. Port Authority
-317. Transit Police
-318. Telecom Giant
-319. Sovereign Cloud
-320. Private Space Agency
-321. War Crimes Tribunal
-322. Peace Corps
-323. Oil Consortium
-324. Customs Union
-325. Passport Office
-326. Immigration Court
-327. Border Patrol
-328. Cyber Police Unit
-329. Digital Bank
-330. Asset Management Firm
-331. Lobbying Firm
-332. Opinion Polling Co
-333. Super PAC
-334. Policy Institute
-335. Research University
-336. Community College
-337. Boarding School
-338. Seminary
-339. Madrasa
-340. Yeshiva
-341. Scientific Academy
-342. Astronomical Society
-343. Geological Survey
-344. Climate Council
-345. Antarctic Base
-346. Lunar Settlement
-347. Mars Colony
-348. Seasteading Institute
-349. Intentional Community
-350. Ecovillage
-351. Kibbutz
-352. Moshav
-353. Amish Community
-354. Gated Community
-355. Safe Zone
-356. No-Fly Zone
-357. Buffer Zone
-358. Combatant Command
-359. Marine Corps
-360. Air Force
-361. Navy
-362. Army
-363. Special Forces
-364. Sniper Team
-365. Bomb Squad
-366. Military Police
-367. War Correspondent
-368. Fixer
-369. People Smuggler
-370. Bounty Hunter
-371. Private Investigator
-372. Security Guard Union
-373. Locksmith Guild
-374. Bar Association
-375. Medical Council
-376. Engineering Council
-377. Architecture Board
-378. Pilots Union
-379. Air Traffic Control
-380. Railway Union
-381. Dock Workers Union
-382. Stevedore Company
 383. Logistics Firm
 384. Courier Service
 385. Diplomatic Courier
@@ -894,15 +819,6 @@
 1198. Google Research
 1199. Swiss Finance Institute
 1200. London School of Economics and Political Science
-1201. Agency for Defense Development
-1202. Forest Sciences Centre of Catalonia
-1203. National Physical Laboratory
-1204. Institut d’Economia de Barcelona
-1205. Lowy Institute
-1206. Institute of Chemistry
-1207. Manchester Institute of Innovation Research
-1208. Nordic Institute for Theoretical Physics
-1209. Microsoft Research
 
 - Wealth
 - Capita
