@@ -2,60 +2,6 @@
 
 [ ] How it's revenew recogniized using accounting?
 
-236. National Park Service
-237. Chemical Safety Board
-238. Art Syndicate
-239. Immigration Detention Center
-240. National Space Council
-241. Social Credit System
-242. Historical Reenactment Soc
-243. Central Depository
-244. Cyber Stalking Group
-245. Filibuster Movement
-246. Child Welfare Agency
-247. Geoengineering Startup
-248. Nuclear Watchdog
-249. Pirate Republic
-250. Broadcasting Regulator
-251. Foreign Exchange Market
-252. Interpol
-253. Vatican City State
-254. Ethical AI Institute
-255. Free Port
-256. Zoonotic Disease Unit
-257. Town Hall
-258. Disaster Response Team
-259. Blood Bank
-260. Merchant Marine
-261. Cyber Insurance Provider
-262. Recycling Consortium
-263. Language Preservation Soc
-264. Securities Commission
-265. International Tribunal
-266. Organ Trafficking Network
-267. Space Traffic Control
-268. Genealogy Society
-269. Noise Abatement Society
-270. Digital Currency Initiative
-271. Museum Board of Trustees
-272. Fan Club Federation
-273. Human Smuggling Ring
-274. Housing Cooperative
-275. Political Satire Group
-276. Forestry Commission
-277. Public Records Office
-278. Global Shipping Alliance
-279. Voter Registration Drive
-280. Nuclear Energy Agency
-281. Emergency Alert System
-282. Professional Sports League
-283. Diplomatic Protection Unit
-284. Archaeological Institute
-285. Marine Protection Area
-286. Inter-Parliamentary Union
-288. Biobank
-289. Counter-Terrorism Unit
-290. Ethnic Association
 291. Quantum Computing Lab
 292. National Archives
 293. Humanitarian Corridor
@@ -977,13 +923,6 @@
 1210. National Institute for Materials Science
 1211. Instituto Interdisciplinario de Economía Política
 1212. RISE Research Institutes of Sweden
-1213. Defense Advanced Research Projects Agency
-1214. SRI International
-1215. Center for Collective Learning
-1216. Los Alamos National Laboratory
-1217. Forschungszentrum Jülich
-1218. Fraunhofer Society
-1219. Fraunhofer Institute for Manufacturing Technology and Advanced Materials
 
 - Wealth
 - Capita
