@@ -2,27 +2,6 @@
 
 [ ] How it's revenew recogniized using accounting?
 
-422. Vigilante Militia
-423. Gene Editing Firm
-424. Political Dynasty
-425. State News Agency
-426. Maritime Court
-427. Child Soldier Network
-428. Diaspora Government
-430. Feudal Lordship
-431. Disaster Mortuary Team
-432. Deep State
-433. Hydroelectric Dam Auth
-434. Blockchain Governance
-435. Warlord
-436. National Science Foundation
-437. Tribal Militia
-438. Human Terrain Team
-439. Carbon Credit Exchange
-440. Refugee Camp Admin
-441. Orthodox Church
-442. Economic Hitman
-443. Space Debris Tracking
 444. Public Health Institute
 445. Strategic Petroleum Reserve
 446. Undersea Cable Consortium
@@ -777,9 +756,6 @@
 1195. Federal Institute for Geosciences and Natural Resources
 1196. Lawrence Berkeley National Laboratory
 1197. German Aerospace Center
-1198. Google Research
-1199. Swiss Finance Institute
-1200. London School of Economics and Political Science
 
 - Wealth
 - Capita
