@@ -3323,8 +3323,8 @@ select:focus-visible {
     <main class="canvas-area" aria-label="Epistemic network graph canvas">
         <header class="header-bar">
             <div>
-                <h1 class="app-title">Sociognosis Editor</h1>
-                <p class="app-subtitle">Epistemic Network Visualization</p>
+                <h1 class="app-title">Product Space Editor</h1>
+                <p class="app-subtitle">Product Space Network Visualization</p>
             </div>
             <div class="spacer"></div>
             
@@ -3565,7 +3565,7 @@ select:focus-visible {
                     <div class="settings-title">Schema Configuration</div>
                     <div class="settings-row">
                         <label class="settings-label">Schema Path</label>
-                        <input type="text" class="settings-input" id="schema-path" placeholder="../data/idx/schema/schema.json">
+                        <input type="text" class="settings-input" id="schema-path" placeholder="../data/prd/schema/schema.json">
                     </div>
                     <div class="settings-row" style="display:flex;gap:10px;">
                         <button class="btn btn-sm" id="load-schema-btn">Load Schema</button>
@@ -3577,7 +3577,7 @@ select:focus-visible {
                     <div class="settings-title">Global Context</div>
                     <div class="settings-row">
                         <label class="settings-label">Context URL</label>
-                        <input type="text" class="settings-input" id="global-context-url" value="../data/idx/schema/notes" placeholder="../data/idx/schema/notes">
+                        <input type="text" class="settings-input" id="global-context-url" value="../data/prd/schema/notes" placeholder="../data/prd/schema/notes">
                     </div>
                     <div class="settings-row" style="display:flex;gap:10px;">
                         <button class="btn btn-sm" id="load-context-btn">Load Context</button>
@@ -4318,9 +4318,9 @@ let aiConfig = {
     endpoint: 'https://api.deepseek.com/v1/chat/completions',
     token: loadPersistedToken(),
     model: 'deepseek-v4-flash',
-    schemaPath: '../data/idx/schema/schema.json',
+    schemaPath: '../data/prd/schema/schema.json',
     schema: null,
-    contextUrl: '../data/idx/schema/notes',
+    contextUrl: '../data/prd/schema/notes',
     globalContext: ''
 };
 
@@ -4420,15 +4420,15 @@ function buildSystemPrompt(forCreation = true) {
         prompt += `TASK: Create a new node as a valid JSON object following the Sociognosis schema exactly. The JSON must include all required fields:
 - id: A unique identifier following the pattern "category.name" (e.g., "reality.market")
 - name: A human-readable name
+- tags: Array of keywords for indexing, filtering, and discovery (top-level field)
+- layer: One of the defined layers from the schema (Reality, Problem, Technical, Production, Product, Economic)
 - category: One of the defined categories from the schema
-- description: A brief description
-- longDescription: A detailed explanation
-- functionalRoles: Array of roles this entity plays
-- historicalContext: Object with summary and chronology array
-- specific: Object with category-specific fields (refer to schema $defs)
-- relationshipFamily: Optional, for the node's primary relationship family
-- relationshipType: Optional, for the node's primary relationship type
-- metadata: Object with tags array, inheritanceLevel (integer), confidenceScore (0-1), sourceReference, createdAt, auditTrail array
+- description: A short description / concise summary
+- longDescription: A comprehensive explanation (optional but recommended)
+- chronology: Object with summary (string) and events array (each { year, event, context })
+- relationships: Array of relationship objects (may be empty; each has targetNodeId, relationshipType, optional relationshipFamily, optional description)
+- specific: Object with category-specific fields (refer to schema $defs and allOf branches)
+- metadata: Object with inheritanceLevel (integer), confidenceScore (0-1), sourceReference, createdAt, auditTrail array
 - references: Array of reference objects with title, optional link, and description
 
 Return ONLY valid JSON with no additional text or explanation.`;
@@ -5007,6 +5007,9 @@ function extractSuggestions() {
     
     data.forEach(d => {
         (d.functionalRoles || []).forEach(v => { if (v && typeof v === 'string') functionalRolesSet.add(v); });
+        // prd schema: tags is a top-level field (not in metadata)
+        (d.tags || []).forEach(v => { if (v && typeof v === 'string') tagsSet.add(v); });
+        // Backward compat: also check metadata.tags for idx-schema data
         if (d.metadata) {
             (d.metadata.tags || []).forEach(v => { if (v && typeof v === 'string') tagsSet.add(v); });
             if (d.metadata.sourceReference && typeof d.metadata.sourceReference === 'string') {
@@ -5373,31 +5376,31 @@ function screenToWorld(sx, sy) { return { x: (sx - cam.x) / cam.z, y: (sy - cam.
 /* ═══════ DATA LOADING ═══════ */
 async function loadData() {
     try {
-        const res = await fetch('../data/idx/data.json');
+        const res = await fetch('../data/prd/data.json');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         data = await res.json();
     } catch (e) {
         console.warn('Could not load data.json, using sample data');
         data = [{
-            "id": "reality.market", "name": "Market", "category": "Reality",
+            "id": "reality.market", "name": "Market", "layer": "Economic", "category": "Reality",
             "description": "A socially constituted institutional structure that coordinates voluntary exchange among economic agents.",
-            "longDescription": "A market is a synontic institutional configuration composed of agents, exchange protocols, property rights, contractual rules, information flows, and allocation mechanisms.",
-            "functionalRoles": ["Resource Allocation", "Price Discovery", "Information Transmission"],
-            "historicalContext": { "summary": "Markets have existed in various forms throughout human history.", "chronology": [] },
-            "specific": { "onticLayer": "synontic", "onticCategory": "entity" },
+            "longDescription": "A market is an institutional configuration composed of agents, exchange protocols, property rights, contractual rules, information flows, and allocation mechanisms.",
+            "tags": ["market", "institution", "exchange"],
+            "chronology": { "summary": "Markets have existed in various forms throughout human history.", "events": [] },
+            "specific": {},
             "relationships": [],
-            "metadata": { "tags": ["market", "institution", "exchange"], "inheritanceLevel": 2, "confidenceScore": 0.97, "sourceReference": "Sociognosis Economic Ontology", "createdAt": "2024-06-10T00:00:00Z", "auditTrail": [] },
+            "metadata": { "inheritanceLevel": 2, "confidenceScore": 0.97, "sourceReference": "Sociognosis Production Ontology", "createdAt": "2024-06-10T00:00:00Z", "auditTrail": [] },
             "references": []
         },
         {
-            "id": "agent.trader", "name": "Trader", "category": "Epistemic Agent",
-            "description": "An economic agent who participates in market exchanges.",
-            "longDescription": "A trader is an individual or institution that buys and sells financial instruments in markets.",
-            "functionalRoles": ["Price Formation", "Liquidity Provision"],
-            "historicalContext": { "summary": "Traders have existed as long as markets have.", "chronology": [] },
-            "specific": { "agentType": "individualHuman", "domain": "economic" },
+            "id": "product.steel-beam", "name": "Steel Beam", "layer": "Product", "category": "Product",
+            "description": "A structural steel product used in construction.",
+            "longDescription": "A steel beam is a load-bearing structural element manufactured from steel, used in buildings, bridges, and infrastructure.",
+            "tags": ["steel", "construction", "structural"],
+            "chronology": { "summary": "Steel beams became ubiquitous with industrial steel production.", "events": [] },
+            "specific": { "materiality": "tangible", "useCase": "Load-bearing structure", "lifeCycleStage": "production" },
             "relationships": [],
-            "metadata": { "tags": ["agent", "market", "trading"], "inheritanceLevel": 1, "confidenceScore": 0.92, "sourceReference": "Sociognosis Economic Ontology", "createdAt": "2024-06-10T00:00:00Z", "auditTrail": [] },
+            "metadata": { "inheritanceLevel": 1, "confidenceScore": 0.95, "sourceReference": "Sociognosis Production Ontology", "createdAt": "2024-06-10T00:00:00Z", "auditTrail": [] },
             "references": []
         }];
     }
@@ -6028,19 +6031,21 @@ function collectCurrentFormData() {
     const d = {};
     d.id = (document.getElementById('edit-id')?.value || '').trim();
     d.name = (document.getElementById('edit-name')?.value || '').trim();
+    d.layer = getSSValue('edit-layer') || '';
     d.category = getSSValue('edit-category') || '';
     d.description = (document.getElementById('edit-description')?.value || '').trim();
     d.longDescription = (document.getElementById('edit-longdesc')?.value || '').trim();
-    d.functionalRoles = (typeof getArrayValues === 'function') ? getArrayValues('functionalRoles') : [];
-    d.historicalContext = {
+    // prd schema: tags is top-level; functionalRoles is not in prd schema (kept for backward compat)
+    d.tags = (typeof getArrayValues === 'function') ? getArrayValues('tags') : [];
+    // prd schema: chronology is top-level with { summary, events }
+    d.chronology = {
         summary: (document.getElementById('edit-hist-summary')?.value || '').trim(),
-        chronology: (selectedNode._data.historicalContext?.chronology || [])
+        events: selectedNode._data.chronology?.events || selectedNode._data.historicalContext?.chronology || []
     };
     d.specific = (typeof collectSpecificValues === 'function') ? collectSpecificValues() : {};
     d.relationships = selectedNode._data.relationships || [];
     if (!selectedNode._data.metadata) selectedNode._data.metadata = {};
     d.metadata = {
-        tags: (typeof getArrayValues === 'function') ? getArrayValues('tags') : [],
         sourceReference: (document.getElementById('edit-source')?.value || '').trim()
     };
     d.references = selectedNode._data.references || [];
@@ -6063,16 +6068,16 @@ function computeNodeCompleteness(d) {
         return Boolean(v);
     }
 
-    // Core fields always present in the form
+    // Core fields always present in the form (prd schema)
     push('id', d.id);
     push('name', d.name);
+    push('layer', d.layer);
     push('category', d.category);
     push('description', d.description);
     push('longDescription', d.longDescription);
-    push('functionalRoles', d.functionalRoles);
-    push('historicalContext.summary', d.historicalContext?.summary);
+    push('tags', d.tags);
+    push('chronology.summary', d.chronology?.summary);
     push('relationships', d.relationships);
-    push('metadata.tags', d.metadata?.tags);
     push('metadata.sourceReference', d.metadata?.sourceReference);
     push('references', d.references);
 
@@ -6299,8 +6304,8 @@ function initSpecificFields() {
 function validateNode(nodeData) {
     const errors = [];
     
-    // Top-level required fields
-    const topRequired = aiConfig.schema?.required || ['id', 'name', 'category', 'description', 'functionalRoles', 'historicalContext', 'specific', 'relationships', 'metadata', 'references'];
+    // Top-level required fields (prd schema fallback list)
+    const topRequired = aiConfig.schema?.required || ['id', 'name', 'tags', 'layer', 'category', 'description', 'chronology', 'specific', 'relationships', 'metadata', 'references'];
     topRequired.forEach(field => {
         if (!nodeData[field] || (Array.isArray(nodeData[field]) && nodeData[field].length === 0)) {
             errors.push({ field, message: `${friendlyLabel(field)} is required` });
@@ -6326,12 +6331,16 @@ function renderForm(nodeData) {
     if (currentTab === 'json') { renderJsonEditor(nodeData); return; }
     
     const categoryOptions = CATEGORIES.map(c => ({ value: c, label: c }));
+    const layerOptions = LAYERS.map(l => ({ value: l, label: l }));
     const nodeOptions = nodes.filter(n => n.id !== nodeData.id).map(n => ({ value: n.id, label: n.name || n.id })).sort((a, b) => a.label.localeCompare(b.label));
     const familyOptions = RELATIONSHIP_FAMILIES.map(f => ({ value: f, label: friendlyLabel(f) }));
     const typeOptions = RELATIONSHIP_TYPES.map(t => ({ value: t, label: t }));
     
     const specific = nodeData.specific || {};
-    const historicalContext = nodeData.historicalContext || { summary: '', chronology: [] };
+    // prd schema uses top-level `chronology` with `events` (not `historicalContext` with `chronology`)
+    // Fall back to historicalContext for backward compat with idx-schema data
+    const chronology = nodeData.chronology || nodeData.historicalContext || { summary: '', events: [], chronology: [] };
+    const chronEvents = chronology.events || chronology.chronology || [];
     
     const html = `
         <div class="form-section collapsed">
@@ -6346,13 +6355,17 @@ function renderForm(nodeData) {
             </div>
             <div class="form-row-inline">
                 <div class="form-row">
+                    <label class="form-label">Layer</label>
+                    ${createSearchableSelect('edit-layer', 'Search layer...', layerOptions, nodeData.layer || '', null, false)}
+                </div>
+                <div class="form-row">
                     <label class="form-label">Category</label>
                     ${createSearchableSelect('edit-category', 'Search category...', categoryOptions, nodeData.category || '', null, false)}
                 </div>
-                <div class="form-row">
-                    <label class="form-label">Inheritance Level</label>
-                    <input type="number" class="form-input" id="edit-inheritance" value="${(nodeData.metadata || {}).inheritanceLevel || 0}" min="0">
-                </div>
+            </div>
+            <div class="form-row">
+                <label class="form-label">Inheritance Level</label>
+                <input type="number" class="form-input" id="edit-inheritance" value="${(nodeData.metadata || {}).inheritanceLevel || 0}" min="0">
             </div>
         </div>
         
@@ -6369,23 +6382,23 @@ function renderForm(nodeData) {
         </div>
         
         <div class="form-section collapsed">
-            <div class="form-section-title">Functional Roles</div>
+            <div class="form-section-title">Tags</div>
             <div class="form-row">
-                <label class="form-label">Roles <span style="opacity:0.5;font-size:0.5em">(${suggestions.functionalRoles.length} suggestions)</span></label>
-                ${createArrayInput('functionalRoles', nodeData.functionalRoles || [], suggestions.functionalRoles)}
+                <label class="form-label">Tag Set <span style="opacity:0.5;font-size:0.5em">(${suggestions.tags.length} suggestions)</span></label>
+                ${createArrayInput('tags', nodeData.tags || [], suggestions.tags)}
             </div>
         </div>
         
         <div class="form-section collapsed">
-            <div class="form-section-title">Historical Context</div>
+            <div class="form-section-title">Chronology</div>
             <div class="form-row">
                 <label class="form-label">Summary</label>
-                <textarea class="form-textarea" id="edit-hist-summary" placeholder="Historical summary...">${escHTML(historicalContext.summary || '')}</textarea>
+                <textarea class="form-textarea" id="edit-hist-summary" placeholder="Historical summary...">${escHTML(chronology.summary || '')}</textarea>
             </div>
             <div class="form-row">
-                <label class="form-label">Chronology <span style="opacity:0.5;font-size:0.5em">(${(historicalContext.chronology || []).length} entries)</span></label>
+                <label class="form-label">Chronology <span style="opacity:0.5;font-size:0.5em">(${chronEvents.length} entries)</span></label>
                 <div id="chronology-container">
-                    ${(historicalContext.chronology || []).map((entry, i) => renderChronologyEntry(entry, i)).join('')}
+                    ${chronEvents.map((entry, i) => renderChronologyEntry(entry, i)).join('')}
                 </div>
                 <div class="add-chronology-form" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border-subtle);">
                     <div class="form-row-inline">
@@ -6440,10 +6453,6 @@ function renderForm(nodeData) {
         
         <div class="form-section collapsed">
             <div class="form-section-title">Metadata</div>
-            <div class="form-row">
-                <label class="form-label">Tags <span style="opacity:0.5;font-size:0.5em">(${suggestions.tags.length} suggestions)</span></label>
-                ${createArrayInput('tags', (nodeData.metadata || {}).tags || [], suggestions.tags)}
-            </div>
             <div class="form-row-inline">
                 <div class="form-row">
                     <label class="form-label">Confidence Score</label>
@@ -6468,6 +6477,7 @@ function renderForm(nodeData) {
     
     document.getElementById('panel-body').innerHTML = html;
     
+    initSearchableSelect('edit-layer');
     initSearchableSelect('edit-category');
     initSpecificFields();
     initSearchableSelect('new-rel-type');
@@ -6562,14 +6572,25 @@ function addChronologyEntry() {
         return;
     }
     
-    selectedNode._data.historicalContext = selectedNode._data.historicalContext || { summary: '', chronology: [] };
-    selectedNode._data.historicalContext.chronology = selectedNode._data.historicalContext.chronology || [];
-    
-    selectedNode._data.historicalContext.chronology.push({
+    // prd schema: top-level `chronology` with `events` array
+    // Backward compat: fall back to historicalContext.chronology
+    const entry = {
         year: year || new Date().getFullYear(),
         event: event,
         context: context
-    });
+    };
+    if (selectedNode._data.chronology) {
+        selectedNode._data.chronology.events = selectedNode._data.chronology.events || [];
+        selectedNode._data.chronology.events.push(entry);
+    } else {
+        // Migrate from historicalContext or create new chronology
+        const oldHist = selectedNode._data.historicalContext || {};
+        selectedNode._data.chronology = {
+            summary: oldHist.summary || '',
+            events: [...(oldHist.chronology || []), entry]
+        };
+        delete selectedNode._data.historicalContext;
+    }
     
     document.getElementById('new-chron-year').value = '';
     document.getElementById('new-chron-event').value = '';
@@ -6580,10 +6601,17 @@ function addChronologyEntry() {
 
 function removeChronologyEntry(idx) {
     if (!selectedNode) return;
-    if (!selectedNode._data.historicalContext || !selectedNode._data.historicalContext.chronology) return;
-    
-    selectedNode._data.historicalContext.chronology.splice(idx, 1);
-    renderForm(selectedNode._data);
+    // prd schema: chronology.events
+    if (selectedNode._data.chronology && selectedNode._data.chronology.events) {
+        selectedNode._data.chronology.events.splice(idx, 1);
+        renderForm(selectedNode._data);
+        return;
+    }
+    // Backward compat: historicalContext.chronology
+    if (selectedNode._data.historicalContext && selectedNode._data.historicalContext.chronology) {
+        selectedNode._data.historicalContext.chronology.splice(idx, 1);
+        renderForm(selectedNode._data);
+    }
 }
 
 function renderRelationshipItem(rel, idx) {
@@ -6868,18 +6896,26 @@ function commitFormData() {
     } else {
         selectedNode._data.id = document.getElementById('edit-id').value;
         selectedNode._data.name = document.getElementById('edit-name').value;
+        // prd schema: layer + category are top-level
+        selectedNode._data.layer = getSSValue('edit-layer') || '';
         selectedNode._data.category = getSSValue('edit-category') || 'Reality';
         selectedNode._data.description = document.getElementById('edit-description').value;
         selectedNode._data.longDescription = document.getElementById('edit-longdesc').value;
+        // prd schema: tags is top-level (not in metadata)
+        selectedNode._data.tags = getArrayValues('tags');
+        // Backward compat: keep functionalRoles for idx-schema data
         selectedNode._data.functionalRoles = getArrayValues('functionalRoles');
 
-        selectedNode._data.historicalContext = selectedNode._data.historicalContext || { summary: '', chronology: [] };
-        selectedNode._data.historicalContext.summary = document.getElementById('edit-hist-summary').value;
+        // prd schema: chronology is top-level with { summary, events }
+        const existingEvents = selectedNode._data.chronology?.events || selectedNode._data.historicalContext?.chronology || [];
+        selectedNode._data.chronology = {
+            summary: document.getElementById('edit-hist-summary').value,
+            events: existingEvents
+        };
 
         selectedNode._data.specific = collectSpecificValues();
 
         if (!selectedNode._data.metadata) selectedNode._data.metadata = {};
-        selectedNode._data.metadata.tags = getArrayValues('tags');
         selectedNode._data.metadata.inheritanceLevel = parseInt(document.getElementById('edit-inheritance').value) || 0;
         selectedNode._data.metadata.confidenceScore = parseFloat(document.getElementById('edit-confidence').value) || 0.7;
         selectedNode._data.metadata.sourceReference = document.getElementById('edit-source').value;
@@ -6986,11 +7022,12 @@ function showValidationSummary(errors) {
 function addNewNode() {
     const id = 'node.' + Date.now();
     const newNodeData = {
-        id: id, name: 'New Node', category: 'Reality',
-        description: '', longDescription: '', functionalRoles: [],
-        historicalContext: { summary: '', chronology: [] },
+        id: id, name: 'New Node', layer: 'Production', category: 'Reality',
+        description: '', longDescription: '',
+        tags: [],
+        chronology: { summary: '', events: [] },
         specific: {}, relationships: [],
-        metadata: { tags: [], inheritanceLevel: 0, confidenceScore: 0.7, sourceReference: '', createdAt: new Date().toISOString(), auditTrail: [] },
+        metadata: { inheritanceLevel: 0, confidenceScore: 0.7, sourceReference: '', createdAt: new Date().toISOString(), auditTrail: [] },
         references: []
     };
     data.push(newNodeData);
