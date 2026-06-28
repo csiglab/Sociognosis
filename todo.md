@@ -1,6 +1,8 @@
-[] Finish the product space.
-
-[] Continue working on a parsing methology for the production sphere of reality.
+[ ] Our social ontolgy (is a copy of epistemica) - i am working on fix it - see spec - index.
+  - All of the datset needs migration - conversion to a new structure.
+   - ...
+[ ] ...
+[ ] Continue working on a parsing methology for the production sphere of reality.
 
 [ ] We should allow for deletions.
 
