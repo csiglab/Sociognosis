@@ -2,12 +2,6 @@
 
 [ ] How it's revenew recogniized using accounting?
 
-136. Flag of Convenience
-137. E-Commerce Platform
-138. Water Management District
-139. Peacekeeping Force
-140. Grantmaking Foundation
-141. Party Faction
 142. Credit Union
 143. Transit Authority
 144. Fact-Checking Org
