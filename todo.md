@@ -2,23 +2,6 @@
 
 [ ] How it's revenew recogniized using accounting?
 
-291. Quantum Computing Lab
-292. National Archives
-293. Humanitarian Corridor
-294. Private Library
-295. Waste Management Authority
-296. State Media Outlet
-297. Maritime Piracy Unit
-298. Genocide Watch
-299. Intangible Heritage Body
-300. Cyber Warfare Command
-301. Space Tourism Agency
-302. Human Rights Watch
-303. Monarchy
-304. Water Authority
-305. Space Resource Extractor
-306. Heritage Railway
-307. National Lottery
 308. Cybersecurity Agency
 309. Public Pension System
 310. Censorship Resistance Net
@@ -920,9 +903,6 @@
 1207. Manchester Institute of Innovation Research
 1208. Nordic Institute for Theoretical Physics
 1209. Microsoft Research
-1210. National Institute for Materials Science
-1211. Instituto Interdisciplinario de Economía Política
-1212. RISE Research Institutes of Sweden
 
 - Wealth
 - Capita
