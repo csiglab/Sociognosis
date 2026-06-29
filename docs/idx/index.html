@@ -1457,7 +1457,7 @@
         var nodes = [], gE = [], nM = {};
         var alpha = 1;
         var cam = { x: 0, y: 0, z: 1 }, camTgt = null;
-        var hovN = null, selN = null, dragN = null;
+        var hovN = null, selN = null, dragN = null, dragMoved = false;
         var isPan = false, panS = { x: 0, y: 0 };
         var W = 0, H = 0;
         var tR = { min: -Infinity, max: Infinity }, tRF = { min: 0, max: 0 };
@@ -1487,6 +1487,7 @@
         /* Viewport coverage metric: visible world-width / full graph width.
            Macro ≈ 1.0, Meso ≈ 0.3–0.6, Micro < 0.2 */
         var viewportCoverage = 1.0;
+        var localNodeDensity = 0, localEdgeDensity = 0;
 
         /* Offscreen canvas for community silhouettes (recomputed on layout change) */
         var silhouetteCanvas = null, silhouetteCtx = null;
@@ -1529,7 +1530,7 @@
             deck = SocioGraph.createDeck(lib, canvas, W, H);
         }
 
-        function resize() { sCV(); if (dLoaded) fitCamera(false); }
+        function resize() { sCV(); }
 
         /* Compute the target (z, x, y) that fits the whole graph. */
         function computeFitTarget() {
@@ -1599,7 +1600,9 @@
         /* Fly to a node, easing it to the centre over ~600ms. */
         function pTN(nd) {
             if (!nd) return;
-            var tz = Math.max(cam.z, 1.3);
+            var d = (nodeDegrees[nd.id] || nd.degree || 0);
+            var tz = 1.3 + 0.6 * Math.log2(Math.max(1, d));
+            tz = clamp(tz, cam.z, 6);
             tweenCamera(W / 2 - nd.x * tz, H / 2 - nd.y * tz, tz, 600);
         }
 
@@ -1617,10 +1620,37 @@
             viewportCoverage = clamp(visW / graphW, 0, 2);
         }
 
+        function computeLocalDensity() {
+            var wl = -cam.x / cam.z, wr = (W - cam.x) / cam.z;
+            var wt = -cam.y / cam.z, wb = (H - cam.y) / cam.z;
+            var nn = 0, ne = 0;
+            for (var i = 0; i < nodes.length; i++) {
+                var n = nodes[i];
+                if (n.visible && n.x >= wl && n.x <= wr && n.y >= wt && n.y <= wb) nn++;
+            }
+            for (var j = 0; j < gE.length; j++) {
+                var e = gE[j];
+                if (!e.visible) continue;
+                var s = nM[e.source], t = nM[e.target];
+                if (!s || !t) continue;
+                var sin = s.x >= wl && s.x <= wr && s.y >= wt && s.y <= wb;
+                var tin = t.x >= wl && t.x <= wr && t.y >= wt && t.y <= wb;
+                if (sin || tin) ne++;
+            }
+            localNodeDensity = nn;
+            localEdgeDensity = ne;
+        }
+
         function zoomBand() {
-            if (viewportCoverage > 0.7) return 'macro';
-            if (viewportCoverage > 0.2) return 'meso';
-            return 'micro';
+            var b;
+            if (viewportCoverage > 0.7) b = 'macro';
+            else if (viewportCoverage > 0.2) b = 'meso';
+            else b = 'micro';
+            if (localNodeDensity > 0) {
+                if (localNodeDensity <= 60) b = 'micro';
+                else if (localNodeDensity <= 200 && b === 'macro') b = 'meso';
+            }
+            return b;
         }
 
         /* ═══════ CONTEXTUAL LINKS ═══════ */
@@ -1900,6 +1930,7 @@
             if (!deck) return;
             updateCameraTween(performance.now());
             computeViewportCoverage();
+            computeLocalDensity();
 
             if (silhouetteDirty) {
                 communityHulls = SocioGraph.computeHulls(visNodes(), categoryColorIndex);
@@ -1909,7 +1940,7 @@
             }
 
             var band = zoomBand();
-            if (lastBand !== band) { lastBand = band; labelsDirty = true; }
+            if (lastBand !== band) { lastBand = band; labelsDirty = true; deckDirty = true; }
             if (lastLabelZ < 0 || Math.abs(cam.z - lastLabelZ) / Math.max(cam.z, 1e-6) > 0.12) {
                 lastLabelZ = cam.z; labelsDirty = true;
             }
@@ -2921,6 +2952,7 @@
         /* Focus state is implicit: the detail panel (aside) open/closed reflects selection.
            No explicit indicator or button — the aside IS the focus affordance. */
         function updateFocusIndicator() {
+            deckDirty = true; labelsDirty = true;
             if (selN) {
                 /* Open the detail panel and render the selected node */
                 document.body.classList.add('detail-open');
@@ -2941,6 +2973,7 @@
 
         /* ═══════ EVENT LISTENERS ═══════ */
         canvas.addEventListener('mousedown', function (e) {
+            dragMoved = false;
             var r = canvas.getBoundingClientRect();
             var sx = e.clientX - r.left, sy = e.clientY - r.top;
             var nd = hitNode(sx, sy);
@@ -2959,6 +2992,7 @@
             var r = canvas.getBoundingClientRect();
             var sx = e.clientX - r.left, sy = e.clientY - r.top;
             if (dragN) {
+                dragMoved = true;
                 var wp = s2w(sx, sy);
                 dragN.x = wp.x;
                 dragN.y = wp.y;
@@ -2969,6 +3003,7 @@
                 return;
             }
             if (isPan) {
+                dragMoved = true;
                 cam.x = e.clientX - panS.x;
                 cam.y = e.clientY - panS.y;
                 camTgt = null;
@@ -3002,12 +3037,15 @@
                 }
                 updateFocusIndicator();
                 deckDirty = true; labelsDirty = true;
+            } else if (!dragMoved && selN) {
+                clearFocus();
             }
         });
 
         canvas.addEventListener('mouseleave', function () {
             hovN = null;
             hideTT();
+            deckDirty = true; labelsDirty = true;
             if (!dragN) {
                 isPan = false;
                 canvas.classList.remove('locked');

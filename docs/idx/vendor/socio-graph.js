@@ -82,22 +82,27 @@
         const z = cam.z;
 
         const edgesData = [];
+        const incidentData = [];
         for (let i = 0; i < edges.length; i++) {
-            if (!edgeShouldShow(i, band)) continue;
             const e = edges[i];
             const s = nodeMap[e.source], t = nodeMap[e.target];
             if (!s || !t) continue;
             const incident = (hoveredNode && (hoveredNode.id === e.source || hoveredNode.id === e.target)) ||
                 (selectedNode && (selectedNode.id === e.source || selectedNode.id === e.target));
-            const w = edgeWeights[i];
-            const baseA = clamp((w / maxEdgeWeight) * 0.3, 0.1, 0.3) * 255;
-            let color;
-            if (incident) { const ref = hoveredNode || selectedNode; color = catRGB(getCategoryColor, ref.category, catCache).concat(153); }
-            else if (hoveredNode) { color = [74, 74, 74, 13]; }
-            else { color = [74, 74, 74, baseA | 0]; }
-            const width = incident ? clamp(1.0 * z, 0.6, 1.6) : clamp(0.75 * z, 0.4, 1.2);
-            edgesData.push({ start: [s.x, s.y], end: [t.x, t.y], color, width });
+            if (!incident && !edgeShouldShow(i, band)) continue;
+            const start = [s.x, s.y], end = [t.x, t.y];
+            if (incident) {
+                const ref = hoveredNode || selectedNode;
+                const color = catRGB(getCategoryColor, ref.category, catCache).concat(235);
+                incidentData.push({ start, end, color, width: clamp(1.6 * z, 1.6, 2.8) });
+            } else {
+                const w = edgeWeights[i];
+                const baseA = clamp((w / maxEdgeWeight) * 0.3, 0.1, 0.3) * 255;
+                const color = hoveredNode ? [74, 74, 74, 13] : [74, 74, 74, baseA | 0];
+                edgesData.push({ start, end, color, width: clamp(0.75 * z, 0.4, 1.2) });
+            }
         }
+        if (incidentData.length) edgesData.push(...incidentData);
 
         const GILT = [196, 185, 152];
         const nodesLayer = new lib.ScatterplotLayer({

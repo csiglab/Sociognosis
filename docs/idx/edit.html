@@ -4098,6 +4098,7 @@ let labelOpacity = {};     // id -> current opacity
 /* Viewport coverage metric: visible world-width / full graph width.
    Macro ≈ 1.0, Meso ≈ 0.3–0.6, Micro < 0.2 */
 let viewportCoverage = 1.0;
+let localNodeDensity = 0, localEdgeDensity = 0;
 
 /* Offscreen canvas for community silhouettes (recomputed on layout change) */
 let silhouetteCanvas = null, silhouetteCtx = null;
@@ -5508,6 +5509,7 @@ function draw() {
     if (!deck) return;
     updateCameraTween(performance.now());
     computeViewportCoverage();
+    computeLocalDensity();
     if (silhouetteDirty) {
         computeHulls();
         renderSilhouettes();
@@ -5519,7 +5521,7 @@ function draw() {
     // Labels must follow the camera: rebuild them when the zoom band changes or
     // the zoom level shifts enough that the decluttered set should differ.
     const band = zoomBand();
-    if (lastBand !== band) { lastBand = band; labelsDirty = true; }
+    if (lastBand !== band) { lastBand = band; labelsDirty = true; deckDirty = true; }
     if (lastLabelZ < 0 || Math.abs(cam.z - lastLabelZ) / Math.max(cam.z, 1e-6) > 0.12) {
         lastLabelZ = cam.z; labelsDirty = true;
     }
@@ -5768,6 +5770,26 @@ function computeViewportCoverage() {
     viewportCoverage = clamp(visW / graphW, 0, 2);
 }
 
+function computeLocalDensity() {
+    const wl = -cam.x / cam.z, wr = (W - cam.x) / cam.z;
+    const wt = -cam.y / cam.z, wb = (H - cam.y) / cam.z;
+    let nn = 0, ne = 0;
+    for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        if (n.x >= wl && n.x <= wr && n.y >= wt && n.y <= wb) nn++;
+    }
+    for (let j = 0; j < edges.length; j++) {
+        const e = edges[j];
+        const s = nodeMap[e.source], t = nodeMap[e.target];
+        if (!s || !t) continue;
+        const sin = s.x >= wl && s.x <= wr && s.y >= wt && s.y <= wb;
+        const tin = t.x >= wl && t.x <= wr && t.y >= wt && t.y <= wb;
+        if (sin || tin) ne++;
+    }
+    localNodeDensity = nn;
+    localEdgeDensity = ne;
+}
+
 /* ═══════ SIMULATION ═══════ */
 function simulate() {
     alpha *= ALPHA_DECAY;
@@ -5837,9 +5859,15 @@ function edgeShouldShow(i, band) {
 }
 
 function zoomBand() {
-    if (viewportCoverage > 0.7) return 'macro';
-    if (viewportCoverage > 0.2) return 'meso';
-    return 'micro';
+    let b;
+    if (viewportCoverage > 0.7) b = 'macro';
+    else if (viewportCoverage > 0.2) b = 'meso';
+    else b = 'micro';
+    if (localNodeDensity > 0) {
+        if (localNodeDensity <= 60) b = 'micro';
+        else if (localNodeDensity <= 200 && b === 'macro') b = 'meso';
+    }
+    return b;
 }
 
 /* ═══════ LABEL VISIBILITY (tier + band + hover/selected) ═══════ */
@@ -6856,9 +6884,10 @@ function isNewOrEmptyNode(node) {
 /* Fly to a node, easing it to the centre over ~600ms. Used by search + selection. */
 function fitToNode(node) {
     if (!node) return;
-    const tx = W / 2 - node.x * cam.z;
-    const ty = H / 2 - node.y * cam.z;
-    tweenCamera(tx, ty, cam.z, 600);
+    const d = (nodeDegrees[node.id] || 0);
+    let tz = 1.3 + 0.6 * Math.log2(Math.max(1, d));
+    tz = clamp(tz, cam.z, 6);
+    tweenCamera(W / 2 - node.x * tz, H / 2 - node.y * tz, tz, 600);
 }
 
 /* Mark graph metrics + silhouettes dirty — called on any structural change */
@@ -7590,7 +7619,7 @@ function setupEventHandlers() {
         canvas.style.cursor = hoveredNode ? 'pointer' : 'grab';
     });
     
-    canvas.addEventListener('mouseleave', () => { hoveredNode = null; hideTooltip(); draggedNode = null; isPanning = false; });
+    canvas.addEventListener('mouseleave', () => { hoveredNode = null; hideTooltip(); deckDirty = true; draggedNode = null; isPanning = false; });
     canvas.addEventListener('wheel', e => {
         e.preventDefault();
         const rect = canvas.getBoundingClientRect();
@@ -7600,6 +7629,81 @@ function setupEventHandlers() {
         const nz = clamp(cam.z * factor, 0.1, 5);
         cam.x = sx - wp.x * nz; cam.y = sy - wp.y * nz; cam.z = nz;
     }, { passive: false });
+
+    if ('ontouchstart' in window) {
+        let touchStart = null, pinch = null;
+        const tDist = (a, b) => { const dx = a.clientX - b.clientX, dy = a.clientY - b.clientY; return Math.sqrt(dx * dx + dy * dy); };
+        const tMid = (a, b) => { const r = canvas.getBoundingClientRect(); return { x: ((a.clientX + b.clientX) / 2) - r.left, y: ((a.clientY + b.clientY) / 2) - r.top }; };
+
+        canvas.addEventListener('touchstart', e => {
+            if (e.touches.length === 2) {
+                touchStart = null; draggedNode = null; isPanning = false;
+                pinch = { dist: tDist(e.touches[0], e.touches[1]) };
+                return;
+            }
+            if (e.touches.length !== 1) { touchStart = null; return; }
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const sx = e.touches[0].clientX - rect.left, sy = e.touches[0].clientY - rect.top;
+            const node = hitTest(sx, sy);
+            touchStart = { x: sx, y: sy, node, moved: false, t: Date.now() };
+            if (node) { draggedNode = node; canvas.style.cursor = 'grabbing'; }
+            else { isPanning = true; panStart = { x: e.touches[0].clientX - cam.x, y: e.touches[0].clientY - cam.y }; }
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', e => {
+            e.preventDefault();
+            if (pinch && e.touches.length === 2) {
+                const d = tDist(e.touches[0], e.touches[1]);
+                if (pinch.dist > 0) {
+                    const m = tMid(e.touches[0], e.touches[1]);
+                    const wp = screenToWorld(m.x, m.y);
+                    const nz = clamp(cam.z * (d / pinch.dist), 0.1, 5);
+                    cam.x = m.x - wp.x * nz; cam.y = m.y - wp.y * nz; cam.z = nz;
+                    pinch.dist = d;
+                }
+                return;
+            }
+            if (!touchStart || e.touches.length !== 1) return;
+            const rect = canvas.getBoundingClientRect();
+            const sx = e.touches[0].clientX - rect.left, sy = e.touches[0].clientY - rect.top;
+            if (Math.abs(sx - touchStart.x) > 6 || Math.abs(sy - touchStart.y) > 6) touchStart.moved = true;
+            if (draggedNode && touchStart.moved) {
+                const wp = screenToWorld(sx, sy);
+                draggedNode.x = wp.x; draggedNode.y = wp.y; draggedNode.vx = 0; draggedNode.vy = 0; deckDirty = true;
+            } else if (isPanning) {
+                cam.x = e.touches[0].clientX - panStart.x; cam.y = e.touches[0].clientY - panStart.y;
+            }
+        }, { passive: false });
+
+        const endTouch = () => {
+            const ts = touchStart; touchStart = null;
+            draggedNode = null; isPanning = false;
+            canvas.style.cursor = 'grab';
+            if (!ts) return;
+            if (ts.moved || (Date.now() - ts.t) > 450) return;
+            if (ts.node) {
+                selectNode(ts.node);
+                hoveredNode = ts.node;
+                deckDirty = true;
+                showTooltip(ts.node, ts.x, ts.y);
+            } else {
+                hoveredNode = null; hideTooltip(); deckDirty = true;
+            }
+        };
+
+        canvas.addEventListener('touchend', e => {
+            if (pinch && e.touches.length < 2) pinch = null;
+            if (e.touches.length > 0) return;
+            e.preventDefault();
+            endTouch();
+        }, { passive: false });
+
+        canvas.addEventListener('touchcancel', () => {
+            pinch = null; touchStart = null; draggedNode = null; isPanning = false;
+            hoveredNode = null; hideTooltip();
+        }, { passive: false });
+    }
     
     document.getElementById('fit-btn').addEventListener('click', fitCamera);
     document.getElementById('link-mode-btn').addEventListener('click', () => {

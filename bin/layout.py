@@ -140,6 +140,66 @@ def fr_layout(members, edge_pairs, iters, width, height, rng):
     return pos
 
 
+def _relax_pair(points, i, j, min_sep, rng):
+    xi, yi = points[i]
+    xj, yj = points[j]
+    dx = xi - xj
+    dy = yi - yj
+    d2 = dx * dx + dy * dy
+    if d2 >= min_sep * min_sep:
+        return False
+    if d2 < 1e-6:
+        a = rng.random() * 6.283185307179586
+        dx, dy = math.cos(a), math.sin(a)
+        d = 1.0
+    else:
+        d = math.sqrt(d2)
+    push = (min_sep - d) * 0.5
+    ux, uy = dx / d, dy / d
+    points[i][0] = xi + ux * push
+    points[i][1] = yi + uy * push
+    points[j][0] = xj - ux * push
+    points[j][1] = yj - uy * push
+    return True
+
+
+def resolve_overlaps(points, min_sep, rng, max_passes=40):
+    """Enforce a minimum pairwise separation via spatial-hash repulsion.
+
+    Guarantees no two points end closer than ``min_sep``. Each pass is O(N) for
+    sparse layouts (the sunflower field has no overlaps, so it early-exits after
+    one clean pass); only dense component pile-ups do real work. Deterministic
+    via the seeded ``rng`` (used only to break exact coincidences).
+    """
+    if not points:
+        return points
+    for _ in range(max_passes):
+        grid = {}
+        for i, p in enumerate(points):
+            grid.setdefault((int(p[0] // min_sep), int(p[1] // min_sep)), []).append(i)
+        changed = False
+        for (gx, gy), idxs in grid.items():
+            nbr = []
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    if dx == 0 and dy == 0:
+                        continue
+                    g = grid.get((gx + dx, gy + dy))
+                    if g:
+                        nbr.extend(g)
+            for a in range(len(idxs)):
+                i = idxs[a]
+                for b in range(a + 1, len(idxs)):
+                    if _relax_pair(points, i, idxs[b], min_sep, rng):
+                        changed = True
+                for k in nbr:
+                    if k > i and _relax_pair(points, i, k, min_sep, rng):
+                        changed = True
+        if not changed:
+            break
+    return points
+
+
 def compute_layout(data):
     """Return {id: [x, y]} for every node in data."""
     ids = []
@@ -185,18 +245,14 @@ def compute_layout(data):
             if s in comp_set and t in comp_set:
                 edge_pairs.append((local_idx[s], local_idx[t]))
 
-        local_span = max(40.0, SPACING * 0.9 * math.sqrt(size))
+        local_span = max(SPACING, SPACING * math.sqrt(size))
         pos = fr_layout(members, edge_pairs, 350, local_span, local_span, rng)
 
-        # Anchor at the centroid of the component's spiral slots.
         cx = sum(base[id_index[nid]][0] for nid in members) / size
         cy = sum(base[id_index[nid]][1] for nid in members) / size
 
-        # Scale local coords to a footprint smaller than SPACING so the cluster
-        # stays tight at its slot without invading neighbours.
         max_r = max((math.hypot(p[0], p[1]) for p in pos), default=0.0)
-        target_r = min(SPACING * 0.45, local_span / 2)
-        scale = (target_r / max_r) if max_r > 1e-6 else 1.0
+        scale = (local_span / 2.0 / max_r) if max_r > 1e-6 else 1.0
 
         for k, nid in enumerate(members):
             out[nid] = [cx + pos[k][0] * scale, cy + pos[k][1] * scale]
@@ -205,6 +261,13 @@ def compute_layout(data):
     for i, nid in enumerate(ids):
         if nid not in out:
             out[nid] = [base[i][0], base[i][1]]
+
+    # 4. Guarantee minimum separation everywhere (no two nodes on top of each
+    #    other). Deterministic spatial-hash repulsion; cheap on sparse layouts.
+    pts = [out[nid] for nid in ids]
+    resolve_overlaps(pts, SPACING * 0.45, rng)
+    for i, nid in enumerate(ids):
+        out[nid] = pts[i]
 
     return out
 
