@@ -20,12 +20,14 @@ import json
 import os
 import sys
 import tempfile
+import time
 from functools import partial
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 
 SAVE_ENDPOINT = "/api/graph/save"
 HEALTH_ENDPOINT = "/api/health"
+LAYOUT_RECOMPUTE_ENDPOINT = "/api/layout/recompute"
 
 
 class SyncHandler(SimpleHTTPRequestHandler):
@@ -92,6 +94,8 @@ class SyncHandler(SimpleHTTPRequestHandler):
 
         if path == SAVE_ENDPOINT:
             self._handle_save()
+        elif path == LAYOUT_RECOMPUTE_ENDPOINT:
+            self._handle_layout_recompute()
         else:
             self.send_error(404, "Not Found")
 
@@ -197,6 +201,64 @@ class SyncHandler(SimpleHTTPRequestHandler):
             )
 
     # ------------------------------------------------------------------
+    # Layout recompute endpoint (on demand from the editor)
+    # ------------------------------------------------------------------
+
+    def _handle_layout_recompute(self):
+        """POST /api/layout/recompute -> regenerate layout.json now.
+
+        Decoupled from save so saves stay fast; the editor calls this
+        explicitly (e.g. its "Recompute Layout" button)."""
+        try:
+            result = self._recompute_layout()
+            if "layout_error" in result:
+                self._send_json(
+                    {"status": "error", "message": result["layout_error"]},
+                    500,
+                )
+            else:
+                self._send_json({"status": "ok", **result})
+        except Exception as exc:  # pragma: no cover - defensive
+            self._send_json(
+                {"status": "error", "message": str(exc)},
+                500,
+            )
+
+    # ------------------------------------------------------------------
+    # Layout recompute (triggered after every successful save)
+    # ------------------------------------------------------------------
+
+    def _recompute_layout(self):
+        """Recompute layout.json (sibling of data file) via bin/layout.py.
+
+        Best-effort: a layout failure is reported, not raised. Returns a dict
+        consumed by the save/recompute response handlers.
+        """
+        layout_file = self.data_file.parent / "layout.json"
+        try:
+            bin_dir = os.path.dirname(os.path.abspath(__file__))
+            if bin_dir not in sys.path:
+                sys.path.insert(0, bin_dir)
+            import layout as layout_mod  # noqa: E402
+
+            node_count, elapsed = layout_mod.recompute(
+                self.data_file,
+                layout_file,
+            )
+            sys.stderr.write(
+                f"[sync] layout recomputed: {node_count} nodes "
+                f"in {elapsed * 1000:.0f} ms -> {layout_file}\n"
+            )
+            return {
+                "layout": "recomputed",
+                "layout_nodes": node_count,
+                "layout_ms": int(elapsed * 1000),
+            }
+        except Exception as exc:  # pragma: no cover - defensive
+            sys.stderr.write(f"[sync] layout recompute failed: {exc}\n")
+            return {"layout_error": str(exc)}
+
+    # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
 
@@ -286,6 +348,9 @@ def main():
     print("──────────────────────────────────────────────")
     print(
         f"  Save:    http://{display_host}:{args.port}{SAVE_ENDPOINT}"
+    )
+    print(
+        f"  Layout:  http://{display_host}:{args.port}{LAYOUT_RECOMPUTE_ENDPOINT}"
     )
     print(
         f"  Health:  http://{display_host}:{args.port}{HEALTH_ENDPOINT}"

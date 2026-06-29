@@ -107,7 +107,7 @@
 
 Features:
 
-1. Show a `graph - force layout` - allow the search of the nodes - and simple edit - like adding links between the nodes.
+1. Show the graph via a **WebGL renderer (deck.gl)** over a **precomputed static layout** (`layout.json`). Allow search of the nodes and simple editing (e.g. adding links between nodes). See [Rendering & Data Pipeline](#rendering--data-pipeline).
 2. Add a side panel that allow the full edit - including adding links.
 3. Allow to save the new data.json
 4. Alow to add new nodes - both in json - and using the form - to fill the fields.
@@ -118,6 +118,89 @@ Features:
     - Use the deepseek api  -  `deepseek-v4-flash` - to output the json - and used that to append the new node.
 8. Use AI also to help to fixed - nodes - and create a diff visualizer - to accept the new changes - use the stack of point 7.
 9. JSON Schema and DeepSeek API elements, such as the route and token, should be entered through the interface.
+
+## Rendering & Data Pipeline
+
+The editor (`docs/idx/edit.html`) renders the sociogenesis space at scale (target:
+200,000+ nodes). The original Canvas2D + per-frame O(N²) force simulation could
+not scale beyond a few thousand nodes, so the architecture is now:
+
+- **Precomputed static layout.** Node positions live in `docs/data/idx/layout.json`
+  (`{ "<id>": [x, y], ... }`). There is no live global force simulation at render
+  time — positions are read once at load. This is what makes the graph fast.
+- **WebGL renderer (deck.gl).** The Canvas2D draw pipeline was replaced by a
+  deck.gl `Deck` with an `OrthographicView`. Layers: `ScatterplotLayer` (nodes),
+  `LineLayer` (edges), `TextLayer` (labels), plus glow/link-preview layers. GPU
+  picking (`deck.pickObject`) replaces O(N) hit-testing. The existing `cam`
+  remains the camera source of truth and is pushed into deck's `viewState` each
+  frame; layers rebuild only when graph/highlight state changes.
+- **Local edits only.** Because the graph is near-fully-disconnected (very few
+  edges), structural edits (add node / create link / delete) re-layout only the
+  touched connected component via `relaxComponent()` — O(component²), independent
+  of total N.
+
+### Data + layout contract (required to render)
+
+The graph **can only be rendered if both files are present and non-empty**:
+
+| File | Purpose | Source |
+|------|---------|--------|
+| `docs/data/idx/data.json` | Node/edge content (this schema). | Authored / edited. |
+| `docs/data/idx/layout.json` | Precomputed `[x, y]` per node id. | `python bin/layout.py` |
+
+If either is missing or empty, the editor holds its loading overlay open with an
+actionable error message instead of dropping the user into an empty or
+randomly-scattered canvas. The overlay mirrors `docs/idx/index.html`'s loader.
+
+### Generating / refreshing the layout
+
+Layout is **pure-Python** (`bin/layout.py`, stdlib only):
+
+```
+python bin/layout.py
+# or explicitly:
+python bin/layout.py --data-file docs/data/idx/data.json --layout-file docs/data/idx/layout.json
+```
+
+Algorithm: sunflower (phyllotaxis) packing for the isolated-node majority +
+per-component Fruchterman–Reingold for the tiny connected clusters. Deterministic,
+linear-time. ~0.5 s for 4k nodes, ~5 s for 200k nodes.
+
+**On-demand recompute (endpoint):** layout recomputation is a dedicated sync.py
+endpoint — `POST /api/layout/recompute` — decoupled from save so saves stay fast.
+The editor's **"Recompute Layout"** button (next to Save) calls it, then reloads
+`layout.json` and re-applies positions in place. The response reports
+`layout: "recomputed"`, `layout_nodes`, `layout_ms`.
+
+**Missing-position fallback:** if a node exists in `data.json` but not in
+`layout.json` (e.g. a freshly added node before a recompute), the editor gives it
+a random position within the current layout bounds rather than dropping it at the
+origin, so it always appears somewhere reasonable inside the field.
+
+### deck.gl bundle (offline, vendored)
+
+The renderer is self-hosted (no runtime CDN). Two vendored, committed assets live
+under `docs/idx/vendor/`:
+
+- `deck.min.js` (~660 KB) — deck.gl (`Deck`, `OrthographicView`, `ScatterplotLayer`,
+  `LineLayer`, `TextLayer`), exposed as `window.SocioDeck`.
+- `socio-graph.js` — the shared Sociognosis renderer (`window.SocioGraph`): pure
+  functions (deck factory, cam→viewState, static layer builder, greedy-decluttered
+  label builder, community-silhouette + minimap helpers, layout seeding). Both
+  `edit.html` and `index.html` import it and drive it from their own state, so the
+  two pages render identically and stay in sync.
+
+The project itself is Python-only — there is no committed Node build step. The
+bundle is regenerated only when upgrading deck.gl (one-off, not part of the
+normal workflow):
+
+```bash
+# temporary, throwaway — produces docs/idx/vendor/deck.min.js
+npm install deck.gl esbuild
+echo "import {Deck,OrthographicView,OrthographicController,ScatterplotLayer,LineLayer,TextLayer} from 'deck.gl';
+export {Deck,OrthographicView,OrthographicController,ScatterplotLayer,LineLayer,TextLayer};" > entry.js
+esbuild entry.js --bundle --format=iife --global-name=SocioDeck --minify --outfile=docs/idx/vendor/deck.min.js
+```
 
 ## Data Schema
 

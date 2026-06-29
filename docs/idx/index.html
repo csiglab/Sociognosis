@@ -133,6 +133,17 @@
             z-index: 2;
         }
 
+        /* Community silhouette backdrop — sits behind the (transparent) deck.gl canvas. */
+        #silhouette-view {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            display: block;
+        }
+
         canvas#graph-canvas:active { cursor: grabbing; }
         canvas#graph-canvas.locked { cursor: default; }
 
@@ -1316,6 +1327,7 @@
                 <line x1="20" y1="20" x2="20" y2="4" />
             </svg>
         </button>
+        <canvas id="silhouette-view" aria-hidden="true"></canvas>
         <canvas id="graph-canvas"></canvas>
 
         <div id="tooltip">
@@ -1370,6 +1382,8 @@
         <div class="stats-body" id="stats-body"></div>
     </div>
 
+    <script src="vendor/deck.min.js"></script>
+    <script src="vendor/socio-graph.js"></script>
     <script>
         /* ═══════ UTILITIES ═══════ */
         function hexToRGBA(hex, alpha) {
@@ -1451,7 +1465,7 @@
         var activeCategories = new Set();
         var catVisibility = {};
 
-        var canvas = document.getElementById('graph-canvas'), ctx = canvas.getContext('2d');
+        var canvas = document.getElementById('graph-canvas'), ctx = null;
 
         /* ═══════ SIMULATION CONSTANTS ═══════ */
         /* Aligned with edit.html Oxford layout (REPULSION=280, LINK_DISTANCE=100).
@@ -1484,13 +1498,35 @@
         /* Pre-computed edge weights for progressive filtering */
         var edgeWeights = null, maxEdgeWeight = 1;
 
+        /* ═══════ DECK.GL RENDERER STATE (shared socio-graph module) ═══════ */
+        var deck = null, silViewCanvas = null, silViewCtx = null, silBounds = null;
+        var staticLayers = [], deckDirty = true, labelsDirty = true;
+        var lastBand = null, lastLabelZ = -1, lastLabelCount = 0;
+        var layoutData = null;            /* { id: [x, y] } from layout.json */
+        var _catRGBCache = {};            /* category -> [r,g,b], shared with the module */
+
         /* ═══════ VIEW HELPERS ═══════ */
         function sCV() {
             var r = canvas.parentElement.getBoundingClientRect();
             W = r.width; H = r.height;
-            canvas.width = W * devicePixelRatio;
-            canvas.height = H * devicePixelRatio;
-            ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+            /* The deck.gl WebGL canvas manages its own drawing buffer; the 2D
+               ctx is no longer used for the graph. Keep the silhouette backdrop
+               canvas sized to the viewport. */
+            if (silViewCanvas) {
+                silViewCanvas.width = Math.max(1, W * devicePixelRatio);
+                silViewCanvas.height = Math.max(1, H * devicePixelRatio);
+            }
+            if (deck) deck.setProps({ width: W, height: H });
+            silhouetteDirty = true;
+        }
+
+        function setupRenderer() {
+            silViewCanvas = document.getElementById('silhouette-view');
+            silViewCtx = silViewCanvas.getContext('2d');
+            var lib = window.SocioDeck;
+            if (!lib) { console.error('deck.gl bundle (vendor/deck.min.js) not loaded'); return; }
+            sCV();
+            deck = SocioGraph.createDeck(lib, canvas, W, H);
         }
 
         function resize() { sCV(); if (dLoaded) fitCamera(false); }
@@ -1814,60 +1850,81 @@
         /* ═══════ DRAWING — Oxford layered pipeline ═══════ */
         /* Layers: (1) silhouettes → (2) edges → (3) nodes → (4) labels.
            Depth by shadow not glow; matte velvet nodes; faint graphite threads. */
-        function draw() {
-            var now = performance.now();
-            updateCameraTween(now);
-            computeViewportCoverage();
-            var band = zoomBand();
-            var showFlow = document.getElementById('lens-flow').checked;
-            var showSilhouettes = document.getElementById('lens-hulls').checked;
-            var showHullOutlines = document.getElementById('lens-heatmap').checked;
-            var showCent = document.getElementById('lens-centrality').checked;
-            var showConfCol = document.getElementById('lens-confidence-color').checked;
-            var showObs = document.getElementById('lens-observability').checked;
+        /* Visible nodes/edges (category + temporal filter). */
+        function visNodes() { return nodes.filter(function (n) { return n.visible; }); }
 
-            /* Recompute silhouettes when layout has shifted substantially */
+        /* Static deck.gl layers for the currently visible set. Edge weights are
+           computed on the filtered edge array so indices stay aligned. */
+        function buildStaticLayers() {
+            var vn = visNodes();
+            var vmap = {}; vn.forEach(function (n) { vmap[n.id] = n; });
+            var ve = gE.filter(function (e) { return e.visible && vmap[e.source] && vmap[e.target]; });
+            var ew = new Array(ve.length), mw = 1;
+            for (var i = 0; i < ve.length; i++) {
+                var e = ve[i]; var w = (nodeDegrees[e.source] || 0) + (nodeDegrees[e.target] || 0);
+                ew[i] = w; if (w > mw) mw = w;
+            }
+            return SocioGraph.buildStaticLayers({
+                lib: window.SocioDeck, nodes: vn, cam: cam, band: zoomBand(),
+                edges: ve, nodeMap: vmap,
+                hoveredNode: hovN, selectedNode: selN,
+                searchHighlights: new Set(), linkSourceNode: null, linkMode: false,
+                nodeRadius: nodeRadius, getCategoryColor: getCategoryColor, catCache: _catRGBCache,
+                edgeWeights: ew, maxEdgeWeight: mw,
+                edgeShouldShow: function (i, band) {
+                    var w = ew[i];
+                    if (band === 'macro') return w >= mw * 0.95;
+                    if (band === 'meso') {
+                        var ee = ve[i];
+                        var ts = labelTiers[ee.source] !== 'micro' || labelTiers[ee.target] !== 'micro';
+                        return ts || w >= mw * 0.9;
+                    }
+                    return true;
+                },
+                hexToRGBA: hexToRGBA
+            });
+        }
+
+        function buildLabelsLayer() {
+            var r = SocioGraph.buildLabelsLayer({
+                lib: window.SocioDeck, nodes: visNodes(), cam: cam, W: W, H: H, band: zoomBand(),
+                labelTargetOpacity: labelTargetOpacity, labelTiers: labelTiers,
+                nodeDegrees: nodeDegrees, nodeRadius: nodeRadius,
+                hoveredNode: hovN, selectedNode: selN
+            });
+            lastLabelCount = r.count;
+            return r.layer;
+        }
+
+        function draw() {
+            if (!deck) return;
+            updateCameraTween(performance.now());
+            computeViewportCoverage();
+
             if (silhouetteDirty) {
-                computeHulls();
-                if (showSilhouettes) renderSilhouettes();
+                communityHulls = SocioGraph.computeHulls(visNodes(), categoryColorIndex);
+                var sr = SocioGraph.renderSilhouettes(silhouetteCanvas, silhouetteCtx, communityHulls, COMMUNITY_COLORS, hexToRGBA);
+                silhouetteCanvas = sr.canvas; silhouetteCtx = sr.ctx2d; silBounds = sr.bounds;
                 silhouetteDirty = false;
             }
-            /* Recompute edge weights if structure changed */
-            if (edgeWeights === null || edgeWeights.length !== gE.length) computeEdgeWeights();
 
-            ctx.clearRect(0, 0, W, H);
-
-            /* ── LAYER 0: Category hull outlines (legacy heatmap lens) ── */
-            if (showHullOutlines) drawHullOutlines();
-
-            /* ── LAYER 1: Community silhouettes (background clouds) ── */
-            if (showSilhouettes) {
-                var silhouetteAlpha = band === 'macro' ? 1 : band === 'meso' ? 0.5 : 0.15;
-                if (silhouetteCanvas && silhouetteCanvas.width > 1 && silhouetteAlpha > 0 && nodes.length) {
-                    var vis = nodes.filter(function (n) { return n.visible; });
-                    if (vis.length) {
-                        var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-                        vis.forEach(function (n) { if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x; if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y; });
-                        var pad = 120;
-                        var tlx = (minX - pad) * cam.z + cam.x;
-                        var tly = (minY - pad) * cam.z + cam.y;
-                        var sw = silhouetteCanvas.width * cam.z;
-                        var sh = silhouetteCanvas.height * cam.z;
-                        ctx.globalAlpha = silhouetteAlpha;
-                        ctx.drawImage(silhouetteCanvas, tlx, tly, sw, sh);
-                        ctx.globalAlpha = 1;
-                    }
-                }
+            var band = zoomBand();
+            if (lastBand !== band) { lastBand = band; labelsDirty = true; }
+            if (lastLabelZ < 0 || Math.abs(cam.z - lastLabelZ) / Math.max(cam.z, 1e-6) > 0.12) {
+                lastLabelZ = cam.z; labelsDirty = true;
             }
 
-            /* ── LAYER 2: Edges (midground, drawn before nodes) ── */
-            drawEdgesOxford(band, showFlow);
+            deck.setProps({ viewState: SocioGraph.viewStateFromCam(cam, W, H) });
+            if (deckDirty) { staticLayers = buildStaticLayers(); deckDirty = false; labelsDirty = true; }
+            if (labelsDirty) {
+                var lbl = buildLabelsLayer();
+                deck.setProps({ layers: lbl ? staticLayers.concat([lbl]) : staticLayers });
+                labelsDirty = false;
+            }
 
-            /* ── LAYER 3: Nodes (foreground, matte velvet) ── */
-            drawNodesOxford(band, showCent, showConfCol, showObs);
-
-            /* ── LAYER 4: Labels (parchment text with protective dark mask) ── */
-            drawLabelsOxford(band);
+            var showSil = document.getElementById('lens-hulls') ? document.getElementById('lens-hulls').checked : true;
+            if (showSil) SocioGraph.drawSilhouetteView(silViewCtx, silViewCanvas, silhouetteCanvas, silBounds, cam, devicePixelRatio);
+            else if (silViewCtx) { silViewCtx.setTransform(1, 0, 0, 1, 0, 0); silViewCtx.clearRect(0, 0, silViewCanvas.width, silViewCanvas.height); }
         }
 
         /* Legacy hull outlines (heatmap lens) — radial gradient fills + strokes. */
@@ -2140,10 +2197,11 @@
                 e.visible = s && t && s.visible && t.visible;
             });
             document.getElementById('time-visible-count').textContent = vc;
-            /* Structure changed — recompute metrics, weights, silhouettes */
+            /* Structure changed — recompute metrics, weights, silhouettes, deck layers */
             computeMetrics();
             edgeWeights = null;
             silhouetteDirty = true;
+            deckDirty = true; labelsDirty = true;
             recomputeStatsIfOpen();
         }
 
@@ -2214,6 +2272,8 @@
                 catColor(r.category);
             });
 
+            SocioGraph.applyLayoutToNodes(nodes, layoutData);
+
             data.forEach(function (r) {
                 if (!r.relationships) return;
                 r.relationships.forEach(function (rel) {
@@ -2243,8 +2303,9 @@
             buildCategoryLegend();
             uFilt();
 
-            /* Settle the layout before fitting, then snap to the fit view */
-            warmupLayout(300);
+            /* Positions are precomputed (layout.json); compute metrics + overlays. */
+            computeMetrics();
+            silhouetteDirty = true; deckDirty = true;
             sCV();
             fitCamera(true);
             dLoaded = true;
@@ -2904,6 +2965,7 @@
                 dragN.vx = 0;
                 dragN.vy = 0;
                 silhouetteDirty = true;
+                deckDirty = true;
                 return;
             }
             if (isPan) {
@@ -2915,6 +2977,7 @@
             var nd = hitNode(sx, sy);
             if (nd !== hovN) {
                 hovN = nd;
+                deckDirty = true; labelsDirty = true;
                 if (nd) showTT(nd, sx, sy);
                 else hideTT();
             } else if (nd) showTT(nd, sx, sy);
@@ -2938,6 +3001,7 @@
                     selN = nd; /* Select */
                 }
                 updateFocusIndicator();
+                deckDirty = true; labelsDirty = true;
             }
         });
 
@@ -2973,19 +3037,9 @@
         });
 
         function hitNode(sx, sy) {
-            var wp = s2w(sx, sy);
-            var best = null, bestD = Infinity;
-            nodes.forEach(function (n) {
-                if (!n.visible) return;
-                var dx = n.x - wp.x, dy = n.y - wp.y;
-                var d2 = dx * dx + dy * dy;
-                var r = nodeRadius(n) * 1.5; /* generous hit area */
-                if (d2 < r * r && d2 < bestD) {
-                    bestD = d2;
-                    best = n;
-                }
-            });
-            return best;
+            if (!deck) return null;
+            var info = deck.pickObject({ x: sx, y: sy, radius: 6, layerIds: ['nodes'] });
+            return info && info.object ? info.object : null;
         }
 
         function showTT(nd, sx, sy) {
@@ -3101,24 +3155,54 @@
             });
         });
 
+        /* Renderer introspection hook (console: window.__indexDebug()). */
+        window.__indexDebug = function () {
+            var pick = null;
+            try { var info = deck ? deck.pickObject({ x: W / 2, y: H / 2, radius: 8, layerIds: ['nodes'] }) : null; pick = info && info.object ? info.object.name : null; } catch (e) {}
+            return {
+                deckReady: !!deck, nodes: nodes.length, edges: gE.length,
+                visible: visNodes().length, camz: cam.z, band: zoomBand(),
+                labels: lastLabelCount, silBounds: !!silBounds, dLoaded: dLoaded,
+                pickCenter: pick
+            };
+        };
+
         /* ═══════ BOOT ═══════ */
-        resize(); render(); window.addEventListener('resize', resize);
+        setupRenderer();
+        render();
+        window.addEventListener('resize', resize);
 
         var loaderMsg = document.getElementById('loader-msg');
+        function failLoad(msg, hint) {
+            loaderMsg.innerHTML = '<span style="color:#c47d8a">' + msg + '</span>' +
+                (hint ? '<br><span style="color:#9290aa;font-size:.92em">' + hint + '</span>' : '');
+        }
         loaderMsg.textContent = 'Loading epistemic space';
+
         fetch('../data/idx/data.json')
-            .then(function (r) {
-                if (!r.ok) throw new Error('HTTP ' + r.status);
-                return r.json();
-            })
+            .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
             .then(function (d) {
-                loaderMsg.textContent = 'Building graph';
                 var arr = Array.isArray(d) ? d : (d.nodes || d.categories || []);
                 if (!arr.length) throw new Error('Empty dataset');
+                loaderMsg.textContent = 'Loading layout';
+                return fetch('../data/idx/layout.json', { cache: 'no-cache' })
+                    .then(function (r) { if (!r.ok) throw new Error('layout missing'); return r.json(); })
+                    .then(function (L) {
+                        if (!L || typeof L !== 'object' || !Object.keys(L).length) throw new Error('Empty layout');
+                        layoutData = L;
+                        loaderMsg.textContent = 'Building graph';
+                        return arr;
+                    });
+            })
+            .then(function (arr) {
                 setTimeout(function () { initGraph(arr); }, 50);
             })
             .catch(function (err) {
-                loaderMsg.innerHTML = '<span style="color:#c47d8a">Failed to load data.<br>' + err.message + '</span>';
+                var m = String(err.message || err);
+                var hint = (m.indexOf('layout') >= 0)
+                    ? 'Rendering requires a precomputed layout.json — generate it with: python bin/layout.py'
+                    : 'Start the sync server: python bin/sync.py --data-file docs/data/idx/data.json';
+                failLoad('Failed to load: ' + m, hint);
             });
     </script>
 </body>

@@ -217,6 +217,17 @@ body.panel-collapsed { grid-template-columns: 1fr 0; }
     z-index: 2;
 }
 
+/* Community silhouette backdrop — sits behind the (transparent) deck.gl canvas. */
+#silhouette-view {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    display: block;
+}
+
 #graph-canvas:active { cursor: grabbing; }
 #graph-canvas.linking { cursor: crosshair; }
 
@@ -3316,6 +3327,67 @@ select:focus-visible {
     from { opacity: 0; transform: translateX(40px); }
     to   { opacity: 1; transform: translateX(0); }
 }
+/* ═══════ LOADING / FATAL OVERLAY — mirrors index.html ═══════ */
+#loading-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-void);
+    z-index: 500;
+    transition: opacity .8s ease;
+}
+#loading-overlay.hidden { opacity: 0; pointer-events: none; }
+.loader-dots { display: flex; gap: 7px; }
+.loader-dots span {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--accent-copper);
+    opacity: .25;
+    animation: dotPulse 1.4s ease-in-out infinite;
+}
+.loader-dots span:nth-child(2) { animation-delay: .16s; }
+.loader-dots span:nth-child(3) { animation-delay: .32s; }
+@keyframes dotPulse { 0%, 80%, 100% { opacity: .25; transform: scale(.8); } 40% { opacity: 1; transform: scale(1.3); } }
+#loading-overlay.error .loader-dots { display: none; }
+#loading-overlay.error::before {
+    content: '✕';
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    color: var(--accent-rose);
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.loader-text {
+    font-family: var(--font-mono);
+    font-size: .58rem;
+    color: var(--text-secondary);
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: .22em;
+    text-align: center;
+    max-width: 80vw;
+}
+#loading-overlay.error .loader-text { color: var(--accent-rose); text-transform: none; letter-spacing: .04em; font-size: .72rem; }
+.loader-hint {
+    font-family: var(--font-mono);
+    font-size: .6rem;
+    color: var(--text-muted);
+    margin-top: 16px;
+    padding: 10px 14px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    max-width: min(560px, 86vw);
+    line-height: 1.7;
+    text-align: center;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.loader-hint code { color: var(--accent-copper-light); }
+
     </style>
 </head>
 <body>
@@ -3324,7 +3396,7 @@ select:focus-visible {
         <header class="header-bar">
             <div>
                 <h1 class="app-title">Sociognosis Editor</h1>
-                <p class="app-subtitle">Epistemic Network Visualization</p>
+                <p class="app-subtitle">Parsing social reality.</p>
             </div>
             <div class="spacer"></div>
             
@@ -3352,6 +3424,13 @@ select:focus-visible {
                     </svg>
                     Save
                 </button>
+                <button class="btn btn-ghost" id="recompute-layout-btn" type="button" title="Recompute the graph layout (node positions) on the backend">
+                    <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                    </svg>
+                    Recompute Layout
+                </button>
                 <div class="btn-divider"></div>
                 <button class="btn btn-icon btn-ghost" id="help-btn" type="button" aria-label="Help and keyboard shortcuts (F1)" title="Help (F1)">
                     <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -3373,6 +3452,7 @@ select:focus-visible {
             </div>
         </header>
 
+        <canvas id="silhouette-view" aria-hidden="true"></canvas>
         <canvas id="graph-canvas" role="img" aria-label="Interactive network graph: drag nodes, scroll to zoom, double-click to fit. Node details are announced in the status bar and tooltip." tabindex="0"></canvas>
 
         <div class="link-mode-indicator" id="link-indicator">
@@ -3821,8 +3901,15 @@ select:focus-visible {
         <div class="wa-tip">Tab to accept • Esc to dismiss • Runs locally when available</div>
     </div>
 
+    <div id="loading-overlay">
+        <div class="loader-dots"><span></span><span></span><span></span></div>
+        <div class="loader-text" id="loader-msg">Initializing editor</div>
+        <div class="loader-hint" id="loader-hint" style="display:none"></div>
+    </div>
+
+    <script src="vendor/deck.min.js"></script>
+    <script src="vendor/socio-graph.js"></script>
     <script>
-/* ═══════ UTILITIES ═══════ */
 function hexToRGBA(hex, alpha) {
     if (!hex || typeof hex !== 'string') return `rgba(136,136,136,${alpha})`;
     if (hex.startsWith('rgb')) return hex;
@@ -3989,6 +4076,9 @@ let searchMatchCount = 0;
 
 const REPULSION = 280, LINK_DISTANCE = 100, ALPHA_DECAY = 0.995;
 let alpha = 1;
+let simActive = false;          // global O(N^2) sim only runs on explicit demand
+let layoutData = null;          // precomputed positions: { id: [x, y] }
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
 
 /* ═══════ OXFORD LAYERING STATE ═══════ */
 /* Tweened camera — animate over ~600ms with cubic-bezier feel on reset/fit/fly-to */
@@ -4012,6 +4102,14 @@ let viewportCoverage = 1.0;
 /* Offscreen canvas for community silhouettes (recomputed on layout change) */
 let silhouetteCanvas = null, silhouetteCtx = null;
 let silhouetteDirty = true;
+/* deck.gl layers must be rebuilt when graph data or highlight state changes. */
+let deckDirty = true;
+/* Cached overlays (recomputed only when graph structure/positions change):
+   minimap node dots -> offscreen canvas; community silhouette backdrop -> a DOM
+   canvas layered behind deck. Per-frame cost is O(1) regardless of N (essential
+   at 200k). Both rebuild when silhouetteDirty is set. */
+let mmDotsCanvas = null, mmDotsCtx = null, mmBounds = null;
+let silViewCanvas = null, silViewCtx = null, silBounds = null;
 
 /* Pre-computed hulls: { colorIndex: [{x,y}, ...] } */
 let communityHulls = {};
@@ -4124,24 +4222,25 @@ function loadPersistedBackendUrl() {
 }
 
 /* ═══════ BACKEND HEALTH CHECK ═══════ */
-/* Derives the /health endpoint URL from the configured Save URL.
-   sync.py serves both endpoints from the same origin:
+/* Derives a same-origin API endpoint URL from the configured Save URL.
+   sync.py serves all endpoints from one origin:
    - Save:   <origin>/api/graph/save
+   - Layout: <origin>/api/layout/recompute
    - Health: <origin>/api/health
-   So we strip the save path and append '/api/health'. */
-function deriveHealthUrl(saveUrl) {
+   We strip the save path and append the requested sub-path. */
+function deriveBackendUrl(saveUrl, subPath) {
     if (!saveUrl) return '';
     try {
         const u = new URL(saveUrl, window.location.origin);
-        return `${u.origin}/api/health`;
+        return `${u.origin}${subPath}`;
     } catch (e) {
-        // Fallback: basic string manipulation if URL parsing fails
         const idx = saveUrl.indexOf('/api/');
-        if (idx >= 0) return saveUrl.substring(0, idx) + '/api/health';
-        // Or if it ends with /api/graph/save, strip that
-        return saveUrl.replace(/\/api\/graph\/save\/?$/, '/api/health');
+        if (idx >= 0) return saveUrl.substring(0, idx) + subPath;
+        return saveUrl.replace(/\/api\/graph\/save\/?$/, subPath);
     }
 }
+function deriveHealthUrl(saveUrl) { return deriveBackendUrl(saveUrl, '/api/health'); }
+function deriveLayoutRecomputeUrl(saveUrl) { return deriveBackendUrl(saveUrl, '/api/layout/recompute'); }
 
 let backendHealthInterval = null;
 let backendHealthStatus = 'unknown'; // 'online' | 'offline' | 'checking' | 'unknown'
@@ -5321,63 +5420,260 @@ function getArrayValues(field) {
 }
 
 /* ═══════ CANVAS SETUP ═══════ */
+/* ═══════ RENDERER SETUP (deck.gl / WebGL) ═══════ */
+/* Hybrid model: deck.gl is the rasterizer + picker; the existing `cam` remains
+   the single source of truth for the camera. Each frame `draw()` pushes `cam`
+   into deck's OrthographicView viewState; layers are rebuilt only when the
+   graph data or highlight state changes (deckDirty / silhouetteDirty). */
+let deck = null;
+const D = () => window.SocioDeck || null;
+const HEX = h => { h = (h || '#888').replace('#', ''); return h.length === 3 ? h.split('').map(c => c + c).join('') : h; };
+const rgbOf = hex => { const h = HEX(hex); return [parseInt(h.slice(0,2),16)||0, parseInt(h.slice(2,4),16)||0, parseInt(h.slice(4,6),16)||0]; };
+const _catRGBCache = {};
+function catRGB(category) {
+    if (_catRGBCache[category]) return _catRGBCache[category];
+    const c = rgbOf(getCategoryColor(category));
+    _catRGBCache[category] = c;
+    return c;
+}
+
 function setupCanvas() {
     canvas = document.getElementById('graph-canvas');
-    ctx = canvas.getContext('2d');
     mmCanvas = document.getElementById('minimap-canvas');
     mmCtx = mmCanvas.getContext('2d');
+    silViewCanvas = document.getElementById('silhouette-view');
+    silViewCtx = silViewCanvas.getContext('2d');
+    mmDotsCanvas = document.createElement('canvas');
     resizeCanvas();
+    const lib = D();
+    if (!lib) { console.error('deck.gl bundle (vendor/deck.min.js) not loaded'); return; }
+    deck = SocioGraph.createDeck(lib, canvas, W, H);
 }
 
 function resizeCanvas() {
     const rect = canvas.parentElement.getBoundingClientRect();
     W = rect.width; H = rect.height;
-    canvas.width = W * devicePixelRatio;
-    canvas.height = H * devicePixelRatio;
-    ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
     mmCanvas.width = 160 * devicePixelRatio;
     mmCanvas.height = 110 * devicePixelRatio;
     mmCtx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    mmDotsCanvas.width = 160 * devicePixelRatio;
+    mmDotsCanvas.height = 110 * devicePixelRatio;
+    mmDotsCtx = mmDotsCanvas.getContext('2d');
+    if (silViewCanvas) {
+        silViewCanvas.width = Math.max(1, W * devicePixelRatio);
+        silViewCanvas.height = Math.max(1, H * devicePixelRatio);
+    }
+    silhouetteDirty = true;
+    if (deck) deck.setProps({ width: W, height: H });
 }
+
+/* ═══════ DECK.GL DRAW (cam-driven viewState + LOD layers) ═══════ */
+/* Static layers (edges/nodes/glow/link) rebuild only on deckDirty. Labels are
+   split out: they rebuild on deckDirty AND on zoom/band changes (labelsDirty),
+   with greedy screen-space decluttering so text never stacks on itself. */
+let staticLayers = [];
+let labelsDirty = true;
+let lastBand = null, lastLabelZ = -1;
+let lastLabelCount = 0;
+
+function viewStateFromCam() {
+    return SocioGraph.viewStateFromCam(cam, W, H);
+}
+
+function buildStaticLayers() {
+    return SocioGraph.buildStaticLayers({
+        lib: D(), nodes, cam, band: zoomBand(), edges, nodeMap,
+        hoveredNode, selectedNode, searchHighlights: searchHighlightNodes,
+        linkSourceNode, linkMode, nodeRadius, getCategoryColor, catCache: _catRGBCache,
+        edgeWeights, maxEdgeWeight, edgeShouldShow, hexToRGBA
+    });
+}
+
+/* Labels with greedy screen-space decluttering. Candidates are admitted in
+   priority order (hover/selected > tier "always" > "meso" > "micro", then by
+   degree); a label is dropped if its on-screen bounding box overlaps one already
+   placed. Because positions are computed from `cam`, the set that fits changes
+   naturally with the zoom level — zooming in reveals more labels. */
+function buildLabelsLayer() {
+    const r = SocioGraph.buildLabelsLayer({
+        lib: D(), nodes, cam, W, H, band: zoomBand(),
+        labelTargetOpacity, labelTiers, nodeDegrees, nodeRadius,
+        hoveredNode, selectedNode
+    });
+    lastLabelCount = r.count;
+    return r.layer;
+}
+
+function draw() {
+    if (!deck) return;
+    updateCameraTween(performance.now());
+    computeViewportCoverage();
+    if (silhouetteDirty) {
+        computeHulls();
+        renderSilhouettes();
+        rebuildMinimapDots();
+        silhouetteDirty = false;
+    }
+    if (edgeWeights === null || edgeWeights.length !== edges.length) computeEdgeWeights();
+
+    // Labels must follow the camera: rebuild them when the zoom band changes or
+    // the zoom level shifts enough that the decluttered set should differ.
+    const band = zoomBand();
+    if (lastBand !== band) { lastBand = band; labelsDirty = true; }
+    if (lastLabelZ < 0 || Math.abs(cam.z - lastLabelZ) / Math.max(cam.z, 1e-6) > 0.12) {
+        lastLabelZ = cam.z; labelsDirty = true;
+    }
+
+    deck.setProps({ viewState: viewStateFromCam() });
+    if (deckDirty) { staticLayers = buildStaticLayers(); deckDirty = false; labelsDirty = true; }
+    if (labelsDirty) {
+        const lbl = buildLabelsLayer();
+        deck.setProps({ layers: lbl ? staticLayers.concat([lbl]) : staticLayers });
+        labelsDirty = false;
+    }
+    drawSilhouetteView();
+    drawMinimap();
+}
+
+/* Community silhouette backdrop: blit the precomputed offscreen silhouette into
+   a DOM canvas behind deck, transformed by `cam`. O(1) per frame. */
+function drawSilhouetteView() {
+    SocioGraph.drawSilhouetteView(silViewCtx, silViewCanvas, silhouetteCanvas, silBounds, cam, devicePixelRatio);
+}
+
+/* Render the minimap node dots to an offscreen canvas (done only when the graph
+   structure/positions change), so the per-frame draw is a cheap blit + viewport
+   rectangle regardless of node count. */
+function rebuildMinimapDots() {
+    mmBounds = SocioGraph.rebuildMinimapDots(mmDotsCanvas, mmDotsCtx, nodes, getCategoryColor, hexToRGBA, devicePixelRatio);
+}
+
+/* Renderer introspection hook (console: await window.__socioDebug()). */
+window.__socioDebug = async function () {
+    const gl = canvas && canvas.getContext && (() => { try { return canvas.getContext('webgl2') || canvas.getContext('webgl'); } catch (e) { return null; } })();
+    const center = deck ? deck.pickObject({ x: W / 2, y: H / 2, radius: 8, layerIds: ['nodes'] }) : null;
+    return {
+        nodes: nodes.length, edges: edges.length,
+        deckReady: !!deck, webgl: !!gl,
+        cam: { ...cam }, viewState: viewStateFromCam(),
+        band: zoomBand(), deckDirty, silhouetteDirty, labels: lastLabelCount, camz: cam.z,
+        silhouette: { canvas: !!silhouetteCanvas, bounds: !!silBounds, view: !!silViewCanvas },
+        minimap: { dots: !!mmDotsCanvas, bounds: !!mmBounds },
+        pickCenter: center && center.object ? { id: center.object.id, name: center.object.name } : null,
+        firstNode: nodes[0] ? { id: nodes[0].id, x: nodes[0].x, y: nodes[0].y, screen: worldToScreen(nodes[0].x, nodes[0].y) } : null
+    };
+};
 
 /* ═══════ COORDINATE TRANSFORMS ═══════ */
 function worldToScreen(wx, wy) { return { x: wx * cam.z + cam.x, y: wy * cam.z + cam.y }; }
 function screenToWorld(sx, sy) { return { x: (sx - cam.x) / cam.z, y: (sy - cam.y) / cam.z }; }
 
 /* ═══════ DATA LOADING ═══════ */
+/* The graph can only render with BOTH data.json (content) and layout.json
+   (precomputed positions). Missing either is fatal: the loading overlay is held
+   open with an actionable message instead of dropping the user into an empty or
+   randomly-scattered canvas. layout.json is produced by `python bin/layout.py`
+   or regenerated automatically by bin/sync.py on every save. */
+function setLoader(msg) {
+    const el = document.getElementById('loader-msg');
+    if (el) el.textContent = msg;
+}
+function hideLoader() {
+    const ov = document.getElementById('loading-overlay');
+    if (ov) ov.classList.add('hidden');
+}
+function fatalLoader(msg, hint) {
+    const ov = document.getElementById('loading-overlay');
+    if (!ov) { console.error(msg, hint); return; }
+    ov.classList.add('error');
+    const m = document.getElementById('loader-msg');
+    if (m) m.innerHTML = msg;
+    const h = document.getElementById('loader-hint');
+    if (h && hint) { h.innerHTML = hint; h.style.display = 'block'; }
+}
+
 async function loadData() {
+    setLoader('Loading graph data');
+    let dataOk = false;
     try {
         const res = await fetch('../data/idx/data.json');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         data = await res.json();
+        if (!Array.isArray(data) || !data.length) throw new Error('Empty dataset');
+        dataOk = true;
     } catch (e) {
-        console.warn('Could not load data.json, using sample data');
         data = [];
+        fatalLoader(
+            'No graph data found.',
+            'Expected <code>docs/data/idx/data.json</code>. Start the sync server and it will serve the data file:\n<code>python bin/sync.py --data-file docs/data/idx/data.json -p 8000</code>'
+        );
+        throw e;
     }
+
+    setLoader('Loading layout');
+    layoutData = null;
+    try {
+        const lres = await fetch('../data/idx/layout.json', { cache: 'no-cache' });
+        if (!lres.ok) throw new Error('HTTP ' + lres.status);
+        layoutData = await lres.json();
+        if (!layoutData || typeof layoutData !== 'object' || Object.keys(layoutData).length === 0) throw new Error('Empty layout');
+    } catch (e) {
+        layoutData = null;
+        fatalLoader(
+            'Graph layout not found.',
+            'Rendering requires a precomputed <code>layout.json</code>. Generate it with:\n<code>python bin/layout.py</code>\n(or save once via the sync server, which recomputes it automatically).'
+        );
+        throw e;
+    }
+
+    setLoader('Building graph');
     extractSuggestions();
     initGraph();
     rebuildVocabularies(); // populate dropdowns from data + schema
+}
+
+/* Bounding box of the precomputed layout, with a sane fallback. Nodes that are
+   missing from layout.json get a random position within this box so they still
+   appear somewhere reasonable inside the field instead of piled at the origin. */
+function layoutBounds() { return SocioGraph.layoutBounds(layoutData); }
+
+/* Re-apply positions from layoutData to the live nodes (used after a recompute).
+   Missing nodes fall back to a random point within the layout bounds. Optionally
+   refit the camera to the new arrangement. */
+function applyLayoutData(refit) {
+    SocioGraph.applyLayoutToNodes(nodes, layoutData);
+    deckDirty = true; silhouetteDirty = true;
+    if (refit) fitCamera();
 }
 
 function initGraph() {
     nodes = [];
     edges = [];
     nodeMap = {};
-    
+    const b = layoutBounds();
+
     data.forEach((d, i) => {
         if (!d.id) d.id = 'node.' + i;
         if (!d.category) d.category = 'Reality';
         if (!d.name) d.name = d.id;
-        
+
+        let x, y;
+        const lp = layoutData && layoutData[d.id];
+        if (lp && isFinite(lp[0]) && isFinite(lp[1])) {
+            x = lp[0]; y = lp[1];
+        } else {
+            x = b.minX + Math.random() * (b.maxX - b.minX);
+            y = b.minY + Math.random() * (b.maxY - b.minY);
+        }
+
         const node = {
             id: d.id, name: d.name, category: d.category,
-            x: (Math.random() - 0.5) * 600, y: (Math.random() - 0.5) * 600,
-            vx: 0, vy: 0, _data: d
+            x, y, vx: 0, vy: 0, _data: d
         };
         nodes.push(node);
         nodeMap[d.id] = node;
     });
-    
+
     data.forEach(d => {
         (d.relationships || []).forEach(rel => {
             if (nodeMap[d.id] && nodeMap[rel.targetNodeId]) {
@@ -5390,14 +5686,11 @@ function initGraph() {
             }
         });
     });
-    
+
     updateStats();
     computeMetrics();
     silhouetteDirty = true;
 
-    // Settle the layout before fitting, then snap directly to the fit view
-    // so the initial frame is the macro "fit-all" view of the real graph.
-    warmupLayout(300);
     fitCamera(true);
 }
 
@@ -5438,70 +5731,14 @@ function nodeRadius(n) {
     return clamp(3 + t * 15, 3, 18);
 }
 
-/* ═══════ CONVEX HULL (Andrew's monotone chain) ═══════ */
-function convexHull(points) {
-    if (points.length < 3) return points.slice();
-    const pts = points.slice().sort((a, b) => a.x - b.x || a.y - b.y);
-    const cross = (O, A, B) => (A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x);
-    const lower = [];
-    for (const p of pts) {
-        while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], p) <= 0) lower.pop();
-        lower.push(p);
-    }
-    const upper = [];
-    for (let i = pts.length - 1; i >= 0; i--) {
-        const p = pts[i];
-        while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], p) <= 0) upper.pop();
-        upper.push(p);
-    }
-    lower.pop(); upper.pop();
-    return lower.concat(upper);
-}
-
 /* ═══════ COMMUNITY SILHOUETTES (offscreen, blurred clouds) ═══════ */
 function computeHulls() {
-    const groups = {};
-    nodes.forEach(n => {
-        const ci = categoryColorIndex(n.category);
-        if (!groups[ci]) groups[ci] = [];
-        groups[ci].push({ x: n.x, y: n.y });
-    });
-    communityHulls = {};
-    Object.keys(groups).forEach(ci => {
-        communityHulls[ci] = convexHull(groups[ci]);
-    });
+    communityHulls = SocioGraph.computeHulls(nodes, categoryColorIndex);
 }
 
 function renderSilhouettes() {
-    if (!silhouetteCanvas) {
-        silhouetteCanvas = document.createElement('canvas');
-        silhouetteCtx = silhouetteCanvas.getContext('2d');
-    }
-    // Compute world bounds to size the offscreen canvas
-    if (!nodes.length) { silhouetteCanvas.width = 1; silhouetteCanvas.height = 1; return; }
-    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-    nodes.forEach(n => { if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x; if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y; });
-    const pad = 120;
-    const bw = Math.max(1, maxX - minX + pad * 2);
-    const bh = Math.max(1, maxY - minY + pad * 2);
-    silhouetteCanvas.width = Math.min(bw, 4000);
-    silhouetteCanvas.height = Math.min(bh, 4000);
-    const sc = silhouetteCtx;
-    sc.clearRect(0, 0, silhouetteCanvas.width, silhouetteCanvas.height);
-
-    const ox = -minX + pad, oy = -minY + pad;
-    sc.filter = 'blur(70px)';
-    Object.keys(communityHulls).forEach(ci => {
-        const hull = communityHulls[ci];
-        if (!hull || hull.length < 2) return;
-        sc.beginPath();
-        sc.moveTo(hull[0].x + ox, hull[0].y + oy);
-        for (let i = 1; i < hull.length; i++) sc.lineTo(hull[i].x + ox, hull[i].y + oy);
-        sc.closePath();
-        sc.fillStyle = hexToRGBA(COMMUNITY_COLORS[ci % COMMUNITY_COLORS.length], 0.08);
-        sc.fill();
-    });
-    sc.filter = 'none';
+    const r = SocioGraph.renderSilhouettes(silhouetteCanvas, silhouetteCtx, communityHulls, COMMUNITY_COLORS, hexToRGBA);
+    silhouetteCanvas = r.canvas; silhouetteCtx = r.ctx2d; silBounds = r.bounds;
 }
 
 /* ═══════ CAMERA TWEEN (cubic-bezier ease over ~600ms) ═══════ */
@@ -5511,6 +5748,7 @@ function tweenCamera(toX, toY, toZ, duration = 600) {
 }
 function updateCameraTween(now) {
     if (!camTween) return;
+    if (now === undefined) now = performance.now();
     const t = clamp((now - camTween.start) / camTween.duration, 0, 1);
     // Cubic-bezier-ish ease
     const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
@@ -5614,248 +5852,15 @@ function labelTargetOpacity(n, band) {
     return 0;
 }
 
-/* ═══════ DRAWING — Oxford layered pipeline ═══════ */
-/* Layers: (1) silhouettes → (2) edges → (3) nodes → (4) labels.
-   Depth by shadow not glow; matte velvet nodes; faint graphite threads. */
-function draw() {
-    const now = performance.now();
-    updateCameraTween(now);
-    computeViewportCoverage();
-    const band = zoomBand();
-
-    // Recompute silhouettes when layout has shifted substantially
-    if (silhouetteDirty) {
-        computeHulls();
-        renderSilhouettes();
-        silhouetteDirty = false;
-    }
-    // Recompute edge weights if structure changed
-    if (edgeWeights === null || edgeWeights.length !== edges.length) computeEdgeWeights();
-
-    ctx.clearRect(0, 0, W, H);
-
-    /* ── LAYER 1: Community silhouettes (background clouds) ── */
-    // Fade clouds in macro, dim them to near-invisibility in micro
-    const silhouetteAlpha = band === 'macro' ? 1 : band === 'meso' ? 0.5 : 0.15;
-    if (silhouetteCanvas && silhouetteCanvas.width > 1 && silhouetteAlpha > 0) {
-        if (!nodes.length) { /* skip */ } else {
-            let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-            nodes.forEach(n => { if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x; if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y; });
-            const pad = 120;
-            // The silhouette canvas was drawn with offset ox=-minX+pad, oy=-minY+pad
-            // Map world (minX-pad .. maxX+pad) to screen
-            const tlx = (minX - pad) * cam.z + cam.x;
-            const tly = (minY - pad) * cam.z + cam.y;
-            const sw = (silhouetteCanvas.width) * cam.z;
-            const sh = (silhouetteCanvas.height) * cam.z;
-            ctx.globalAlpha = silhouetteAlpha;
-            ctx.drawImage(silhouetteCanvas, tlx, tly, sw, sh);
-            ctx.globalAlpha = 1;
-        }
-    }
-
-    /* ── LAYER 2: Edges (midground, drawn before nodes) ── */
-    ctx.lineCap = 'round';
-    for (let i = 0; i < edges.length; i++) {
-        if (!edgeShouldShow(i, band)) continue;
-        const e = edges[i];
-        const s = nodeMap[e.source], t = nodeMap[e.target];
-        if (!s || !t) continue;
-        const ss = worldToScreen(s.x, s.y), ts = worldToScreen(t.x, t.y);
-        const w = edgeWeights[i];
-        const baseOpacity = clamp((w / maxEdgeWeight) * 0.3, 0.1, 0.3);
-
-        const incident = (hoveredNode && (hoveredNode.id === e.source || hoveredNode.id === e.target)) ||
-                         (selectedNode && (selectedNode.id === e.source || selectedNode.id === e.target));
-
-        let strokeStyle, lineWidth;
-        if (incident) {
-            // Highlight: tint with hovered/selected community colour, opacity 0.6
-            const ref = hoveredNode || selectedNode;
-            const tint = getCategoryColor(ref.category);
-            strokeStyle = hexToRGBA(tint, 0.6);
-            lineWidth = clamp(1.0 * cam.z, 0.6, 1.6);
-        } else if (hoveredNode) {
-            // Dim others to 0.05 when hovering
-            strokeStyle = hexToRGBA('#4a4a4a', 0.05);
-            lineWidth = clamp(0.5 * cam.z, 0.3, 1.0);
-        } else {
-            strokeStyle = hexToRGBA('#4a4a4a', baseOpacity);
-            lineWidth = clamp(0.75 * cam.z, 0.4, 1.2);
-        }
-        ctx.beginPath();
-        ctx.moveTo(ss.x, ss.y);
-        ctx.lineTo(ts.x, ts.y);
-        ctx.strokeStyle = strokeStyle;
-        ctx.lineWidth = lineWidth;
-        ctx.stroke();
-    }
-
-    /* Potential link line (link mode) */
-    if (linkMode && linkSourceNode && hoveredNode && linkSourceNode !== hoveredNode) {
-        const ss = worldToScreen(linkSourceNode.x, linkSourceNode.y), ts = worldToScreen(hoveredNode.x, hoveredNode.y);
-        ctx.beginPath(); ctx.moveTo(ss.x, ss.y); ctx.lineTo(ts.x, ts.y);
-        ctx.strokeStyle = hexToRGBA('#9b7eb0', 0.5); ctx.lineWidth = 1.6;
-        ctx.setLineDash([6, 4]); ctx.stroke(); ctx.setLineDash([]);
-    }
-
-    /* ── LAYER 3: Nodes (foreground, matte velvet) ── */
-    // First pass: drop shadows for all nodes (lifts them from canvas)
-    ctx.save();
-    for (let i = 0; i < nodes.length; i++) {
-        const n = nodes[i];
-        const s = worldToScreen(n.x, n.y);
-        const isH = hoveredNode === n, isSel = selectedNode === n;
-        const baseR = nodeRadius(n);
-        const r = Math.max(2, baseR * cam.z);
-        // Cull offscreen
-        if (s.x + r + 20 < 0 || s.x - r - 20 > W || s.y + r + 20 < 0 || s.y - r - 20 > H) continue;
-        const shadowBlur = isH ? 12 : 6;
-        const shadowOffset = isH ? 4 : 2;
-        ctx.shadowColor = `rgba(0,0,0,${isH ? 0.7 : 0.5})`;
-        ctx.shadowBlur = shadowBlur * (cam.z > 1 ? 1 : cam.z);
-        ctx.shadowOffsetY = shadowOffset;
-        ctx.fillStyle = getCategoryColor(n.category);
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
-        ctx.fill();
-    }
-    ctx.restore();
-
-    // Second pass: fills + strokes (no shadow)
-    for (let i = 0; i < nodes.length; i++) {
-        const n = nodes[i];
-        const s = worldToScreen(n.x, n.y);
-        const isH = hoveredNode === n, isSel = selectedNode === n, isLS = linkSourceNode === n;
-        const baseR = nodeRadius(n);
-        const r = Math.max(2, (baseR + (isH ? 1 : 0)) * cam.z);
-        if (s.x + r + 20 < 0 || s.x - r - 20 > W || s.y + r + 20 < 0 || s.y - r - 20 > H) continue;
-        const color = getCategoryColor(n.category);
-
-        // Matte solid fill — velvet buttons
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Hover stroke: faint warm pencil line
-        if (isH && !isSel) {
-            ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
-            ctx.stroke();
-        }
-        // Selected stroke: thin gilt edge — fine bookbinding
-        if (isSel) {
-            ctx.strokeStyle = '#C4B998';
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, r + 1.5, 0, Math.PI * 2);
-            ctx.stroke();
-        }
-        // Search highlight: glowing cyan ring
-        if (searchHighlightNodes.has(n.id)) {
-            ctx.save();
-            ctx.shadowColor = '#4dd4c4';
-            ctx.shadowBlur = 15;
-            ctx.strokeStyle = '#4dd4c4';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, r + 5, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.restore();
-        }
-        // Link source: plum dashed ring
-        if (isLS) {
-            ctx.strokeStyle = hexToRGBA('#9b7eb0', 0.6);
-            ctx.lineWidth = 1.6;
-            ctx.setLineDash([4, 4]);
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, r + 4, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.setLineDash([]);
-        }
-    }
-
-    /* ── LAYER 4: Labels (parchment text with protective dark mask) ── */
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    for (let i = 0; i < nodes.length; i++) {
-        const n = nodes[i];
-        const target = labelTargetOpacity(n, band);
-        const cur = labelOpacity[n.id] || 0;
-        // Tween opacity over ~200ms (approx 12 frames)
-        const next = cur + (target - cur) * 0.15;
-        labelOpacity[n.id] = next;
-        if (next < 0.02) continue;
-        const s = worldToScreen(n.x, n.y);
-        const baseR = nodeRadius(n);
-        const r = Math.max(2, baseR * cam.z);
-        const tier = labelTiers[n.id] || 'micro';
-        const weight = tier === 'always' ? 500 : 400;
-        const fontSize = clamp(tier === 'always' ? r * 1.3 : r * 1.1, 9, 13);
-        ctx.font = `${weight} ${fontSize}px Inter, system-ui, sans-serif`;
-        let label = n.name || n.id || 'Unknown';
-        const maxChars = band === 'macro' ? 14 : 22;
-        if (label.length > maxChars) label = label.substring(0, maxChars - 1) + '…';
-
-        // Protective dark mask shadow (not a glow)
-        ctx.save();
-        ctx.shadowColor = '#0b0e14';
-        ctx.shadowBlur = 4;
-        ctx.fillStyle = hexToRGBA('#D6D1C4', Math.min(1, next));
-        ctx.fillText(label, s.x + r + 6, s.y);
-        ctx.restore();
-    }
-
-    drawMinimap();
-}
-
-function lightenColor(hex, percent) {
-    const num = parseInt(hex.replace('#', ''), 16);
-    const amt = Math.round(2.55 * percent);
-    const R = Math.min(255, (num >> 16) + amt);
-    const G = Math.min(255, ((num >> 8) & 0x00FF) + amt);
-    const B = Math.min(255, (num & 0x0000FF) + amt);
-    return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
-}
-
-function darkenColor(hex, percent) {
-    const num = parseInt(hex.replace('#', ''), 16);
-    const amt = Math.round(2.55 * percent);
-    const R = Math.max(0, (num >> 16) - amt);
-    const G = Math.max(0, ((num >> 8) & 0x00FF) - amt);
-    const B = Math.max(0, (num & 0x0000FF) - amt);
-    return '#' + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
-}
-
 function drawMinimap() {
-    mmCtx.clearRect(0, 0, 160, 110);
-    if (!nodes.length) return;
-    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-    nodes.forEach(n => { if (n.x < minX) minX = n.x; if (n.x > maxX) maxX = n.x; if (n.y < minY) minY = n.y; if (n.y > maxY) maxY = n.y; });
-    const pad = 10, gw = Math.max(1, maxX - minX + pad * 2), gh = Math.max(1, maxY - minY + pad * 2);
-    const s = Math.min(150 / gw, 100 / gh), ox = 80 - (minX + maxX) / 2 * s, oy = 55 - (minY + maxY) / 2 * s;
-    nodes.forEach(n => { mmCtx.fillStyle = hexToRGBA(getCategoryColor(n.category), 0.6); mmCtx.fillRect(n.x * s + ox - 1, n.y * s + oy - 1, 2, 2); });
-    const vx1 = -cam.x / cam.z, vy1 = -cam.y / cam.z, vx2 = (W - cam.x) / cam.z, vy2 = (H - cam.y) / cam.z;
-    mmCtx.strokeStyle = hexToRGBA('#7a7a8a', 0.3); mmCtx.lineWidth = 1;
-    mmCtx.strokeRect(vx1 * s + ox, vy1 * s + oy, (vx2 - vx1) * s, (vy2 - vy1) * s);
+    SocioGraph.drawMinimap(mmCtx, mmDotsCanvas, mmBounds, cam, W, H, hexToRGBA);
 }
 
-/* ═══════ HIT TESTING (degree-based radius) ═══════ */
+/* ═══════ HIT TESTING (deck.gl GPU picking, O(1) visual query) ═══════ */
 function hitTest(sx, sy) {
-    const wp = screenToWorld(sx, sy);
-    let best = null;
-    let bestD = Infinity;
-    nodes.forEach(n => {
-        const dx = n.x - wp.x, dy = n.y - wp.y, d2 = dx * dx + dy * dy;
-        const r = nodeRadius(n);
-        // Generous hit area: 1.5× radius (a little larger for easy targeting)
-        const hr = r * 1.5;
-        if (d2 < hr * hr && d2 < bestD) { bestD = d2; best = n; }
-    });
-    return best;
+    if (!deck) return null;
+    const info = deck.pickObject({ x: sx, y: sy, radius: 6, layerIds: ['nodes'] });
+    return info && info.object ? info.object : null;
 }
 
 /* ═══════ CAMERA ═══════ */
@@ -5882,13 +5887,76 @@ function fitCamera(snap = false) {
     }
 }
 
-/* Warm up the force-directed layout synchronously so nodes settle into their
-   final arrangement. Called once after load before fitting the initial view,
-   so the fit matches the graph's real shape rather than the random spread. */
-function warmupLayout(iterations = 300) {
+/* Layout is precomputed (layout.json). The global O(N^2) simulate() is kept
+   only for short, on-demand bursts after structural edits or while dragging,
+   and is gated by `simActive` so it never runs every frame at idle. */
+function wakeSimulation() {
     alpha = 1;
-    for (let i = 0; i < iterations; i++) simulate();
-    alpha = 1; // let the live loop cool it down again naturally
+    simActive = true;
+}
+
+/* Relax only the connected component touching `anchorId` (Fruchterman-Reingold
+   on the subgraph). Because the sociogenesis graph is near-fully-disconnected,
+   components are tiny, so this is O(C^2) per call regardless of total N and is
+   safe to run at 200k-node scale. Used after add/link/delete. */
+function relaxComponent(anchorId, iters = 140) {
+    if (!anchorId || !nodeMap[anchorId]) return;
+    const adj = {};
+    const localEdges = [];
+    const add = (id) => { if (!adj[id]) { adj[id] = true; comp.push(id); } };
+    const comp = [];
+    add(anchorId);
+    const queue = [anchorId];
+    while (queue.length) {
+        const cur = queue.shift();
+        for (const e of edges) {
+            let other = null;
+            if (e.source === cur) other = e.target;
+            else if (e.target === cur) other = e.source;
+            if (other && !adj[other]) { add(other); queue.push(other); }
+        }
+    }
+    for (const e of edges) {
+        if (adj[e.source] && adj[e.target]) localEdges.push([e.source, e.target]);
+    }
+    if (comp.length < 2) return;
+
+    const idx = new Map();
+    comp.forEach((id, i) => idx.set(id, i));
+    const pos = comp.map(id => [nodeMap[id].x, nodeMap[id].y]);
+    const k = Math.max(40, LINK_DISTANCE);
+    let temp = k;
+    for (let it = 0; it < iters; it++) {
+        const disp = comp.map(() => [0, 0]);
+        for (let i = 0; i < comp.length; i++) {
+            for (let j = i + 1; j < comp.length; j++) {
+                let dx = pos[i][0] - pos[j][0], dy = pos[i][1] - pos[j][1];
+                let d2 = dx * dx + dy * dy;
+                if (d2 < 1e-6) { dx = 0.1; dy = 0.1; d2 = 0.02; }
+                const d = Math.sqrt(d2);
+                const f = (k * k) / d;
+                disp[i][0] += dx / d * f; disp[i][1] += dy / d * f;
+                disp[j][0] -= dx / d * f; disp[j][1] -= dy / d * f;
+            }
+        }
+        for (const [s, t] of localEdges) {
+            const i = idx.get(s), j = idx.get(t);
+            const dx = pos[i][0] - pos[j][0], dy = pos[i][1] - pos[j][1];
+            const d = Math.max(1e-6, Math.sqrt(dx * dx + dy * dy));
+            const f = (d * d) / k;
+            disp[i][0] -= dx / d * f; disp[i][1] -= dy / d * f;
+            disp[j][0] += dx / d * f; disp[j][1] += dy / d * f;
+        }
+        for (let i = 0; i < comp.length; i++) {
+            const d = Math.max(1e-6, Math.hypot(disp[i][0], disp[i][1]));
+            const lim = Math.min(d, temp);
+            pos[i][0] += disp[i][0] / d * lim;
+            pos[i][1] += disp[i][1] / d * lim;
+        }
+        temp = Math.max(0.5, temp * 0.96);
+    }
+    comp.forEach((id, i) => { const nd = nodeMap[id]; nd.x = pos[i][0]; nd.y = pos[i][1]; nd.vx = 0; nd.vy = 0; });
+    silhouetteDirty = true;
 }
 
 /* ═══════ TOOLTIP ═══════ */
@@ -6076,6 +6144,7 @@ async function selectNode(node) {
     }
 
     selectedNode = node;
+    deckDirty = true;
     const selChip = document.getElementById('selection-chip');
     const selName = node ? (node.name || node.id) : 'None';
     document.getElementById('selected-name').textContent = selName;
@@ -6741,6 +6810,8 @@ function addRelationship() {
     selectedNode._data.relationships.push(rel);
     edges.push({ source: selectedNode.id, target: target, family: family || 'not_specified', type: type, description: '' });
     updateStats();
+    computeMetrics();
+    relaxComponent(selectedNode.id);
     markGraphDirty();
     renderForm(selectedNode._data);
 }
@@ -6950,9 +7021,10 @@ function addNewNode() {
         references: []
     };
     data.push(newNodeData);
-    const node = { id: id, name: 'New Node', category: 'Reality', x: (Math.random() - 0.5) * 200, y: (Math.random() - 0.5) * 200, vx: 0, vy: 0, _data: newNodeData };
+    const center = screenToWorld(W / 2, H / 2);
+    const node = { id: id, name: 'New Node', category: 'Reality', x: center.x, y: center.y, vx: 0, vy: 0, _data: newNodeData };
     nodes.push(node); nodeMap[id] = node;
-    selectNode(node); fitToNode(node); alpha = 1; updateStats();
+    selectNode(node); fitToNode(node); updateStats();
     markGraphDirty();
     // Track new node as pending so Save syncs it to the backend
     markNodeChanged(id);
@@ -6968,7 +7040,7 @@ function deleteNode() {
     const nodeIdx = nodes.indexOf(selectedNode);
     if (nodeIdx >= 0) nodes.splice(nodeIdx, 1);
     delete nodeMap[selectedNode.id];
-    selectNode(null); updateStats();
+    selectNode(null); updateStats(); computeMetrics();
     markGraphDirty();
 }
 
@@ -7152,6 +7224,44 @@ function saveJSON() {
         title: 'Graph exported',
         message: `${nodes.length} nodes downloaded as data.json.`
     });
+}
+
+/* POST /api/layout/recompute to the backend, then reload layout.json and
+   re-apply positions. The endpoint is served by bin/sync.py. */
+async function recomputeLayout() {
+    const btn = document.getElementById('recompute-layout-btn');
+    const url = deriveLayoutRecomputeUrl(backendConfig && backendConfig.saveUrl);
+    if (!url) {
+        showToast({ type: 'error', title: 'No backend',
+            message: 'Configure the Backend Save URL in Settings to recompute the layout.' });
+        return;
+    }
+    const prevHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loading-spinner"></span> Recomputing…';
+    try {
+        const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const info = await res.json().catch(() => ({}));
+
+        // Reload layout.json (cache-busted) and apply the fresh positions.
+        const lres = await fetch('../data/idx/layout.json', { cache: 'no-cache' });
+        if (lres.ok) layoutData = await lres.json();
+        applyLayoutData(true);
+
+        showToast({
+            type: 'success',
+            title: 'Layout recomputed',
+            message: info.layout_nodes
+                ? `${info.layout_nodes} nodes repositioned${info.layout_ms ? ` (${info.layout_ms} ms)` : ''}.`
+                : 'Positions refreshed.'
+        });
+    } catch (e) {
+        showToast({ type: 'error', title: 'Recompute failed', message: e.message || 'Could not recompute layout.' });
+    } finally {
+        btn.innerHTML = prevHTML;
+        btn.disabled = false;
+    }
 }
 
 function updateStats() {
@@ -7448,7 +7558,7 @@ function setupEventHandlers() {
                 linkSourceNode._data.relationships = linkSourceNode._data.relationships || [];
                 linkSourceNode._data.relationships.push(rel);
                 edges.push({ source: linkSourceNode.id, target: node.id, family: 'not_specified', type: 'not_specified', description: '' });
-                updateStats(); markGraphDirty(); if (selectedNode === linkSourceNode) renderForm(linkSourceNode._data);
+                updateStats(); computeMetrics(); relaxComponent(linkSourceNode.id); markGraphDirty(); if (selectedNode === linkSourceNode) renderForm(linkSourceNode._data);
             }
             linkSourceNode = node;
             document.getElementById('link-source-name').textContent = node.name || node.id;
@@ -7460,11 +7570,11 @@ function setupEventHandlers() {
         const rect = canvas.getBoundingClientRect();
         const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
         mouseWorld = screenToWorld(sx, sy);
-        if (draggedNode) { draggedNode.x = mouseWorld.x; draggedNode.y = mouseWorld.y; draggedNode.vx = 0; draggedNode.vy = 0; }
+        if (draggedNode) { draggedNode.x = mouseWorld.x; draggedNode.y = mouseWorld.y; draggedNode.vx = 0; draggedNode.vy = 0; deckDirty = true; }
         else if (isPanning) { cam.x = e.clientX - panStart.x; cam.y = e.clientY - panStart.y; }
         else {
             const node = hitTest(sx, sy);
-            if (node !== hoveredNode) { hoveredNode = node; if (node) showTooltip(node, sx, sy); else hideTooltip(); }
+            if (node !== hoveredNode) { hoveredNode = node; deckDirty = true; if (node) showTooltip(node, sx, sy); else hideTooltip(); }
             else if (node) showTooltip(node, sx, sy);
             canvas.style.cursor = node ? 'pointer' : 'grab';
         }
@@ -7504,6 +7614,7 @@ function setupEventHandlers() {
     
     document.getElementById('add-node-btn').addEventListener('click', addNewNode);
     document.getElementById('save-btn').addEventListener('click', handleSave);
+    document.getElementById('recompute-layout-btn').addEventListener('click', recomputeLayout);
     document.getElementById('toggle-panel-btn').addEventListener('click', async () => {
         // If closing the panel with unsaved changes, ask for confirmation first.
         const isCurrentlyOpen = !document.body.classList.contains('panel-collapsed');
@@ -7716,10 +7827,20 @@ function setupEventHandlers() {
 }
 
 /* ═══════ MAIN LOOP ═══════ */
+/* The global O(N^2) physics step is gated: it only runs for short bursts after
+   structural edits/drags (wakeSimulation), and only when the graph is small
+   enough that O(N^2) is acceptable. Large graphs edit via relaxComponent(). */
+const SIM_GLOBAL_CAP = 5000;
 function animate() {
-    simulate();
-    // Refresh silhouettes periodically while layout is settling
-    if (alpha > 0.05 && Math.random() < 0.05) silhouetteDirty = true;
+    if (simActive) {
+        if (nodes.length <= SIM_GLOBAL_CAP) {
+            simulate();
+            if (alpha <= 0.01) { simActive = false; }
+        } else {
+            simActive = false;
+        }
+        if (alpha > 0.05 && Math.random() < 0.05) silhouetteDirty = true;
+    }
     draw();
     requestAnimationFrame(animate);
 }
@@ -7727,13 +7848,17 @@ function animate() {
 /* ═══════ INIT ═══════ */
 async function init() {
     setupCanvas();
-    await loadData();
+    try {
+        await loadData();   // holds the overlay open with an error on failure
+    } catch (e) {
+        return;             // fatal message already shown — do not boot the editor
+    }
     setupEventHandlers();
     setupModals();
     updateAIStatus();
     animate();
     selectNode(null);
-    
+
     // Auto-load schema and global context on startup so the "Specific
     // Properties" section renders category-specific fields immediately
     // when a node is selected — no manual Settings step required.
@@ -7750,6 +7875,9 @@ async function init() {
 
     // Start backend health polling if a backend URL is configured
     startBackendHealthPolling();
+
+    // Give deck.gl a couple of frames to paint before fading the loader out.
+    requestAnimationFrame(() => requestAnimationFrame(hideLoader));
 }
 /* ═══════ KEYBOARD SHORTCUTS REGISTRY ═══════ */
 const KEYBINDINGS = {
