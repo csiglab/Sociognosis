@@ -61,4 +61,10 @@
   - https://yuka.io/en/
   - https://www.ewg.org/foodnews/dirty-dozen.php
 - https://food.ec.europa.eu/plants/pesticides/eu-pesticides-database_en?utm_source=chatgpt.com
-- 
+- Stock Market
+- Dominican Republic Land Market
+  - https://inmueble.mercadolibre.com.do/MRD-747228712-terreno-de-227-tareas-con-mucha-naturaleza-en-anton-sanchez-_JM
+  - 
+- Visual Technical Object Set -> CAD Application, Parametric Modeling,  Constraint solver, Geometric Kernel, Computational Geometry, etc.
+- Virtual Technical Production Object
+- ...
