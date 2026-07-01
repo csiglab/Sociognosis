@@ -4121,6 +4121,10 @@ const STORAGE_KEY_SAVE_PREF = 'sociognosis-save-token-pref';
 const STORAGE_KEY_BACKEND_URL = 'sociognosis-backend-save-url';
 const STORAGE_KEY_SAVE_BACKEND_PREF = 'sociognosis-save-backend-url-pref';
 
+/* Which dataset this editor edits. Determines the sync API namespace
+   (GET /api/graph?dataset=... and the 'dataset' field in save patches). */
+const DATASET = 'idx';
+
 /** Returns true if the user opted into saving the token in the browser. */
 function getSaveTokenPreference() {
     try {
@@ -4243,6 +4247,24 @@ function deriveBackendUrl(saveUrl, subPath) {
 function deriveHealthUrl(saveUrl) { return deriveBackendUrl(saveUrl, '/api/health'); }
 function deriveLayoutRecomputeUrl(saveUrl) { return deriveBackendUrl(saveUrl, '/api/layout/recompute'); }
 
+/* The Backend Save URL, defaulting to same-origin when unset. sync.py serves
+   the editor and the API from one origin, so load/save/health all work without
+   per-editor configuration. The default is also surfaced in Settings so it is
+   always visible/editable. */
+function defaultSaveUrl() {
+    return window.location.origin + '/api/graph/save';
+}
+function effectiveSaveUrl() {
+    return backendConfig.saveUrl || defaultSaveUrl();
+}
+
+/* Graph load URL. Falls back to same-origin when no backend is configured
+   (sync.py serves the editor and the API from the same origin). */
+function deriveGraphLoadUrl(dataset) {
+    const sub = `/api/graph?dataset=${encodeURIComponent(dataset)}`;
+    return backendConfig.saveUrl ? deriveBackendUrl(backendConfig.saveUrl, sub) : sub;
+}
+
 let backendHealthInterval = null;
 let backendHealthStatus = 'unknown'; // 'online' | 'offline' | 'checking' | 'unknown'
 
@@ -4250,11 +4272,7 @@ let backendHealthStatus = 'unknown'; // 'online' | 'offline' | 'checking' | 'unk
    Uses AbortController for a timeout (health checks should be fast).
    Returns the health object on success, throws on error. */
 async function checkBackendHealth() {
-    const healthUrl = deriveHealthUrl(backendConfig.saveUrl);
-    if (!healthUrl) {
-        updateBackendStatus('offline', 'No backend URL configured');
-        return null;
-    }
+    const healthUrl = deriveHealthUrl(effectiveSaveUrl());
 
     updateBackendStatus('checking', 'Checking...');
 
@@ -4329,16 +4347,10 @@ function updateBackendStatus(status, label) {
    Stops any existing interval first to avoid duplicates. */
 function startBackendHealthPolling() {
     if (backendHealthInterval) clearInterval(backendHealthInterval);
-    if (!backendConfig.saveUrl) {
-        updateBackendStatus('offline', 'No backend URL configured');
-        return;
-    }
-    // Immediate check + interval
+    // Immediate check + interval. Defaults to same-origin when no URL is set.
     checkBackendHealth().catch(() => { /* errors already handled in updateBackendStatus */ });
     backendHealthInterval = setInterval(() => {
-        if (backendConfig.saveUrl) {
-            checkBackendHealth().catch(() => {});
-        }
+        checkBackendHealth().catch(() => {});
     }, 60000); // 60 seconds
 }
 
@@ -4359,6 +4371,7 @@ function buildPatch() {
     }
     return {
         nodes: changedNodes,
+        dataset: DATASET,
         timestamp: new Date().toISOString()
     };
 }
@@ -4366,9 +4379,7 @@ function buildPatch() {
 /* Send the JSON patch to the configured backend URL via HTTP POST.
    Returns true on success, throws on error. */
 async function saveToBackend() {
-    if (!backendConfig.saveUrl) {
-        throw new Error('No backend URL configured.');
-    }
+    const saveUrl = effectiveSaveUrl();
 
     const patch = buildPatch();
     if (patch.nodes.length === 0) {
@@ -4376,7 +4387,7 @@ async function saveToBackend() {
         return true;
     }
 
-    const response = await fetch(backendConfig.saveUrl, {
+    const response = await fetch(saveUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(patch)
@@ -4694,7 +4705,7 @@ function setupModals() {
         document.getElementById('global-context-url').value = aiConfig.contextUrl;
         document.getElementById('global-context-preview').value = aiConfig.globalContext.substring(0, 2000);
         document.getElementById('save-token-toggle').checked = getSaveTokenPreference();
-        document.getElementById('backend-save-url').value = backendConfig.saveUrl;
+        document.getElementById('backend-save-url').value = effectiveSaveUrl();
         document.getElementById('save-backend-url-toggle').checked = getSaveBackendUrlPreference();
         updateAPIStatusIndicator();
         openModal('settings-modal');
@@ -5596,18 +5607,17 @@ function fatalLoader(msg, hint) {
 
 async function loadData() {
     setLoader('Loading graph data');
-    let dataOk = false;
+    // The API is the single source of truth — no static-file fallback.
     try {
-        const res = await fetch('../data/idx/data.json');
+        const res = await fetch(deriveGraphLoadUrl(DATASET), { cache: 'no-cache' });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         data = await res.json();
         if (!Array.isArray(data) || !data.length) throw new Error('Empty dataset');
-        dataOk = true;
     } catch (e) {
         data = [];
         fatalLoader(
             'No graph data found.',
-            'Expected <code>docs/data/idx/data.json</code>. Start the sync server and it will serve the data file:\n<code>python bin/sync.py --data-file docs/data/idx/data.json -p 8000</code>'
+            'Start the sync server (it serves the data via the API):\n<code>python bin/sync.py --docs-root docs --couch-user admin --couch-password admin</code>'
         );
         throw e;
     }
@@ -7259,12 +7269,9 @@ function saveJSON() {
    re-apply positions. The endpoint is served by bin/sync.py. */
 async function recomputeLayout() {
     const btn = document.getElementById('recompute-layout-btn');
-    const url = deriveLayoutRecomputeUrl(backendConfig && backendConfig.saveUrl);
-    if (!url) {
-        showToast({ type: 'error', title: 'No backend',
-            message: 'Configure the Backend Save URL in Settings to recompute the layout.' });
-        return;
-    }
+    // Same-origin default + dataset scope (only idx has a layout).
+    const baseUrl = deriveLayoutRecomputeUrl(effectiveSaveUrl());
+    const url = `${baseUrl}?dataset=${encodeURIComponent(DATASET)}`;
     const prevHTML = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<span class="loading-spinner"></span> Recomputing…';

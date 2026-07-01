@@ -4045,6 +4045,10 @@ const STORAGE_KEY_SAVE_PREF = 'sociognosis-save-token-pref';
 const STORAGE_KEY_BACKEND_URL = 'sociognosis-backend-save-url';
 const STORAGE_KEY_SAVE_BACKEND_PREF = 'sociognosis-save-backend-url-pref';
 
+/* Which dataset this editor edits. Determines the sync API namespace
+   (GET /api/graph?dataset=... and the 'dataset' field in save patches). */
+const DATASET = 'prd';
+
 /** Returns true if the user opted into saving the token in the browser. */
 function getSaveTokenPreference() {
     try {
@@ -4147,23 +4151,44 @@ function loadPersistedBackendUrl() {
 }
 
 /* ═══════ BACKEND HEALTH CHECK ═══════ */
-/* Derives the /health endpoint URL from the configured Save URL.
-   sync.py serves both endpoints from the same origin:
+/* Derive any backend sub-path from the configured Save URL.
+   sync.py serves all endpoints from one origin:
    - Save:   <origin>/api/graph/save
+   - Load:   <origin>/api/graph
    - Health: <origin>/api/health
-   So we strip the save path and append '/api/health'. */
-function deriveHealthUrl(saveUrl) {
+   - Layout: <origin>/api/layout/recompute
+*/
+function deriveBackendUrl(saveUrl, subPath) {
     if (!saveUrl) return '';
     try {
         const u = new URL(saveUrl, window.location.origin);
-        return `${u.origin}/api/health`;
+        return `${u.origin}${subPath}`;
     } catch (e) {
-        // Fallback: basic string manipulation if URL parsing fails
         const idx = saveUrl.indexOf('/api/');
-        if (idx >= 0) return saveUrl.substring(0, idx) + '/api/health';
-        // Or if it ends with /api/graph/save, strip that
-        return saveUrl.replace(/\/api\/graph\/save\/?$/, '/api/health');
+        if (idx >= 0) return saveUrl.substring(0, idx) + subPath;
+        return saveUrl.replace(/\/api\/graph\/save\/?$/, subPath);
     }
+}
+
+function deriveHealthUrl(saveUrl) { return deriveBackendUrl(saveUrl, '/api/health'); }
+function deriveLayoutRecomputeUrl(saveUrl) { return deriveBackendUrl(saveUrl, '/api/layout/recompute'); }
+
+/* The Backend Save URL, defaulting to same-origin when unset. sync.py serves
+   the editor and the API from one origin, so load/save/health all work without
+   per-editor configuration. The default is also surfaced in Settings so it is
+   always visible/editable. */
+function defaultSaveUrl() {
+    return window.location.origin + '/api/graph/save';
+}
+function effectiveSaveUrl() {
+    return backendConfig.saveUrl || defaultSaveUrl();
+}
+
+/* Graph load URL. Falls back to same-origin when no backend is configured
+   (sync.py serves the editor and the API from the same origin). */
+function deriveGraphLoadUrl(dataset) {
+    const sub = `/api/graph?dataset=${encodeURIComponent(dataset)}`;
+    return backendConfig.saveUrl ? deriveBackendUrl(backendConfig.saveUrl, sub) : sub;
 }
 
 let backendHealthInterval = null;
@@ -4173,11 +4198,7 @@ let backendHealthStatus = 'unknown'; // 'online' | 'offline' | 'checking' | 'unk
    Uses AbortController for a timeout (health checks should be fast).
    Returns the health object on success, throws on error. */
 async function checkBackendHealth() {
-    const healthUrl = deriveHealthUrl(backendConfig.saveUrl);
-    if (!healthUrl) {
-        updateBackendStatus('offline', 'No backend URL configured');
-        return null;
-    }
+    const healthUrl = deriveHealthUrl(effectiveSaveUrl());
 
     updateBackendStatus('checking', 'Checking...');
 
@@ -4252,16 +4273,10 @@ function updateBackendStatus(status, label) {
    Stops any existing interval first to avoid duplicates. */
 function startBackendHealthPolling() {
     if (backendHealthInterval) clearInterval(backendHealthInterval);
-    if (!backendConfig.saveUrl) {
-        updateBackendStatus('offline', 'No backend URL configured');
-        return;
-    }
-    // Immediate check + interval
+    // Immediate check + interval. Defaults to same-origin when no URL is set.
     checkBackendHealth().catch(() => { /* errors already handled in updateBackendStatus */ });
     backendHealthInterval = setInterval(() => {
-        if (backendConfig.saveUrl) {
-            checkBackendHealth().catch(() => {});
-        }
+        checkBackendHealth().catch(() => {});
     }, 60000); // 60 seconds
 }
 
@@ -4282,6 +4297,7 @@ function buildPatch() {
     }
     return {
         nodes: changedNodes,
+        dataset: DATASET,
         timestamp: new Date().toISOString()
     };
 }
@@ -4289,9 +4305,7 @@ function buildPatch() {
 /* Send the JSON patch to the configured backend URL via HTTP POST.
    Returns true on success, throws on error. */
 async function saveToBackend() {
-    if (!backendConfig.saveUrl) {
-        throw new Error('No backend URL configured.');
-    }
+    const saveUrl = effectiveSaveUrl();
 
     const patch = buildPatch();
     if (patch.nodes.length === 0) {
@@ -4299,7 +4313,7 @@ async function saveToBackend() {
         return true;
     }
 
-    const response = await fetch(backendConfig.saveUrl, {
+    const response = await fetch(saveUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(patch)
@@ -4617,7 +4631,7 @@ function setupModals() {
         document.getElementById('global-context-url').value = aiConfig.contextUrl;
         document.getElementById('global-context-preview').value = aiConfig.globalContext.substring(0, 2000);
         document.getElementById('save-token-toggle').checked = getSaveTokenPreference();
-        document.getElementById('backend-save-url').value = backendConfig.saveUrl;
+        document.getElementById('backend-save-url').value = effectiveSaveUrl();
         document.getElementById('save-backend-url-toggle').checked = getSaveBackendUrlPreference();
         updateAPIStatusIndicator();
         openModal('settings-modal');
@@ -5375,34 +5389,24 @@ function screenToWorld(sx, sy) { return { x: (sx - cam.x) / cam.z, y: (sy - cam.
 
 /* ═══════ DATA LOADING ═══════ */
 async function loadData() {
+    // The API is the single source of truth — no static-file fallback.
     try {
-        const res = await fetch('../data/prd/data.json');
+        const res = await fetch(deriveGraphLoadUrl(DATASET), { cache: 'no-cache' });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         data = await res.json();
+        if (!Array.isArray(data)) throw new Error('Invalid dataset (expected an array)');
     } catch (e) {
-        console.warn('Could not load data.json, using sample data');
-        data = [{
-            "id": "reality.market", "name": "Market", "layer": "Economic", "category": "Reality",
-            "description": "A socially constituted institutional structure that coordinates voluntary exchange among economic agents.",
-            "longDescription": "A market is an institutional configuration composed of agents, exchange protocols, property rights, contractual rules, information flows, and allocation mechanisms.",
-            "tags": ["market", "institution", "exchange"],
-            "chronology": { "summary": "Markets have existed in various forms throughout human history.", "events": [] },
-            "specific": {},
-            "relationships": [],
-            "metadata": { "inheritanceLevel": 2, "confidenceScore": 0.97, "sourceReference": "Sociognosis Production Ontology", "createdAt": "2024-06-10T00:00:00Z", "auditTrail": [] },
-            "references": []
-        },
-        {
-            "id": "product.steel-beam", "name": "Steel Beam", "layer": "Product", "category": "Product",
-            "description": "A structural steel product used in construction.",
-            "longDescription": "A steel beam is a load-bearing structural element manufactured from steel, used in buildings, bridges, and infrastructure.",
-            "tags": ["steel", "construction", "structural"],
-            "chronology": { "summary": "Steel beams became ubiquitous with industrial steel production.", "events": [] },
-            "specific": { "materiality": "tangible", "useCase": "Load-bearing structure", "lifeCycleStage": "production" },
-            "relationships": [],
-            "metadata": { "inheritanceLevel": 1, "confidenceScore": 0.95, "sourceReference": "Sociognosis Production Ontology", "createdAt": "2024-06-10T00:00:00Z", "auditTrail": [] },
-            "references": []
-        }];
+        console.error('Failed to load graph from API:', e);
+        if (typeof showToast === 'function') {
+            showToast({
+                type: 'error',
+                title: 'Could not load graph',
+                message: 'The sync server did not respond. Start it with: ' +
+                         'python bin/sync.py --docs-root docs --couch-user admin --couch-password admin',
+                duration: 10000,
+            });
+        }
+        data = [];
     }
     extractSuggestions();
     initGraph();
